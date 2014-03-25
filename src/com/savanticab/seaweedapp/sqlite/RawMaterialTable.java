@@ -16,7 +16,7 @@ public class RawMaterialTable extends BaseTable {
 	      + TABLE_NAME
 	      + "(" 
 	      + COLUMN_ID + " integer primary key autoincrement, " 
-	      + COLUMN_NAME + " text not null, " 
+	      + COLUMN_NAME + " text not null unique, " 
 	      + COLUMN_UNIT + " text, " 
 	      + COLUMN_STOCK_QUANTITY + " real, " 
 	      + COLUMN_ORDERED_QUANTITY + " real, "

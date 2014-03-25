@@ -57,8 +57,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.insert(ProductTable.TABLE_NAME, null, values);
         db.close();
 }
-    public Product findProduct(String productcode) {
+    public Product findProductById(int productId){
+    	String query = "Select * FROM " + ProductTable.TABLE_NAME + " WHERE " + ProductTable.COLUMN_ID + " =  \"" + productId + "\"";
+    	return findProduct(query);
+    }
+    public Product findProductByCode(String productcode){
     	String query = "Select * FROM " + ProductTable.TABLE_NAME + " WHERE " + ProductTable.COLUMN_CODE + " =  \"" + productcode + "\"";
+    	return findProduct(query);
+    }
+    private Product findProduct(String query) {
+    	
     	
     	SQLiteDatabase db = this.getWritableDatabase();
     	
@@ -164,9 +172,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.insert(RawMaterialTable.TABLE_NAME, null, values);
         db.close();
     }
-    public RawMaterial findRawMaterial(String materialname){
+    public RawMaterial findRawMaterialById(int materialId){
+    	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_ID + " =  \"" + materialId + "\"";
+    	return findRawMaterial(query);
+    }
+    public RawMaterial findRawMaterialByName(String materialname){
     	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
-    	
+    	return findRawMaterial(query);
+    }
+    private RawMaterial findRawMaterial(String query){    	
     	SQLiteDatabase db = this.getWritableDatabase();
     	
     	Cursor cursor = db.rawQuery(query, null);
@@ -186,6 +200,55 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	}
             db.close();
     	return material;
+    }
+    public List<RawMaterial> getAllRawMaterials() {
+        List<RawMaterial> materials = new LinkedList<RawMaterial>();
+ 
+        String query = "SELECT  * FROM " + RawMaterialTable.TABLE_NAME;
+ 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+ 
+        RawMaterial material = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	material = new RawMaterial();
+            	material.setId(Integer.parseInt(cursor.getString(0)));
+        		material.setName(cursor.getString(1));
+        		material.setUnit(cursor.getString(2));
+        		material.setStockQuantity(Double.parseDouble(cursor.getString(3)));
+        		material.setOrderedQuantity(Double.parseDouble(cursor.getString(4)));
+        		material.setIcon(cursor.getString(5));
+ 
+        		materials.add(material);
+            } while (cursor.moveToNext());
+        }
+        return materials;
+    }
+    public int updateRawMaterial(RawMaterial material) {
+ 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(RawMaterialTable.COLUMN_NAME, material.getName());
+        values.put(RawMaterialTable.COLUMN_UNIT, material.getUnit());
+        values.put(RawMaterialTable.COLUMN_STOCK_QUANTITY, material.getStockQuantity());
+        values.put(RawMaterialTable.COLUMN_ORDERED_QUANTITY, material.getOrderedQuantity());
+        values.put(RawMaterialTable.COLUMN_ICON, material.getIcon());
+ 
+        // 3. updating row
+        int i = db.update(RawMaterialTable.TABLE_NAME, //table
+                values, // column/value
+                RawMaterialTable.COLUMN_ID+" = ?", // selections
+                new String[] { String.valueOf(material.getId()) }); //selection args
+ 
+        // 4. close
+        db.close();
+ 
+        return i;
+ 
     }
     public boolean deleteRawMaterial(String materialname){
     	boolean result = false;
@@ -228,7 +291,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	}
         db.close();
     }
-    public Recipe findRecipe(int productid){
+    public Recipe findRecipeByProductId(int productid){
     	String query = "Select * FROM " + RecipeTable.TABLE_NAME + " WHERE " + RecipeTable.COLUMN_PRODUCT_ID + " =  \"" + productid + "\"";
     	
     	SQLiteDatabase db = this.getWritableDatabase();
@@ -238,12 +301,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	Recipe recipe = new Recipe();
     	Map<RawMaterial, Double> ingredients = new HashMap<RawMaterial, Double>();
     	if (cursor.moveToFirst()) {
-    		Integer productId = Integer.parseInt(cursor.getString(1));
-    		recipe.setProduct(findProduct(productId.toString())); //TODO: cursor returns Id and findProduct needs productCode
+    		Integer productId = Integer.parseInt(cursor.getString(0));
+    		recipe.setProduct(findProductById(productId));
     		do {
-    			Integer raw_material_id = Integer.parseInt(cursor.getString(2));
-    			RawMaterial material = findRawMaterial(raw_material_id.toString()); //TODO: cursor returns Id and findRawMaterial needs materialName
-    			double quantity = Double.parseDouble(cursor.getString(3));
+    			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
+    			RawMaterial material = findRawMaterialById(raw_material_id);
+    			double quantity = Double.parseDouble(cursor.getString(2));
     			ingredients.put(material, quantity);
             } while (cursor.moveToNext());
     		
@@ -254,6 +317,101 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	}
             db.close();
     	return recipe;
+    }
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new LinkedList<Recipe>();
+ 
+        String query = "SELECT  * FROM " + RecipeTable.TABLE_NAME;
+ 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+ 
+        Recipe recipe = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	Integer productId = Integer.parseInt(cursor.getString(0));
+            	for (Recipe r : recipes){
+            		if (r.getProduct().getId() == productId) {
+            			recipe = r;
+            		}
+            	}
+            	if (recipe == null){
+            		recipe = new Recipe();
+            		recipes.add(recipe);
+                	recipe.setProduct(findProductById(productId));
+            	}
+    			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
+    			RawMaterial material = findRawMaterialById(raw_material_id);
+    			double quantity = Double.parseDouble(cursor.getString(2));
+    			
+    			Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+    			ingredients.put(material, quantity);
+    			//recipe.setIngredients(ingredients);
+    			
+            } while (cursor.moveToNext());
+        }
+        return recipes;
+    }
+    public int updateRecipe(Recipe recipe) {
+ 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        int i = 0;
+        
+    	int productId = recipe.getProduct().getId();
+    	Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+    	Recipe recipeinDb = findRecipeByProductId(productId);
+    	Map<RawMaterial, Double> ingredientsinDb = recipeinDb.getIngredients();
+    	Boolean isindb = false;
+    	for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+    		RawMaterial ingredient = entry.getKey();
+    	    Double quantity = entry.getValue();
+        	isindb = false;
+    	    for(Entry<RawMaterial, Double> entryDb : ingredientsinDb.entrySet()) {
+        		RawMaterial ingredientinDb = entryDb.getKey();
+        		if(ingredient.getId() == ingredientinDb.getId()){
+        			isindb = true;
+        			break;
+        		}
+    	    }
+    	    ContentValues values = new ContentValues();
+    	    values.put(RecipeTable.COLUMN_QUANTITY, quantity);
+    	    if(isindb){
+    	    	//update
+    	    	i = i + db.update(RecipeTable.TABLE_NAME, //table
+    	                values, // column/value
+    	                RecipeTable.COLUMN_PRODUCT_ID +" = ? AND " + RecipeTable.COLUMN_RAW_MATERIAL_ID + " = ?", // selections
+    	                new String[] { String.valueOf(productId), String.valueOf(ingredient.getId()) }); //selection args
+    	    }    	    	
+    	    else{
+    	    	//add
+        	    values.put(RecipeTable.COLUMN_PRODUCT_ID, productId);
+        	    values.put(RecipeTable.COLUMN_RAW_MATERIAL_ID, ingredient.getId());        	    
+        	    db.insert(RecipeTable.TABLE_NAME, null, values);
+    	    }
+    	}
+    	
+    	//Remove ingredients that shouldn't be in db
+    	for(Entry<RawMaterial, Double> entryDb : ingredientsinDb.entrySet()) {
+    		RawMaterial ingredientinDb = entryDb.getKey();
+    		isindb = false;
+    		for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+    			RawMaterial ingredient = entry.getKey();
+    			if(ingredient.getId() == ingredientinDb.getId()){
+        			isindb = true;
+        			break;
+        		}
+    		}
+    		if(!isindb){
+    			//remove from db
+    			db.delete(RawMaterialTable.TABLE_NAME, RecipeTable.COLUMN_PRODUCT_ID +" = ? AND " + RecipeTable.COLUMN_RAW_MATERIAL_ID + " = ?",
+        	            new String[] { String.valueOf(productId), String.valueOf(ingredientinDb.getId()) });
+    		}
+    	}
+        // 4. close
+        db.close();
+ 
+        return i;
     }
     public boolean deleteRecipe(int productid){
     	boolean result = false;
@@ -266,7 +424,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	Cursor cursor = db.rawQuery(query, null);
     	
     	if (cursor.moveToFirst()) {
-    		Integer product_id = Integer.parseInt(cursor.getString(1));
+    		Integer product_id = Integer.parseInt(cursor.getString(0));
     		db.delete(RecipeTable.TABLE_NAME, RecipeTable.COLUMN_PRODUCT_ID + " = ?",
     	            new String[] { String.valueOf(product_id) });
     		cursor.close();
