@@ -4,5 +4,124 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ItemDetailActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="4" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_column="1"
+            android:layout_gravity="left"
+            android:layout_row="1"
+            android:text="@string/raw_material_name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="103dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_gravity="left|bottom"
+            android:layout_row="1"
+            android:text="@string/material_stock_title"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_column="3"
+            android:layout_gravity="left"
+            android:layout_row="2"
+            android:text="@string/material_stock_storage_amount"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_column="2"
+            android:layout_gravity="left"
+            android:layout_row="3"
+            android:text="@string/material_stock_ordered" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_column="3"
+            android:layout_gravity="left"
+            android:layout_row="3"
+            android:ems="10"
+            android:inputType="numberDecimal" >
+
+            <requestFocus />
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_column="2"
+            android:layout_gravity="left"
+            android:layout_row="4"
+            android:text="@string/material_stock_arrived" />
+
+        <Space
+            android:layout_width="96dp"
+            android:layout_height="1dp"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="96dp"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="320dp"
+            android:layout_height="1dp"
+            android:layout_column="1"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="80dp"
+            android:layout_column="0"
+            android:layout_row="1" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="49dp"
+            android:layout_column="0"
+            android:layout_row="3" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="1"
+            android:layout_row="2" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="1"
+            android:layout_row="3" />
+
+        <Space
+            android:layout_width="144dp"
+            android:layout_height="1dp"
+            android:layout_column="2"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="3"
+            android:layout_row="2" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="2"
+            android:layout_row="3" />
+    </GridLayout>
+
+</FrameLayout>
 

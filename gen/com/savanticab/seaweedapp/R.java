@@ -27,17 +27,23 @@ public final class R {
         public static final int seaweed_center_logo_2=0x7f020002;
     }
     public static final class id {
-        public static final int button_factory_click=0x7f070006;
-        public static final int button_report=0x7f070009;
-        public static final int button_report_click=0x7f07000a;
-        public static final int button_shop_click=0x7f070008;
-        public static final int button_to_factory=0x7f070005;
-        public static final int button_to_shop=0x7f070007;
-        public static final int container=0x7f070002;
-        public static final int imageView1=0x7f070004;
-        public static final int item_detail=0x7f070003;
+        public static final int button_factory_click=0x7f07000c;
+        public static final int button_report=0x7f07000f;
+        public static final int button_report_click=0x7f070010;
+        public static final int button_shop_click=0x7f07000e;
+        public static final int button_to_factory=0x7f07000b;
+        public static final int button_to_shop=0x7f07000d;
+        public static final int checkBox1=0x7f070005;
+        public static final int checkBox2=0x7f070007;
+        public static final int container=0x7f070008;
+        public static final int editText1=0x7f070006;
+        public static final int imageView1=0x7f07000a;
+        public static final int item_detail=0x7f070009;
         public static final int item_detail_container=0x7f070001;
         public static final int item_list=0x7f070000;
+        public static final int textView1=0x7f070002;
+        public static final int textView2=0x7f070003;
+        public static final int textView4=0x7f070004;
     }
     public static final class layout {
         public static final int activity_factory_list=0x7f030000;
@@ -53,11 +59,17 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int at_the_factory=0x7f050001;
         public static final int hello_world=0x7f050002;
+        public static final int material_stock_arrived=0x7f05000b;
+        public static final int material_stock_ordered=0x7f05000a;
+        public static final int material_stock_ordered_amount=0x7f05000c;
+        public static final int material_stock_storage_amount=0x7f05000d;
+        public static final int material_stock_title=0x7f050009;
+        public static final int raw_material_name=0x7f050008;
         public static final int seaweed_center_logo=0x7f050004;
         public static final int start_to_factory=0x7f050007;
         public static final int start_to_reports=0x7f050005;
         public static final int start_to_shop=0x7f050006;
-        public static final int title_item_detail=0x7f050008;
+        public static final int title_item_detail=0x7f05000e;
     }
     public static final class style {
         /** 

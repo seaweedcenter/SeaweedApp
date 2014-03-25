@@ -8,6 +8,12 @@
     <string name="start_to_reports">To reports</string>
     <string name="start_to_shop">To the shop</string>
     <string name="start_to_factory">To the factory</string>
+    <string name="raw_material_name">Raw material name </string>
+    <string name="material_stock_title">Stock</string>
+    <string name="material_stock_ordered">Ordered</string>
+    <string name="material_stock_arrived">Arrived</string>
+    <string name="material_stock_ordered_amount">0</string>
+    <string name="material_stock_storage_amount">0</string>
 
     <string name="title_item_detail">At the factory</string>
     
