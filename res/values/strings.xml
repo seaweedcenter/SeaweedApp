@@ -14,6 +14,8 @@
     <string name="material_stock_arrived">Arrived</string>
     <string name="material_stock_ordered_amount">0</string>
     <string name="material_stock_storage_amount">0</string>
+    <string name="OK_button">OK</string>
+    <string name="cancel_button">Cancel</string>
 
     <string name="title_item_detail">At the factory</string>
     
