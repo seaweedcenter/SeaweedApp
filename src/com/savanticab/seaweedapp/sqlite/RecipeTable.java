@@ -1,6 +1,8 @@
 package com.savanticab.seaweedapp.sqlite;
 
-public class RecipeTable extends BaseTable {
+import android.database.sqlite.SQLiteDatabase;
+
+public class RecipeTable {
 	// Database table
 		  public static final String TABLE_NAME = "recipes";
 		  //public static final String COLUMN_ID = "_id";
@@ -18,5 +20,15 @@ public class RecipeTable extends BaseTable {
 		      + COLUMN_QUANTITY + " real, " 
 			  + "primary key(" + COLUMN_PRODUCT_ID + ", " + COLUMN_RAW_MATERIAL_ID + ")"
 		      + ");";
+		  
+		  public static void onCreate(SQLiteDatabase database) {
+			  database.execSQL(DATABASE_CREATE);
+		  }
+
+		  public static void onUpgrade(SQLiteDatabase database, int oldVersion,
+			      int newVersion) {
+			  database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+			  onCreate(database);
+		  }
 
 }

@@ -1,5 +1,11 @@
 package com.savanticab.seaweedapp;
 
+import java.util.List;
+
+import com.savanticab.seaweedapp.model.Product;
+import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -45,7 +51,10 @@ public class ItemListActivity extends FragmentActivity implements
 			((ItemListFragment) getSupportFragmentManager().findFragmentById(
 					R.id.item_list)).setActivateOnItemClick(true);
 		}
+		MySQLiteHelper helper = MySQLiteHelper.getInstance(this);
 
+		List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
+		
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
 

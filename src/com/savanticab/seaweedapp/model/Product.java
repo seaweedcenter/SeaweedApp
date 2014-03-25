@@ -37,5 +37,13 @@ public class Product {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public Product(){}
+	public Product(String code, String name, String fragance, String size){
+		this.code = code;
+		this.name = name;
+		this.fragance = fragance;
+		this.size = size;
+	}
 
 }

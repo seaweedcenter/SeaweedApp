@@ -1,7 +1,9 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import android.database.sqlite.SQLiteDatabase;
 
-public class ProductTable extends BaseTable {
+
+public class ProductTable  {
 	
 	// Database table
 	  public static final String TABLE_NAME = "products";
@@ -22,5 +24,14 @@ public class ProductTable extends BaseTable {
 	      + COLUMN_FRAGANCE + " text," 
 	      + COLUMN_SIZE + " text" 
 	      + ");";
+	  public static void onCreate(SQLiteDatabase database) {
+		  database.execSQL(DATABASE_CREATE);
+	  }
+
+	  public static void onUpgrade(SQLiteDatabase database, int oldVersion,
+		      int newVersion) {
+		  database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+		  onCreate(database);
+	  }
 
 }

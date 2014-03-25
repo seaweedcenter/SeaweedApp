@@ -21,10 +21,29 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	// Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "SeaweedDB";
+    private static final String DATABASE_NAME = "SeaweedDB.db";
  
+    private static MySQLiteHelper sInstance;
+    public static MySQLiteHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you 
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sInstance == null) {
+          sInstance = new MySQLiteHelper(context.getApplicationContext());
+        }
+        return sInstance;
+      }
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
+        addProduct(new Product("SOAP1", "Soap", "Lime", "Big"));
+        addProduct(new Product("SOAP2", "Soap", "Clove", "Small"));
+        addProduct(new Product("SOAP3", "Soap", "Langi-langi", "Big"));
+        addProduct(new Product("SOAP4", "Soap", "Lemongrass", "Medium"));
+        
+        addRawMaterial(new RawMaterial("Coconut oil", "L", 100, 0));
+        addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0));
+        addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2));
     }
  
     @Override
@@ -108,6 +127,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             	products.add(product);
             } while (cursor.moveToNext());
         }
+        db.close();
         return products;
     }
     public int updateProduct(Product product) {

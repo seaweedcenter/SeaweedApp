@@ -1,6 +1,8 @@
 package com.savanticab.seaweedapp.sqlite;
 
-public class RawMaterialTable extends BaseTable {
+import android.database.sqlite.SQLiteDatabase;
+
+public class RawMaterialTable {
 	
 	// Database table
 	  public static final String TABLE_NAME = "raw_materials";
@@ -22,5 +24,15 @@ public class RawMaterialTable extends BaseTable {
 	      + COLUMN_ORDERED_QUANTITY + " real, "
 	      + COLUMN_ICON + " text"
 	      + ");";
+	  
+	  public static void onCreate(SQLiteDatabase database) {
+		  database.execSQL(DATABASE_CREATE);
+	  }
+
+	  public static void onUpgrade(SQLiteDatabase database, int oldVersion,
+		      int newVersion) {
+		  database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+		  onCreate(database);
+	  }
 
 }

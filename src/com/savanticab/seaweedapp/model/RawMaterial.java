@@ -45,5 +45,12 @@ public class RawMaterial {
 		this.icon = icon;
 	}
 	
+	public RawMaterial(){}
+	public RawMaterial(String name, String unit, double stockQuantity, double orderedQuantity){
+		this.name = name;
+		this.unit = unit;
+		this.stockQuantity = stockQuantity;
+		this.orderedQuantity = orderedQuantity;
+	}
 
 }
