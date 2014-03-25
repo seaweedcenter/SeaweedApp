@@ -44,8 +44,7 @@ public class FactoryListActivity extends FragmentActivity implements
 	@Override
 	public void onItemSelected(String id) {
 		
-		Intent detailIntent = new Intent(this, ItemDetailActivity.class);
-		detailIntent.putExtra(ItemDetailFragment.ARG_ITEM_ID, id);
+		Intent detailIntent = new Intent(this, ItemListActivity.class);
 		startActivity(detailIntent);
 	}
 }
