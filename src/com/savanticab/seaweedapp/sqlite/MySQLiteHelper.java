@@ -360,7 +360,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         
     	int productId = recipe.getProduct().getId();
     	Map<RawMaterial, Double> ingredients = recipe.getIngredients();
-    	Recipe recipeinDb = findRecipe(productId);
+    	Recipe recipeinDb = findRecipeByProductId(productId);
     	Map<RawMaterial, Double> ingredientsinDb = recipeinDb.getIngredients();
     	Boolean isindb = false;
     	for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
