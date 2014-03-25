@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" android:vmSafeMode="true" android:logo="@drawable/seaweed_center_logo">
         <activity
-            android:name="com.savanticab.seaweedapp.FullscreenActivity"
+            android:name="com.savanticab.seaweedapp.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,14 +21,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name="com.savanticab.seaweedapp.ItemListActivity"
+            android:name="com.savanticab.seaweedapp.FactoryListActivity"
             android:label="@string/at_the_factory" 
-            android:parentActivityName=".FullscreenActivity" >
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".FullscreenActivity" />
+        </activity>
+        <activity
+            android:name="com.savanticab.seaweedapp.ItemListActivity"
+            android:label="@string/at_the_factory" 
+            android:parentActivityName=".FactoryListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FactoryListActivity" />
         </activity>
         <activity
             android:name="com.savanticab.seaweedapp.ItemDetailActivity"
