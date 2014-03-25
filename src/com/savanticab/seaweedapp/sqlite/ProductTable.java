@@ -12,11 +12,12 @@ public class ProductTable extends BaseTable {
 	  public static final String COLUMN_SIZE = "size";
 
 	  // Database creation SQL statement
+	  //TODO: make name+fragance+size combination unique?
 	  protected static final String DATABASE_CREATE = "create table " 
 	      + TABLE_NAME
 	      + "(" 
 	      + COLUMN_ID + " integer primary key autoincrement, " 
-	      + COLUMN_CODE + " text not null, "
+	      + COLUMN_CODE + " text not null unique, "
 	      + COLUMN_NAME + " text not null, " 
 	      + COLUMN_FRAGANCE + " text," 
 	      + COLUMN_SIZE + " text" 
