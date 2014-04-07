@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
@@ -115,10 +117,33 @@ public class ProductionPlanActivity extends Activity{
 				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 				Recipe recipe = helper.findRecipeByProductId(position);
 				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+				
+				// for each raw material entry create a row in table
 				for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
 					RawMaterial mtrl = entry.getKey();
 					Double quantity = entry.getValue();
+					
+					TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+					TableRow rowRecipe = new TableRow(this.getActivity());
+					TextView textEmpty = new TextView(this.getActivity());
+					textEmpty.setText("");
+					TextView textMaterial = new TextView(this.getActivity());
+					textMaterial.setText("material name");
+					TextView textNeeded = new TextView(this.getActivity());
+					textNeeded.setText("needed quantity");
+					TextView textInstock = new TextView(this.getActivity());
+					textInstock.setText("in stock");
+					rowRecipe.addView(textEmpty);
+					rowRecipe.addView(textMaterial);
+					rowRecipe.addView(textNeeded);
+					rowRecipe.addView(textInstock);
+					table.addView(rowRecipe);
 				}
+				
+				//setContentView(R.layout.production_plan_recipe_table);
+				
+				
+				
 			}
 		}
 		
