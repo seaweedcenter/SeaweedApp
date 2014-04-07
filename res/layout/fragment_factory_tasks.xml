@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:gravity="center">
+
+    <View
+        android:layout_width="100dp" 
+        android:layout_height="20dp">
+    </View>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_activity_factory_tasks"
+        android:textSize="30sp" 
+        android:gravity ="center"/>
+    
+    <Button
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_factory_rawmtrl_manage"
+    	android:onClick="clickRawMtrlManage" 
+    	android:gravity ="center"/>
+    
+    <Button
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_factory_prod_plan" 
+		android:onClick="clickProductionPlanning" 
+		android:gravity ="center"/>
+    
+    <Button
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_factory_prod_doc" 
+        android:onClick="clickProductionDocumentation" 
+        android:gravity ="center"/>
+
+</LinearLayout>

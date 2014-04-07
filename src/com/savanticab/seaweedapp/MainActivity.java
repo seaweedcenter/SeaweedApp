@@ -70,11 +70,11 @@ public class MainActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent i = new Intent(v.getContext(),
-							FactoryListActivity.class);
+							FactoryTasksActivity.class);
 					startActivity(i);
 				}
 			});
-
+			
 			// Button "To the shop"
 			Button button_shop = (Button) rootView
 					.findViewById(R.id.button_to_shop);
@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent i = new Intent(v.getContext(),
-							ItemListActivity.class);
+							FactoryTasksActivity.class);
 					startActivity(i);
 				}
 			});
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent i = new Intent(v.getContext(),
-							ItemListActivity.class);
+							FactoryTasksActivity.class);
 					startActivity(i);
 				}
 			});

@@ -1,5 +1,7 @@
 package com.savanticab.seaweedapp;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -8,17 +10,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
+import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
- * A list fragment representing a list of Items. This fragment also supports
- * tablet devices by allowing list items to be given an 'activated' state upon
- * selection. This helps indicate which item is currently being viewed in a
- * {@link ItemDetailFragment}.
+ * A list fragment representing a list of RawMaterials. This fragment also
+ * supports tablet devices by allowing list items to be given an 'activated'
+ * state upon selection. This helps indicate which item is currently being
+ * viewed in a {@link RawMaterialDetailFragment}.
  * <p>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class FactoryListFragment extends ListFragment {
+public class RawMaterialListFragment extends ListFragment {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -63,17 +67,23 @@ public class FactoryListFragment extends ListFragment {
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
 	 */
-	public FactoryListFragment() {
+	public RawMaterialListFragment() {
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		MySQLiteHelper helper = MySQLiteHelper.getInstance(this.getActivity());
+		List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
+		
 		// TODO: replace with a real list adapter.
-		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+		//		android.R.layout.simple_list_item_activated_1,
+		//		android.R.id.text1, DummyContent.ITEMS));
+		setListAdapter(new ArrayAdapter<RawMaterial>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, DummyContent.ITEMS));
+				android.R.id.text1, rawMaterialList));
 	}
 
 	@Override
@@ -116,7 +126,8 @@ public class FactoryListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+		mCallbacks.onItemSelected(Integer.toString(position+1));//DummyContent.ITEMS.get(position).id);
+		
 	}
 
 	@Override

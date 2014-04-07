@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.savanticab.seaweedapp.ProductionPlanActivity$PlaceholderFragment" >
+
+    <TextView
+        android:id="@+id/textViewProdPlanHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/heading_production_planning" />
+
+    <Spinner
+        android:id="@+id/spinner_product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewProdPlanHeading"
+        android:layout_below="@+id/textViewProdPlanHeading"
+        android:layout_marginLeft="67dp"
+        android:layout_marginTop="102dp" />
+
+    <TextView
+        android:id="@+id/text_product_variation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner_product_name"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="145dp"
+        android:layout_toRightOf="@+id/textViewProdPlanHeading"/>
+
+    <TextView
+        android:id="@+id/text_product_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner_product_name"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="145dp"
+        android:layout_toRightOf="@+id/text_product_variation"/>
+    
+</RelativeLayout>

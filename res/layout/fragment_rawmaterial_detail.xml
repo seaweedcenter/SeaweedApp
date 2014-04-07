@@ -1,0 +1,235 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rawmaterial_detail_container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".RawMaterialDetailActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="8" >
+
+        <TextView
+            android:id="@+id/title_rawmaterial_detail"
+            android:layout_column="0"
+            android:layout_gravity="left"
+            android:layout_row="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="left|bottom"
+            android:layout_row="1"
+            android:text="@string/title_material_stock"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/rawmaterial_stock_quantity"
+            android:layout_column="1"
+            android:layout_gravity="left"
+            android:layout_row="3"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/rawmaterial_ordered_quantity"
+            android:layout_column="2"
+            android:layout_gravity="left"
+            android:layout_row="3"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <CheckBox
+            android:id="@+id/checkBoxStock"
+            android:layout_column="1"
+            android:layout_gravity="left"
+            android:layout_row="5"
+            android:text="@string/material_stock_arrived" />
+
+        <Space
+            android:layout_width="96dp"
+            android:layout_height="1dp"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="96dp"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="320dp"
+            android:layout_height="1dp"
+            android:layout_column="1"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="80dp"
+            android:layout_column="0"
+            android:layout_row="1" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="49dp"
+            android:layout_column="0"
+            android:layout_row="4" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="1"
+            android:layout_row="3" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="1"
+            android:layout_row="4" />
+
+        <Space
+            android:layout_width="144dp"
+            android:layout_height="1dp"
+            android:layout_column="2"
+            android:layout_row="0" />
+
+        <Space
+            android:layout_width="336dp"
+            android:layout_height="1dp"
+            android:layout_column="3"
+            android:layout_row="0" />
+
+
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="79dp"
+            android:layout_column="2"
+            android:layout_row="4" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="178dp"
+            android:layout_column="0"
+            android:layout_row="5" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_row="6" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="110dp"
+            android:layout_column="1"
+            android:layout_row="7" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="94dp"
+            android:layout_row="7" />
+
+        <TextView
+            android:id="@+id/textViewOrdered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_gravity="left|bottom"
+            android:layout_row="1"
+            android:text="@string/title_material_ordered"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <CheckBox
+            android:id="@+id/checkBoxOrdered"
+            android:layout_column="1"
+            android:layout_gravity="left|center_vertical"
+            android:layout_row="5"
+            android:text="@string/material_stock_ordered" />
+
+        <EditText
+            android:id="@+id/editTextEnterQuantity"
+            android:layout_column="1"
+            android:layout_gravity="right|top"
+            android:layout_row="5"
+            android:ems="10"
+            android:hint="@string/editTextQuantityHint"
+            android:inputType="numberDecimal" />
+
+        <ImageButton
+            android:id="@+id/imageButtonOK"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_column="1"
+            android:layout_gravity="left|top"
+            android:layout_row="6"
+            android:contentDescription="@string/OK_button"
+            android:src="@drawable/ok_bullet_large" />
+
+        <ImageButton
+            android:id="@+id/imageButtonCancel"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_column="1"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_row="6"
+            android:contentDescription="@string/cancel_button"
+            android:src="@drawable/error_bullet_large" />
+
+    </GridLayout>
+
+</FrameLayout>
+
+
+
+
+<!-- <RelativeLayout  -->
+<!-- 	android:layout_width="fill_parent"  -->
+<!-- 	android:layout_height="fill_parent"  -->
+<!-- 	xmlns:android="http://schemas.android.com/apk/res/android"> -->
+	
+<!--     <TextView -->
+<!--    		android:id="@+id/title_rawmaterial_detail" -->
+<!--    		android:layout_width="wrap_content" -->
+<!--    		android:layout_height="wrap_content"  -->
+<!--    		android:textSize="30sp" /> -->
+<!--     <TextView -->
+<!--    		android:id="@+id/stock_quantity" -->
+<!--    		android:text="@string/title_material_stock" -->
+<!--    		android:layout_width="wrap_content" -->
+<!--    		android:layout_height="wrap_content" -->
+<!--    		android:layout_below="@id/title_rawmaterial_detail" /> -->
+<!-- 	<TextView -->
+<!--    		android:id="@+id/rawmaterial_quantity" -->
+<!--    		android:layout_width="wrap_content" -->
+<!--    		android:layout_height="wrap_content" -->
+<!--    		android:layout_below="@id/title_rawmaterial_detail" -->
+<!--    		android:layout_toRightOf="@id/stock_quantity" /> -->
+
+<!-- </RelativeLayout> -->
+
+<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" -->
+<!--     android:layout_width="fill_parent" -->
+<!--     android:layout_height="fill_parent" -->
+<!--     android:orientation="vertical"> -->
+
+    
+<!-- 	<TextView android:id="@+id/title_rawmaterial_detail" -->
+<!-- 		style="?android:attr/textAppearanceLarge" -->
+<!-- 		android:layout_width="match_parent" -->
+<!-- 		android:layout_height="match_parent" -->
+<!-- 		android:padding="16dp" -->
+<!-- 		android:textIsSelectable="true"/> -->
+	 	
+<!-- 	<TextView android:id="@+id/rawmaterial_quantity" -->
+<!-- 		style="?android:attr/textAppearanceLarge" -->
+<!-- 		android:layout_width="match_parent" -->
+<!-- 		android:layout_height="match_parent" -->
+<!-- 		android:padding="16dp" -->
+<!-- 		android:textIsSelectable="true" /> -->
+<!-- </LinearLayout> -->

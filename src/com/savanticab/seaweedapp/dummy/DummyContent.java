@@ -25,9 +25,9 @@ public class DummyContent {
 
 	static {
 		// Add 3 sample items.
-		addItem(new DummyItem("1", "Raw material management"));
-		addItem(new DummyItem("2", "Production planning"));
-		addItem(new DummyItem("3", "Documentation of production"));
+		addItem(new DummyItem("1", "Item 1"));
+		addItem(new DummyItem("2", "Item 2"));
+		addItem(new DummyItem("3", "Item 3"));
 	}
 
 	private static void addItem(DummyItem item) {
@@ -52,6 +52,4 @@ public class DummyContent {
 			return content;
 		}
 	}
-	
-	
 }

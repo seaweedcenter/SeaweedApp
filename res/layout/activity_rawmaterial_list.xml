@@ -1,0 +1,11 @@
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rawmaterial_list"
+    android:name="com.savanticab.seaweedapp.RawMaterialListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:parentActivityName="com.savanticab.seaweedapp.FactoryTasksActivity"
+    tools:context="com.savanticab.seaweedapp.RawMaterialListActivity"
+    tools:layout="@android:layout/list_content" />

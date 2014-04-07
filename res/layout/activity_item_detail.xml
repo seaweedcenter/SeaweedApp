@@ -46,6 +46,7 @@
 
         <EditText
             android:id="@+id/editText1"
+            android:hint="@string/editTextQuantityHint"
             android:layout_column="3"
             android:layout_gravity="left"
             android:layout_row="3"

@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">SeaweedApp</string>
-	<string name="at_the_factory">At the factory</string>
+    <string name="at_the_factory">At the factory</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="seaweed_center_logo">seaweed_center_logo</string>
@@ -16,7 +17,17 @@
     <string name="material_stock_storage_amount">0</string>
     <string name="OK_button">OK</string>
     <string name="cancel_button">Cancel</string>
-
     <string name="title_item_detail">At the factory</string>
-    
+    <string name="editTextQuantityHint">Enter quantity here</string>
+    <string name="title_activity_factory_tasks">Factory Tasks</string>
+    <string name="button_factory_rawmtrl_manage">Raw material management</string>
+    <string name="button_factory_prod_plan">Production planning</string>
+    <string name="button_factory_prod_doc">Production documentation</string>
+    <string name="title_rawmaterial_list">Raw Material Management</string>
+    <string name="title_rawmaterial_detail">RawMaterial Detail</string>
+    <string name="title_material_stock">Stock:</string>
+    <string name="title_material_ordered">Ordered:</string>
+    <string name="title_activity_production_plan">Production Planning</string>
+    <string name="heading_production_planning">Want to produce:</string>
+
 </resources>

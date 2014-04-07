@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
@@ -36,14 +37,27 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
       }
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
-        addProduct(new Product("SOAP1", "Soap", "Lime", "Big"));
-        addProduct(new Product("SOAP2", "Soap", "Clove", "Small"));
-        addProduct(new Product("SOAP3", "Soap", "Langi-langi", "Big"));
-        addProduct(new Product("SOAP4", "Soap", "Lemongrass", "Medium"));
+        addProduct(new Product(1, "SOAP1", "Soap", "Lime", "Big"));
+        addProduct(new Product(2, "SOAP2", "Soap", "Clove", "Small"));
+        addProduct(new Product(3, "SOAP3", "Soap", "Langi-langi", "Big"));
+        addProduct(new Product(4, "SOAP4", "Soap", "Lemongrass", "Medium"));
         
-        addRawMaterial(new RawMaterial("Coconut oil", "L", 100, 0));
-        addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0));
-        addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2));
+        addRawMaterial(new RawMaterial(1, "Coconut oil", "L", 100, 0));
+        addRawMaterial(new RawMaterial(2, "Seaweed", "Kg", 50, 0));
+        addRawMaterial(new RawMaterial(3, "Bee wax", "Kg", 5, 2));
+        
+        Map m = new HashMap<RawMaterial, Double>();
+        m.put(new RawMaterial(1, "Coconut oil", "L", 100, 0), 1.0);
+        m.put(new RawMaterial(2, "Seaweed", "Kg", 50, 0), 0.5);
+        Recipe r = new Recipe(new Product(1, "SOAP1", "Soap", "Lime", "Big"), m);
+        addRecipe(r);
+        
+        m = new HashMap<RawMaterial, Double>();
+        m.put(new RawMaterial(1, "Coconut oil", "L", 100, 0), 2.0);
+        m.put(new RawMaterial(3, "Bee wax", "Kg", 50, 0), 0.25);
+        r = new Recipe(new Product(2, "SOAP2", "Soap", "Lime", "Big"), m);
+        addRecipe(r);
+        
     }
  
     @Override
@@ -298,6 +312,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
     	ContentValues values;
     	int productId = recipe.getProduct().getId();
+    	Set<Entry<RawMaterial, Double>> s = recipe.getIngredients().entrySet();
     	for(Entry<RawMaterial, Double> entry : recipe.getIngredients().entrySet()) {
     		RawMaterial ingredient = entry.getKey();
     	    Double quantity = entry.getValue();
@@ -340,16 +355,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new LinkedList<Recipe>();
- 
+        
         String query = "SELECT  * FROM " + RecipeTable.TABLE_NAME;
- 
+        
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
- 
+        
         Recipe recipe = null;
         if (cursor.moveToFirst()) {
             do {
             	Integer productId = Integer.parseInt(cursor.getString(0));
+            	
             	for (Recipe r : recipes){
             		if (r.getProduct().getId() == productId) {
             			recipe = r;
@@ -357,8 +373,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             	}
             	if (recipe == null){
             		recipe = new Recipe();
-            		recipes.add(recipe);
-                	recipe.setProduct(findProductById(productId));
+            		recipe.setProduct(findProductById(productId));
+                	recipe.setId(productId);
+                	//recipes.add(recipe);
             	}
     			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
     			RawMaterial material = findRawMaterialById(raw_material_id);
@@ -366,8 +383,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     			
     			Map<RawMaterial, Double> ingredients = recipe.getIngredients();
     			ingredients.put(material, quantity);
-    			//recipe.setIngredients(ingredients);
+    			recipe.setIngredients(ingredients);
+    			recipes.remove(recipe); // remove (if already present, determined by product ID) and re-insert
+    			recipes.add(recipe);
     			
+    			recipe = null;
             } while (cursor.moveToNext());
         }
         return recipes;

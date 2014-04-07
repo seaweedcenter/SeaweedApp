@@ -13,6 +13,7 @@ public class Product {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -39,7 +40,8 @@ public class Product {
 	}
 	
 	public Product(){}
-	public Product(String code, String name, String fragance, String size){
+	public Product(int id, String code, String name, String fragance, String size){
+		this.id = id;
 		this.code = code;
 		this.name = name;
 		this.fragance = fragance;

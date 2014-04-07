@@ -1,6 +1,9 @@
 package com.savanticab.seaweedapp.model;
 
-public class RawMaterial {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RawMaterial implements Parcelable {
 	
 	private int id;
 	private String name;
@@ -45,12 +48,38 @@ public class RawMaterial {
 		this.icon = icon;
 	}
 	
+	public String toString() {
+		return this.name;
+	}
+	
 	public RawMaterial(){}
-	public RawMaterial(String name, String unit, double stockQuantity, double orderedQuantity){
+	public RawMaterial(int id, String name, String unit, double stockQuantity, double orderedQuantity){
+		this.id = id;
 		this.name = name;
 		this.unit = unit;
 		this.stockQuantity = stockQuantity;
 		this.orderedQuantity = orderedQuantity;
 	}
+	
+    // Parcelable implementation
+	// This was done with minimal effort (Jonas)
+    public int describeContents() {
+      return 0;
+    }
+    public void writeToParcel(Parcel out, int flags) {
+      out.writeString(name);
+    }
+    public static final Parcelable.Creator<RawMaterial> CREATOR
+        = new Parcelable.Creator<RawMaterial>() {
+    	public RawMaterial createFromParcel(Parcel in) {
+    		return new RawMaterial(in);
+      }
+      public RawMaterial[] newArray(int size) {
+        return new RawMaterial[size];
+      }
+    };
+    private RawMaterial(Parcel in) {
+      name = in.readString();
+    }
 
 }
