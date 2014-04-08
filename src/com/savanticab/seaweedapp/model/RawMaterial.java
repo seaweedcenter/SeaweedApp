@@ -61,8 +61,15 @@ public class RawMaterial implements Parcelable {
 		this.orderedQuantity = orderedQuantity;
 	}
 	
+	// needed for List.contains()
+	public boolean equals(Object other) {
+		RawMaterial m = (RawMaterial)other;
+		boolean result = (m.getName().equals(this.name));
+		return (m.getName().equals(this.name));
+	}
+	
     // Parcelable implementation
-	// This was done with minimal effort (Jonas)
+	// This was done with minimal effort
     public int describeContents() {
       return 0;
     }

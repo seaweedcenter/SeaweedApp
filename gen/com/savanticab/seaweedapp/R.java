@@ -59,8 +59,8 @@ public final class R {
         public static final int rawmaterial_ordered_quantity=0x7f080023;
         public static final int rawmaterial_stock_quantity=0x7f080022;
         public static final int spinner_product_name=0x7f080017;
-        public static final int tableRow1=0x7f08001d;
-        public static final int tableRow4=0x7f08001b;
+        public static final int tableRowHeading1=0x7f08001b;
+        public static final int tableRowHeading2=0x7f08001d;
         public static final int table_recipe=0x7f08001a;
         public static final int textView1=0x7f080003;
         public static final int textView2=0x7f080004;

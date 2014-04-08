@@ -28,6 +28,6 @@
     <string name="title_material_stock">Stock:</string>
     <string name="title_material_ordered">Ordered:</string>
     <string name="title_activity_production_plan">Production Planning</string>
-    <string name="heading_production_planning">Want to produce:</string>
+    <string name="heading_production_planning">              </string>
 
 </resources>

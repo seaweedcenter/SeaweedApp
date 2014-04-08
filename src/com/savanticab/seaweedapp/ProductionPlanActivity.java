@@ -11,6 +11,7 @@ import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -89,7 +90,7 @@ public class ProductionPlanActivity extends Activity{
 			textVariation.setText(" ");
 			textSize.setText(" ");
 			
-			aa.add("Select product recipe");
+			aa.add("Select what you want to produce");
 			for(int i=0; i<recipes.size(); i++){
 				Recipe tmp = recipes.get(i);
 				aa.add(recipes.get(i).getProduct().getCode());
@@ -97,7 +98,7 @@ public class ProductionPlanActivity extends Activity{
 			
 			productSpinner.setAdapter(aa);
 			
-			// define a listener object to deal with selections in spinner
+			// register a listener to deal with selections in spinner
 			productSpinner.setOnItemSelectedListener(this); 
 			
 			return rootView;
@@ -107,6 +108,7 @@ public class ProductionPlanActivity extends Activity{
 			// ?
 		}
 		
+		// spinner selection listener
 		public void onItemSelected(AdapterView<?> parent, View view, int position,long id)
 		{
 			if (position > 0) {
@@ -119,30 +121,54 @@ public class ProductionPlanActivity extends Activity{
 				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
 				
 				// for each raw material entry create a row in table
+				// clear table rows beyond heading rows and add data
+				// TODO: make the layout of table rows defined in XML
+				// would also be neater if the managing of rows worked on ids instead of hard coded numbers
+				TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+				while (table.getChildCount()>3) {
+					table.removeViewAt(3);
+				}
+				
+				// (re-)populate table with recipe ingredients
 				for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
-					RawMaterial mtrl = entry.getKey();
-					Double quantity = entry.getValue();
 					
-					TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
 					TableRow rowRecipe = new TableRow(this.getActivity());
+					RawMaterial mtrl = entry.getKey();
+					Double quantityNeeded = entry.getValue();
+					List<RawMaterial> materials = helper.getAllRawMaterials();
+					Double quantityStock = 0.0;
+					
+					if (materials.contains(mtrl)) {
+						quantityStock = materials.get(materials.indexOf(mtrl)).getStockQuantity();
+					}
+					//materials.
 					TextView textEmpty = new TextView(this.getActivity());
 					textEmpty.setText("");
+					
 					TextView textMaterial = new TextView(this.getActivity());
-					textMaterial.setText("material name");
+					textMaterial.setText(mtrl.getName());
+					
 					TextView textNeeded = new TextView(this.getActivity());
-					textNeeded.setText("needed quantity");
+					textNeeded.setText(Double.toString(quantityNeeded) + " " + mtrl.getUnit());
+					
 					TextView textInstock = new TextView(this.getActivity());
-					textInstock.setText("in stock");
+					textInstock.setText(Double.toString(quantityStock) + " " + mtrl.getUnit());
+					
+					if (quantityStock >= quantityNeeded) {
+						textNeeded.setTextColor(Color.GREEN);
+						textInstock.setTextColor(Color.GREEN);
+					}
+					else {
+						textNeeded.setTextColor(Color.RED);
+						textInstock.setTextColor(Color.RED);
+					}
+					
 					rowRecipe.addView(textEmpty);
 					rowRecipe.addView(textMaterial);
 					rowRecipe.addView(textNeeded);
 					rowRecipe.addView(textInstock);
 					table.addView(rowRecipe);
 				}
-				
-				//setContentView(R.layout.production_plan_recipe_table);
-				
-				
 				
 			}
 		}
