@@ -33,7 +33,7 @@ public final class R {
         public static final int TextView02=0x7f080020;
         public static final int TextView03=0x7f08001f;
         public static final int TextView04=0x7f08001e;
-        public static final int action_settings=0x7f080029;
+        public static final int action_settings=0x7f08002a;
         public static final int button_factory_click=0x7f080011;
         public static final int button_report=0x7f080012;
         public static final int button_report_click=0x7f080013;
@@ -54,6 +54,7 @@ public final class R {
         public static final int item_detail=0x7f08000d;
         public static final int item_detail_container=0x7f080002;
         public static final int item_list=0x7f080000;
+        public static final int ok_button_generic=0x7f080029;
         public static final int rawmaterial_detail_container=0x7f08000b;
         public static final int rawmaterial_list=0x7f08000c;
         public static final int rawmaterial_ordered_quantity=0x7f080023;
@@ -103,6 +104,7 @@ public final class R {
         public static final int fragment_main=0x7f03000c;
         public static final int fragment_production_plan=0x7f03000d;
         public static final int fragment_rawmaterial_detail=0x7f03000e;
+        public static final int ok_button_generic=0x7f03000f;
     }
     public static final class menu {
         public static final int factory_tasks=0x7f070000;

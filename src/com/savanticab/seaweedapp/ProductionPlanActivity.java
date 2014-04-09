@@ -14,16 +14,23 @@ import com.savanticab.seaweedapp.model.Batch;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -170,6 +177,7 @@ public class ProductionPlanActivity extends Activity{
 						quantityStock = materials.get(materials.indexOf(mtrl)).getStockQuantity();
 					}
 					//materials.
+					
 					TextView textEmpty = new TextView(this.getActivity());
 					textEmpty.setText("");
 					
@@ -197,6 +205,64 @@ public class ProductionPlanActivity extends Activity{
 					rowRecipe.addView(textInstock);
 					table.addView(rowRecipe);
 				}
+				
+				TableRow rowRecipe2 = new TableRow(this.getActivity());
+				TextView emptyText = new TextView(this.getActivity());
+				emptyText.setText(" ");
+				rowRecipe2.addView(emptyText);
+				rowRecipe2.addView(new TextView(this.getActivity()));
+				rowRecipe2.addView(new TextView(this.getActivity()));
+				rowRecipe2.addView(new TextView(this.getActivity()));
+				rowRecipe2.addView(new TextView(this.getActivity()));
+				table.addView(rowRecipe2);
+								
+				TableRow rowRecipe3 = new TableRow(this.getActivity());
+				LinearLayout buttonsLayout = new LinearLayout(this.getActivity());
+				ImageButton buttonCancel = new ImageButton(this.getActivity());
+				buttonCancel.setImageResource(R.drawable.error_bullet_large);
+				
+				ImageButton buttonOK = new ImageButton(this.getActivity());
+				buttonOK.setImageResource(R.drawable.ok_bullet_large);
+				buttonsLayout.addView(buttonCancel);
+				buttonsLayout.addView(buttonOK);
+				
+				rowRecipe3.addView(new TextView(this.getActivity()));
+				rowRecipe3.addView(new TextView(this.getActivity()));
+				rowRecipe3.addView(new TextView(this.getActivity()));
+				rowRecipe3.addView(buttonsLayout);
+				rowRecipe3.addView(new TextView(this.getActivity()));
+				table.addView(rowRecipe3);
+				
+				buttonCancel.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
+						toast.show();
+						
+//						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
+//						editText.setText("");
+//						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
+//		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
+//		            	chkBoxStock.setChecked(false);
+//		            	chkBoxOrdered.setChecked(false);
+					}
+				});
+				buttonOK.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
+						toast.show();
+						
+//						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
+//						editText.setText("");
+//						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
+//		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
+//		            	chkBoxStock.setChecked(false);
+//		            	chkBoxOrdered.setChecked(false);
+					}
+				});
 				
 			}
 		}
