@@ -17,7 +17,8 @@ public class RawMaterialTable {
 	  protected static final String DATABASE_CREATE = "create table " 
 	      + TABLE_NAME
 	      + "(" 
-	      + COLUMN_ID + " integer primary key autoincrement, " 
+	      //+ COLUMN_ID + " integer primary key autoincrement, " 
+	      + COLUMN_ID + " integer primary key, "
 	      + COLUMN_NAME + " text not null unique, " 
 	      + COLUMN_UNIT + " text, " 
 	      + COLUMN_STOCK_QUANTITY + " real, " 

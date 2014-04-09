@@ -1,9 +1,11 @@
 package com.savanticab.seaweedapp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
@@ -83,21 +85,36 @@ public class ProductionPlanActivity extends Activity{
 			List<Recipe> recipes = helper.getAllRecipes();
 			
 			Spinner productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
-			ArrayAdapter<CharSequence> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);	
+			//ArrayAdapter<CharSequence> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);	
+			//ArrayAdapter<Map<String, Recipe>> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
+			ArrayAdapter<Recipe> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
+			
 			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			TextView textVariation = (TextView) rootView.findViewById(R.id.text_product_variation);
 			TextView textSize = (TextView) rootView.findViewById(R.id.text_product_size);
 			textVariation.setText(" ");
 			textSize.setText(" ");
 			
-			aa.add("Select what you want to produce");
+			// ugly solution: add "empty" recipe to get a default description field in spinner
+			Recipe emptyRecipe = new Recipe();
+			emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 
+					0.0, 0, 0));
+			//Map<String, Recipe> map = new HashMap<String, Recipe>();
+			//map.put(emptyProduct);
+			//aa.add(map);
+			aa.add(emptyRecipe);
+			
 			for(int i=0; i<recipes.size(); i++){
 				Recipe tmp = recipes.get(i);
-				aa.add(recipes.get(i).getProduct().getCode());
+				//aa.add(recipes.get(i).getProduct().getCode());
+				//map.clear();
+				//map = new HashMap<String, Recipe>();
+				//map.put(recipes.get(i).getProduct().getCode(), recipes.get(i));
+				//aa.add(map);
+				aa.add(tmp);
 			}
 			
 			productSpinner.setAdapter(aa);
-			
 			// register a listener to deal with selections in spinner
 			productSpinner.setOnItemSelectedListener(this); 
 			
@@ -111,13 +128,27 @@ public class ProductionPlanActivity extends Activity{
 		// spinner selection listener
 		public void onItemSelected(AdapterView<?> parent, View view, int position,long id)
 		{
-			if (position > 0) {
-				String s = (String)parent.getAdapter().getItem(position);
+			// no choice, clear
+			if (position==0) {
+				TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+				while (table.getChildCount()>3) {
+					table.removeViewAt(3);
+				}
+			}
+			// actual choice of product recipe
+			if (position > 0) { 
+				//String s = (String)parent.getAdapter().getItem(position);
+				//Map<String,Recipe> map = (HashMap<String,Recipe>)parent.getAdapter().getItem(position);
+				//String s = (String)(map.keySet().toArray()[0]);
+				//Recipe r = map.get(s);
+				Recipe recipe = (Recipe)parent.getAdapter().getItem(position);	
+				String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
+				
 				Toast toast = Toast.makeText(view.getContext().getApplicationContext(), "Selected " + s, Toast.LENGTH_SHORT);
 				toast.show();
 				
 				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-				Recipe recipe = helper.findRecipeByProductId(position);
+				//Recipe recipe = helper.findRecipeByProductId(position);
 				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
 				
 				// for each raw material entry create a row in table

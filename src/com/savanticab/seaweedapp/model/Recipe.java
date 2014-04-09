@@ -26,6 +26,8 @@ public class Recipe {
 
 	public void setProduct(Product product) {
 		this.product = product;
+		//this.ingredients = null;
+		//this.id = product.getId();
 	}
 
 	public Map<RawMaterial, Double> getIngredients() {
@@ -46,8 +48,13 @@ public class Recipe {
 		this.ingredients = ingredients; //new HashMap<RawMaterial, Double>();
 	}
 	
+	// TODO: should implement hashCode() too...for all model classes... SHA-1 based hashcode?
 	public boolean equals(Recipe r){
 		return (r.getId() == this.getId());
+	}
+		
+	public String toString() {
+		return (product.getCode() + " " + product.getName());
 	}
 	
 //	public Recipe(List<RawMaterial> mtrl, List<double> quantity){

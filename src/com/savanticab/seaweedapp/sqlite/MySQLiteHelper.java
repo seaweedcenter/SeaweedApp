@@ -36,26 +36,27 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return sInstance;
       }
     public MySQLiteHelper(Context context) {
+    	// TODO: addProduct and the rest "adders" should check if item variation already exists
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
-        addProduct(new Product(1, "SOAP1", "Soap", "Lime", "Big"));
-        addProduct(new Product(2, "SOAP2", "Soap", "Clove", "Small"));
-        addProduct(new Product(3, "SOAP3", "Soap", "Langi-langi", "Big"));
-        addProduct(new Product(4, "SOAP4", "Soap", "Lemongrass", "Medium"));
+        addProduct(new Product("SOAP1", "Soap", "Lime", "Big", 10.0, 200, 0));
+        addProduct(new Product("SOAP2", "Soap", "Clove", "Small", 6.0, 100, 0));
+        addProduct(new Product("SOAP3", "Soap", "Langi-langi", "Big", 14.0, 300, 0));
+        addProduct(new Product("SOAP4", "Soap", "Lemongrass", "Medium", 16.0, 150, 0));
         
-        addRawMaterial(new RawMaterial(1, "Coconut oil", "L", 100, 0));
-        addRawMaterial(new RawMaterial(2, "Seaweed", "Kg", 50, 0));
-        addRawMaterial(new RawMaterial(3, "Bee wax", "Kg", 5, 2));
+        addRawMaterial(new RawMaterial("Coconut oil", "L", 100, 0));
+        addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0));
+        addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2));
         
         Map m = new HashMap<RawMaterial, Double>();
-        m.put(new RawMaterial(1, "Coconut oil", "L", 100, 0), 1.0);
-        m.put(new RawMaterial(2, "Seaweed", "Kg", 50, 0), 0.5);
-        Recipe r = new Recipe(new Product(1, "SOAP1", "Soap", "Lime", "Big"), m);
+        m.put(new RawMaterial("Coconut oil", "L", 100, 0), 1.0);
+        m.put(new RawMaterial("Seaweed", "Kg", 50, 0), 0.5);
+        Recipe r = new Recipe(new Product("SOAP1", "Soap", "Lime", "Big", 10.0, 200, 0), m);
         addRecipe(r);
         
         m = new HashMap<RawMaterial, Double>();
-        m.put(new RawMaterial(1, "Coconut oil", "L", 100, 0), 2.0);
-        m.put(new RawMaterial(3, "Bee wax", "Kg", 50, 0), 0.25);
-        r = new Recipe(new Product(2, "SOAP2", "Soap", "Lime", "Big"), m);
+        m.put(new RawMaterial("Coconut oil", "L", 100, 0), 2.0);
+        m.put(new RawMaterial("Bee wax", "Kg", 50, 0), 0.25);
+        r = new Recipe(new Product("SOAP2", "Soap", "Clove", "Small", 6.0, 100, 0), m);
         addRecipe(r);
         
     }
@@ -80,11 +81,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void addProduct(Product product) {
 
         ContentValues values = new ContentValues();
+        values.put(ProductTable.COLUMN_ID, product.getId());
         values.put(ProductTable.COLUMN_CODE, product.getCode());
         values.put(ProductTable.COLUMN_NAME, product.getName());
         values.put(ProductTable.COLUMN_FRAGANCE, product.getFragance());
         values.put(ProductTable.COLUMN_SIZE, product.getSize());
- 
+        values.put(ProductTable.COLUMN_PRICE, product.getPrice());
+        values.put(ProductTable.COLUMN_INSTOCKQTY, product.getInStockQty());
+        values.put(ProductTable.COLUMN_INPRODUCTIONQTY, product.getInProductionQty());
+        
         SQLiteDatabase db = this.getWritableDatabase();
         
         db.insert(ProductTable.TABLE_NAME, null, values);
@@ -99,10 +104,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	return findProduct(query);
     }
     private Product findProduct(String query) {
-    	
-    	
+    	    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
     	
     	Product product = new Product();
@@ -113,6 +116,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     		product.setName(cursor.getString(2));
     		product.setFragance(cursor.getString(3));
     		product.setSize(cursor.getString(4));
+    		product.setPrice(Double.parseDouble(cursor.getString(5)));
+    		product.setInStockQty(Integer.parseInt(cursor.getString(6)));
+    		product.setInProductionQty(Integer.parseInt(cursor.getString(7)));
     		cursor.close();
     	} else {
     		product = null;
@@ -137,7 +143,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         		product.setName(cursor.getString(2));
         		product.setFragance(cursor.getString(3));
         		product.setSize(cursor.getString(4));
- 
+        		product.setPrice(Double.parseDouble(cursor.getString(5)));
+        		product.setInStockQty(Integer.parseInt(cursor.getString(6)));
+        		product.setInProductionQty(Integer.parseInt(cursor.getString(7)));
+        		
             	products.add(product);
             } while (cursor.moveToNext());
         }
@@ -155,7 +164,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(ProductTable.COLUMN_NAME, product.getName());
         values.put(ProductTable.COLUMN_FRAGANCE, product.getFragance());
         values.put(ProductTable.COLUMN_SIZE, product.getSize());
- 
+        values.put(ProductTable.COLUMN_PRICE, product.getPrice());
+        values.put(ProductTable.COLUMN_INSTOCKQTY, product.getInStockQty());
+        values.put(ProductTable.COLUMN_INPRODUCTIONQTY, product.getInProductionQty());
+        
         // 3. updating row
         int i = db.update(ProductTable.TABLE_NAME, //table
                 values, // column/value
@@ -195,6 +207,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     //RawMaterials
     public void addRawMaterial(RawMaterial material){
     	ContentValues values = new ContentValues();
+    	values.put(RawMaterialTable.COLUMN_ID, material.getId());
         values.put(RawMaterialTable.COLUMN_NAME, material.getName());
         values.put(RawMaterialTable.COLUMN_UNIT, material.getUnit());
         values.put(RawMaterialTable.COLUMN_STOCK_QUANTITY, material.getStockQuantity());

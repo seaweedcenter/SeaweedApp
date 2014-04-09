@@ -11,6 +11,7 @@ public class RawMaterial implements Parcelable {
 	private double stockQuantity;
 	private double orderedQuantity;
 	private String icon;
+	
 	public int getId() {
 		return id;
 	}
@@ -22,6 +23,7 @@ public class RawMaterial implements Parcelable {
 	}
 	public void setName(String name) {
 		this.name = name;
+		this.id = name.hashCode();
 	}
 	public String getUnit() {
 		return unit;
@@ -53,8 +55,8 @@ public class RawMaterial implements Parcelable {
 	}
 	
 	public RawMaterial(){}
-	public RawMaterial(int id, String name, String unit, double stockQuantity, double orderedQuantity){
-		this.id = id;
+	public RawMaterial(String name, String unit, double stockQuantity, double orderedQuantity){
+		this.id = name.hashCode();
 		this.name = name;
 		this.unit = unit;
 		this.stockQuantity = stockQuantity;

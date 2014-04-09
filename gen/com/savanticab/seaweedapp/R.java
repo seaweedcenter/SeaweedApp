@@ -118,7 +118,7 @@ public final class R {
         public static final int button_factory_rawmtrl_manage=0x7f050013;
         public static final int cancel_button=0x7f05000f;
         public static final int editTextQuantityHint=0x7f050011;
-        public static final int heading_production_planning=0x7f05001b;
+        public static final int heading_production_planning=0x7f05001c;
         public static final int hello_world=0x7f050002;
         public static final int material_stock_arrived=0x7f05000b;
         public static final int material_stock_ordered=0x7f05000a;
@@ -127,6 +127,7 @@ public final class R {
         public static final int material_stock_title=0x7f050009;
         public static final int raw_material_name=0x7f050008;
         public static final int seaweed_center_logo=0x7f050004;
+        public static final int spinner_prompt_production_planning=0x7f05001b;
         public static final int start_to_factory=0x7f050007;
         public static final int start_to_reports=0x7f050005;
         public static final int start_to_shop=0x7f050006;
