@@ -98,7 +98,5 @@
             android:typeface="serif"></TextView>
     </TableRow>
 </TableLayout>
-
-
     
 </RelativeLayout>

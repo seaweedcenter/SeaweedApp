@@ -9,6 +9,7 @@ import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.model.Batch;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -50,7 +51,7 @@ public class ProductionPlanActivity extends Activity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.production_plan, menu);
+		//getMenuInflater().inflate(R.menu.production_plan, menu);
 		return true;
 	}
 
@@ -137,21 +138,17 @@ public class ProductionPlanActivity extends Activity{
 			}
 			// actual choice of product recipe
 			if (position > 0) { 
-				//String s = (String)parent.getAdapter().getItem(position);
-				//Map<String,Recipe> map = (HashMap<String,Recipe>)parent.getAdapter().getItem(position);
-				//String s = (String)(map.keySet().toArray()[0]);
-				//Recipe r = map.get(s);
+				
+				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+				
+				// pick up Recipe passed by adapter
 				Recipe recipe = (Recipe)parent.getAdapter().getItem(position);	
 				String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
+				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
 				
 				Toast toast = Toast.makeText(view.getContext().getApplicationContext(), "Selected " + s, Toast.LENGTH_SHORT);
 				toast.show();
 				
-				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-				//Recipe recipe = helper.findRecipeByProductId(position);
-				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
-				
-				// for each raw material entry create a row in table
 				// clear table rows beyond heading rows and add data
 				// TODO: make the layout of table rows defined in XML
 				// would also be neater if the managing of rows worked on ids instead of hard coded numbers
