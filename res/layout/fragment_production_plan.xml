@@ -31,16 +31,6 @@
     android:layout_marginTop="21dp"
     android:layout_toRightOf="@+id/text_product_variation"
     android:text="size" />
-
-<TextView
-    android:id="@+id/text_product_variation"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/text_product_size"
-    android:layout_alignBottom="@+id/text_product_size"
-    android:layout_marginLeft="159dp"
-    android:layout_toRightOf="@+id/textViewProdPlanHeading"
-    android:text="variation" />
 	
 <TableLayout
     android:id="@+id/table_recipe"
@@ -98,5 +88,31 @@
             android:typeface="serif"></TextView>
     </TableRow>
 </TableLayout>
+
+<EditText
+    android:id="@+id/production_planned_quantity"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/text_product_size"
+    android:layout_alignBottom="@+id/text_product_size"
+    android:layout_marginLeft="91dp"
+    android:layout_toRightOf="@+id/text_product_size"
+    android:ems="10"
+    android:hint="Enter quantity"
+    android:inputType="number"
+    android:visibility="invisible" >
+
+    <requestFocus />
+</EditText>
+
+<TextView
+    android:id="@+id/text_product_variation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/text_product_size"
+    android:layout_alignBottom="@+id/text_product_size"
+    android:layout_marginLeft="358dp"
+    android:layout_toRightOf="@+id/textViewProdPlanHeading"
+    android:text="variation" />
     
 </RelativeLayout>

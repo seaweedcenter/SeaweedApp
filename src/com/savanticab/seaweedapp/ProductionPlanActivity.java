@@ -170,6 +170,14 @@ public class ProductionPlanActivity extends Activity{
 					table.removeViewAt(3);
 				}
 				
+				TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
+				textViewFragrance.setText(recipe.getProduct().getFragance());
+				TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
+				textViewSize.setText(recipe.getProduct().getSize());
+				
+				EditText editTextQuantity = (EditText)view.getRootView().findViewById(R.id.production_planned_quantity);
+				editTextQuantity.setVisibility(View.VISIBLE);
+						
 				// (re-)populate table with recipe ingredients
 				for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
 					
@@ -288,30 +296,52 @@ public class ProductionPlanActivity extends Activity{
 		
 		// handle buttonclicks
 		public void onClick(View v){
+			
+			TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_recipe);
 			// on cancel reset table and spinner
 			if (v.getId()==buttonCancel.getId()) {
 				Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
 				toast.show();
 				
-				TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_recipe);
 				while (table.getChildCount()>3) {
 					table.removeViewAt(3);
 				}
 				Spinner spinner = (Spinner)table.getRootView().findViewById(R.id.spinner_product_name);
 				spinner.setSelection(0);
+				
+				TextView textViewFragrance = (TextView)table.getRootView().findViewById(R.id.text_product_variation);
+				textViewFragrance.setText("");
+				TextView textViewSize = (TextView)table.getRootView().findViewById(R.id.text_product_variation);
+				textViewSize.setText("");
+				
+				EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
+				editTextQuantity.setVisibility(View.INVISIBLE);
+				editTextQuantity.setText("");
+				editTextQuantity.setHintTextColor(Color.GRAY);
+				
 			}
 			// on OK create new batch, add to database and pass data to new Activity
 			if (v.getId()==buttonOK.getId()) {
-				Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
-				toast.show();
 				
-				Bundle bundle = new Bundle();
-				bundle.putParcelable("recipe", recipe);
-				//bundle.putInt("quantity", quantity);
-				//Intent i = new Intent();
-				//Intent i = new Intent(v.getContext(), ManageBatchActivity.class);
-				//startActivity(i);
-				
+				EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
+				String msg = editTextQuantity.getText().toString();
+				int quantity = 0;
+				if (!msg.isEmpty()) {
+					quantity = Integer.parseInt(msg);
+					Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
+					toast.show();
+					
+					Bundle bundle = new Bundle();
+					bundle.putParcelable("recipe", recipe);
+					bundle.putInt("quantity", quantity);
+					
+					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);
+					startActivity(i);
+					
+				}
+				else {
+					editTextQuantity.setHintTextColor(Color.RED);
+				}
 				
 			}
 		}

@@ -77,6 +77,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.savanticab.seaweedapp.FactoryTasksActivity" />
         </activity>
+        <activity
+            android:name="com.savanticab.seaweedapp.ProductionDocumentListActivity"
+            android:label="@string/title_productiondocument_list"
+            android:parentActivityName="com.savanticab.seaweedapp.FactoryTasksActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.savanticab.seaweedapp.FactoryTasksActivity" />
+        </activity>
+        <activity
+            android:name="com.savanticab.seaweedapp.ProductionDocumentDetailActivity"
+            android:label="@string/title_productiondocument_detail"
+            android:parentActivityName="com.savanticab.seaweedapp.ProductionDocumentListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.savanticab.seaweedapp.ProductionDocumentListActivity" />
+        </activity>
     </application>
 
 </manifest>

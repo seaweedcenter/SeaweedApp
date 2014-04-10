@@ -45,7 +45,7 @@
             android:text="@string/material_stock_ordered" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/production_planned_quantity"
             android:hint="@string/editTextQuantityHint"
             android:layout_column="3"
             android:layout_gravity="left"

@@ -90,6 +90,7 @@ public class RawMaterialListActivity extends FragmentActivity implements
 					.replace(R.id.rawmaterial_detail_container, fragment)
 					.commit();
 		} else {
+			// TODO: implement single pane activity
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
 			Intent detailIntent = new Intent(this,

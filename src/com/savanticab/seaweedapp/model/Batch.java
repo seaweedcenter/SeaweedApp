@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp.model;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ import com.savanticab.seaweedapp.model.Recipe;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 
-public class Batch implements Parcelable {
+public class Batch implements Parcelable, Comparable<Batch> {
 
 	private int id;
 	private Recipe recipe;
@@ -59,6 +60,16 @@ public class Batch implements Parcelable {
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
 	}
+	public String toString() {
+		String returnstring = ""+id;
+		if (recipe == null) {
+			return returnstring;
+		}
+		if (recipe.getProduct() == null) {
+			returnstring += " " + recipe.getProduct().getCode();
+		}
+		return returnstring;
+	}
 	
 	public Batch(Recipe recipe, int id, int quantity) {
 		startDate = new Date();
@@ -66,6 +77,13 @@ public class Batch implements Parcelable {
 		this.recipe = recipe;
 		this.id = id;
 		this.quantity = quantity;
+	}
+	public Batch() {
+		startDate = null;
+		finishDate = null;
+		recipe = null;
+		id = -1;
+		quantity = 0;
 	}
 	
 	
@@ -97,6 +115,11 @@ public class Batch implements Parcelable {
 	    	quantity = in.readInt();
 	    	startDate = (Date)in.readSerializable();
 	    	finishDate = (Date)in.readSerializable();
+	    }
+	    
+	    // Comparator implementation
+	    public int compareTo(Batch other) {
+	    	return (this.getId()<other.getId() ? 1 : this.getId() > other.getId() ? 1 : 0);
 	    }
 	
 }

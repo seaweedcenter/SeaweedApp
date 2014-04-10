@@ -29,6 +29,8 @@
     <string name="title_material_ordered">Ordered:</string>
     <string name="title_activity_production_plan">Production Planning</string>
     <string name="spinner_prompt_production_planning">Select what you want to produce</string>
-    <string name="heading_production_planning">              </string>
+    <string name="heading_production_planning"></string>
+    <string name="title_productiondocument_list">ProductionDocuments</string>
+    <string name="title_productiondocument_detail">ProductionDocument Detail</string>
 
 </resources>
