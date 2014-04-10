@@ -4,13 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Recipe {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Recipe implements Parcelable {
 	
 	private int id;
 	private Product product;
 	//private RawMaterial rawMaterial;
 	//private double quantity;
-	private Map<RawMaterial, Double> ingredients;
+	private HashMap<RawMaterial, Double> ingredients;
 	
 	public int getId() {
 		return id;
@@ -30,11 +33,11 @@ public class Recipe {
 		//this.id = product.getId();
 	}
 
-	public Map<RawMaterial, Double> getIngredients() {
+	public HashMap<RawMaterial, Double> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(Map<RawMaterial, Double> ingredients) {
+	public void setIngredients(HashMap<RawMaterial, Double> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -42,7 +45,7 @@ public class Recipe {
 		ingredients = new HashMap<RawMaterial, Double>();
 	}
 	
-	public Recipe(Product p, Map<RawMaterial, Double> ingredients){
+	public Recipe(Product p, HashMap<RawMaterial, Double> ingredients){
 		this.product = p;
 		this.id = p.getId();	// is recipe ID supposed to be the same as prod. ID?
 		this.ingredients = ingredients; //new HashMap<RawMaterial, Double>();
@@ -56,7 +59,8 @@ public class Recipe {
 	public String toString() {
 		return (product.getCode() + " " + product.getName());
 	}
-	
+
+
 //	public Recipe(List<RawMaterial> mtrl, List<double> quantity){
 //		ingredients = new HashMap<RawMaterial, Double>();
 //		
@@ -66,4 +70,34 @@ public class Recipe {
 //		}
 //	}
 
+	// Parcelable implementation
+	// This was done with minimal effort
+	// just to make it possible to put objects in bundle
+    public int describeContents() {
+      return 0;
+    }
+    public void writeToParcel(Parcel out, int flags) {
+    	out.writeInt(id);
+    	out.writeParcelable(product, flags);
+    	/*for (RawMaterial mtrl: ingredients.keySet()) {
+    		out.writeParcelable(mtrl, flags);
+    		out.writeDouble(ingredients.get(mtrl));
+    	}*/
+    	out.writeSerializable(ingredients);
+    }
+    public static final Parcelable.Creator<Recipe> CREATOR
+        = new Parcelable.Creator<Recipe>() {
+    	public Recipe createFromParcel(Parcel in) {
+    		return new Recipe(in);
+      }
+      public Recipe[] newArray(int size) {
+        return new Recipe[size];
+      }
+    };
+    private Recipe(Parcel in) {
+    	id = in.readInt();
+    	product = (Product) in.readParcelable(Product.class.getClassLoader());
+    	ingredients = (HashMap<RawMaterial, Double>) in.readSerializable();
+    }
+	
 }

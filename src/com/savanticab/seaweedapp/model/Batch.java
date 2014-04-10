@@ -1,15 +1,18 @@
 package com.savanticab.seaweedapp.model;
 
 import java.util.Date;
+import java.util.HashMap;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.savanticab.seaweedapp.model.Recipe;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 
-public class Batch {
+public class Batch implements Parcelable {
 
 	private int id;
-	private boolean isFinished;
 	private Recipe recipe;
 	private int quantity;
 	private Date startDate;
@@ -22,11 +25,10 @@ public class Batch {
 		this.id = id;
 	}
 	public boolean isFinished() {
-		return isFinished;
+		return (finishDate != null);
 	}
 	public void setIsFinished(boolean finished) {
-		this.isFinished = finished;
-		if (!finished) {
+		if (finishDate==null) {
 			this.finishDate = null;
 		}
 		else {
@@ -58,13 +60,43 @@ public class Batch {
 		this.finishDate = finishDate;
 	}
 	
-	public void Batch(Recipe recipe, int id, int quantity) {
+	public Batch(Recipe recipe, int id, int quantity) {
 		startDate = new Date();
 		finishDate = null; // not yet finished
-		isFinished = false; // redundant?
 		this.recipe = recipe;
 		this.id = id;
 		this.quantity = quantity;
 	}
+	
+	
+	// Parcelable implementation
+		// This was done with minimal effort
+		// just to make it possible to put objects in bundle
+	    public int describeContents() {
+	      return 0;
+	    }
+	    public void writeToParcel(Parcel out, int flags) {
+	    	out.writeInt(id);
+	    	out.writeParcelable(recipe, flags);
+	    	out.writeInt(quantity);
+	    	out.writeSerializable(startDate);
+	    	out.writeSerializable(finishDate);
+	    }
+	    public static final Parcelable.Creator<Batch> CREATOR
+	        = new Parcelable.Creator<Batch>() {
+	    	public Batch createFromParcel(Parcel in) {
+	    		return new Batch(in);
+	      }
+	      public Batch[] newArray(int size) {
+	        return new Batch[size];
+	      }
+	    };
+	    private Batch(Parcel in) {
+	    	id = in.readInt();
+	    	recipe = in.readParcelable(Recipe.class.getClassLoader());
+	    	quantity = in.readInt();
+	    	startDate = (Date)in.readSerializable();
+	    	finishDate = (Date)in.readSerializable();
+	    }
 	
 }

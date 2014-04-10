@@ -72,11 +72,16 @@ public class RawMaterial implements Parcelable {
 	
     // Parcelable implementation
 	// This was done with minimal effort
+	// just to make it possible to put objects in bundle
     public int describeContents() {
       return 0;
     }
     public void writeToParcel(Parcel out, int flags) {
-      out.writeString(name);
+    	out.writeInt(id);
+    	out.writeString(name);
+    	out.writeString(unit);
+    	out.writeDouble(stockQuantity);
+    	out.writeDouble(orderedQuantity);
     }
     public static final Parcelable.Creator<RawMaterial> CREATOR
         = new Parcelable.Creator<RawMaterial>() {
@@ -88,7 +93,11 @@ public class RawMaterial implements Parcelable {
       }
     };
     private RawMaterial(Parcel in) {
-      name = in.readString();
+    	id = in.readInt();
+    	name = in.readString();
+    	unit = in.readString();
+    	stockQuantity = in.readDouble();
+    	orderedQuantity = in.readDouble();
     }
 
 }

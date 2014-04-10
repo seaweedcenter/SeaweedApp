@@ -47,7 +47,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0));
         addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2));
         
-        Map m = new HashMap<RawMaterial, Double>();
+        HashMap m = new HashMap<RawMaterial, Double>();
         m.put(new RawMaterial("Coconut oil", "L", 100, 0), 1.0);
         m.put(new RawMaterial("Seaweed", "Kg", 50, 0), 0.5);
         Recipe r = new Recipe(new Product("SOAP1", "Soap", "Lime", "Big", 10.0, 200, 0), m);
@@ -347,7 +347,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	Cursor cursor = db.rawQuery(query, null);
     	
     	Recipe recipe = new Recipe();
-    	Map<RawMaterial, Double> ingredients = new HashMap<RawMaterial, Double>();
+    	HashMap<RawMaterial, Double> ingredients = new HashMap<RawMaterial, Double>();
     	if (cursor.moveToFirst()) {
     		Integer productId = Integer.parseInt(cursor.getString(0));
     		recipe.setProduct(findProductById(productId));
@@ -394,7 +394,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     			RawMaterial material = findRawMaterialById(raw_material_id);
     			double quantity = Double.parseDouble(cursor.getString(2));
     			
-    			Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+    			HashMap<RawMaterial, Double> ingredients = recipe.getIngredients();
     			ingredients.put(material, quantity);
     			recipe.setIngredients(ingredients);
     			recipes.remove(recipe); // remove (if already present, determined by product ID) and re-insert

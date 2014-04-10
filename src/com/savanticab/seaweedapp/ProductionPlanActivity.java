@@ -14,6 +14,7 @@ import com.savanticab.seaweedapp.model.Batch;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -41,6 +42,7 @@ import android.os.Build;
 public class ProductionPlanActivity extends Activity{
 	
 	private List<RawMaterial> rawMaterialList;
+	//Recipe recipe;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,12 @@ public class ProductionPlanActivity extends Activity{
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment implements OnItemSelectedListener {
-
+	public static class PlaceholderFragment extends Fragment implements OnItemSelectedListener, OnClickListener {
+		
+		private ImageButton buttonCancel;
+		private ImageButton buttonOK;
+		private Recipe recipe;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -149,7 +155,7 @@ public class ProductionPlanActivity extends Activity{
 				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 				
 				// pick up Recipe passed by adapter
-				Recipe recipe = (Recipe)parent.getAdapter().getItem(position);	
+				recipe = (Recipe)parent.getAdapter().getItem(position);	
 				String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
 				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
 				
@@ -218,11 +224,13 @@ public class ProductionPlanActivity extends Activity{
 								
 				TableRow rowRecipe3 = new TableRow(this.getActivity());
 				LinearLayout buttonsLayout = new LinearLayout(this.getActivity());
-				ImageButton buttonCancel = new ImageButton(this.getActivity());
+				buttonCancel = new ImageButton(this.getActivity());
 				buttonCancel.setImageResource(R.drawable.error_bullet_large);
+				buttonCancel.setId(View.generateViewId());
 				
-				ImageButton buttonOK = new ImageButton(this.getActivity());
+				buttonOK = new ImageButton(this.getActivity());
 				buttonOK.setImageResource(R.drawable.ok_bullet_large);
+				buttonOK.setId(View.generateViewId());
 				buttonsLayout.addView(buttonCancel);
 				buttonsLayout.addView(buttonOK);
 				
@@ -233,36 +241,77 @@ public class ProductionPlanActivity extends Activity{
 				rowRecipe3.addView(new TextView(this.getActivity()));
 				table.addView(rowRecipe3);
 				
-				buttonCancel.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
-						toast.show();
-						
-//						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
-//						editText.setText("");
-//						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
-//		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
-//		            	chkBoxStock.setChecked(false);
-//		            	chkBoxOrdered.setChecked(false);
-					}
-				});
-				buttonOK.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
-						toast.show();
-						
-//						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
-//						editText.setText("");
-//						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
-//		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
-//		            	chkBoxStock.setChecked(false);
-//		            	chkBoxOrdered.setChecked(false);
-					}
-				});
+				buttonCancel.setOnClickListener(this);
+				buttonOK.setOnClickListener(this);
+				
+//				buttonCancel.setOnClickListener(new OnClickListener()
+//				{
+//					public void onClick(View v)
+//					{
+//						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
+//						toast.show();
+//						
+//						// start new activity production planning, visible effect: clear table
+//						Intent i = new Intent(v.getContext(),
+//								ProductionPlanActivity.class);
+//						startActivity(i);
+//						
+//					}
+//				});
+				
+//				buttonOK.setOnClickListener(new OnClickListener()
+//				{
+//					public void onClick(View v)
+//					{
+//						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
+//						toast.show();
+//						
+//						// need: "getLastBatchNo" eller dylikt i sqlhelper
+//						Batch newBatch = new Batch(recipe, 1, 100);
+//						
+//						Bundle bundle = new Bundle();
+//												
+//						Intent i = new Intent(v.getContext(),
+//								ProductionPlanActivity.class);
+//						startActivity(i, bundle);
+////						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
+////						editText.setText("");
+////						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
+////		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
+////		            	chkBoxStock.setChecked(false);
+////		            	chkBoxOrdered.setChecked(false);
+//					}
+//				});
+				
+			}
+		}
+		
+		// handle buttonclicks
+		public void onClick(View v){
+			// on cancel reset table and spinner
+			if (v.getId()==buttonCancel.getId()) {
+				Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
+				toast.show();
+				
+				TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_recipe);
+				while (table.getChildCount()>3) {
+					table.removeViewAt(3);
+				}
+				Spinner spinner = (Spinner)table.getRootView().findViewById(R.id.spinner_product_name);
+				spinner.setSelection(0);
+			}
+			// on OK create new batch, add to database and pass data to new Activity
+			if (v.getId()==buttonOK.getId()) {
+				Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
+				toast.show();
+				
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("recipe", recipe);
+				//bundle.putInt("quantity", quantity);
+				//Intent i = new Intent();
+				//Intent i = new Intent(v.getContext(), ManageBatchActivity.class);
+				//startActivity(i);
+				
 				
 			}
 		}

@@ -1,6 +1,9 @@
 package com.savanticab.seaweedapp.model;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Product implements Parcelable {
 	
 	private int id;
 	private String code;
@@ -74,4 +77,41 @@ public class Product {
 		this.inProductionQty = inProductionQty;
 	}
 
+	
+	// Parcelable implementation
+	// This was done with minimal effort
+	// just to make it possible to put objects in bundle
+    public int describeContents() {
+      return 0;
+    }
+    public void writeToParcel(Parcel out, int flags) {
+    	out.writeInt(id);
+    	out.writeString(code);
+    	out.writeString(name);
+    	out.writeString(fragance);
+    	out.writeString(size);
+    	out.writeDouble(price);
+    	out.writeInt(inStockQty);
+    	out.writeInt(inProductionQty);
+    }
+    public static final Parcelable.Creator<Product> CREATOR
+        = new Parcelable.Creator<Product>() {
+    	public Product createFromParcel(Parcel in) {
+    		return new Product(in);
+      }
+      public Product[] newArray(int size) {
+        return new Product[size];
+      }
+    };
+    private Product(Parcel in) {
+    	id = in.readInt();
+    	code = in.readString();
+    	name = in.readString();
+    	fragance = in.readString();
+    	size = in.readString();
+    	price = in.readDouble();
+    	inStockQty = in.readInt();
+    	inProductionQty = in.readInt();
+    }
+	
 }
