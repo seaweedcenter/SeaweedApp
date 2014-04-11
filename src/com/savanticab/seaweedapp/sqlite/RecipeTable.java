@@ -9,7 +9,7 @@ public class RecipeTable {
 		  public static final String COLUMN_PRODUCT_ID = "product_id";
 		  public static final String COLUMN_RAW_MATERIAL_ID = "rawmaterial_id";
 		  public static final String COLUMN_QUANTITY = "quantity";
-
+		  
 		  // Database creation SQL statement
 		  protected static final String DATABASE_CREATE = "create table " 
 		      + TABLE_NAME
@@ -30,5 +30,5 @@ public class RecipeTable {
 			  database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 			  onCreate(database);
 		  }
-
+		  
 }

@@ -1,5 +1,8 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
@@ -59,13 +63,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         r = new Recipe(new Product("SOAP2", "Soap", "Clove", "Small", 6.0, 100, 0), m);
         addRecipe(r);
         
+        //Batch b = new Batch(r, 1, 100);
+        //addBatch(b);
+        
     }
- 
+    
     @Override
     public void onCreate(SQLiteDatabase db) {
         ProductTable.onCreate(db);
         RawMaterialTable.onCreate(db);
         RecipeTable.onCreate(db);
+        BatchTable.onCreate(db);
     }
  
     @Override
@@ -73,7 +81,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         ProductTable.onUpgrade(db, oldVersion, newVersion);
         RawMaterialTable.onUpgrade(db, oldVersion, newVersion);
         RecipeTable.onUpgrade(db, oldVersion, newVersion);
- 
+        BatchTable.onUpgrade(db, oldVersion, newVersion);
     }
     
     
@@ -94,7 +102,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         
         db.insert(ProductTable.TABLE_NAME, null, values);
         db.close();
-}
+    }
     public Product findProductById(int productId){
     	String query = "Select * FROM " + ProductTable.TABLE_NAME + " WHERE " + ProductTable.COLUMN_ID + " =  \"" + productId + "\"";
     	return findProduct(query);
@@ -486,5 +494,133 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.close();
     	return result;
     }
-
+    
+    // Batch jobs
+    public void addBatch(Batch batch) {
+    	
+    	ContentValues values = new ContentValues();
+        values.put(BatchTable.COLUMN_BATCH_ID, batch.getId());
+        values.put(BatchTable.COLUMN_RECIPE_ID, batch.getRecipe().getProduct().getId());
+        values.put(BatchTable.COLUMN_QUANTITY, batch.getQuantity());
+        Date startDate = batch.getStartDate();
+        Date finishDate = batch.getFinishDate();
+        if (startDate != null){
+        	values.put(BatchTable.COLUMN_STARTDATE, Long.toString(batch.getStartDate().getTime()));
+        }
+        else {
+        	values.put(BatchTable.COLUMN_STARTDATE, "null");
+        }
+        if (finishDate != null){
+        	values.put(BatchTable.COLUMN_FINISHDATE, Long.toString(batch.getFinishDate().getTime()));
+        }
+        else {
+        	values.put(BatchTable.COLUMN_FINISHDATE, "null");
+        }
+        
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        db.insert(BatchTable.TABLE_NAME, null, values);
+        db.close();
+    }
+    
+    public boolean deleteBatch(int id) {
+    	
+    	boolean result = false;
+    	
+    	String query = "Select * FROM " + BatchTable.TABLE_NAME + " WHERE " + BatchTable.COLUMN_BATCH_ID + " =  \"" + id + "\"";
+    	
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	Cursor cursor = db.rawQuery(query, null);
+    	
+    	//Batch batch = new Batch();
+    	
+    	if (cursor.moveToFirst()) {
+    		//batch.setId(Integer.parseInt(cursor.getString(0)));
+    		db.delete(BatchTable.TABLE_NAME, BatchTable.COLUMN_BATCH_ID + " = ?",
+    	            new String[] { String.valueOf(id) });
+    		cursor.close();
+    		result = true;
+    	}
+            db.close();
+    	return result;
+    }
+    
+    // "finders" and "getters" for Batch
+    public Batch findBatchById(int batchid){
+    	String query = "Select * FROM " + BatchTable.TABLE_NAME + " WHERE " + BatchTable.COLUMN_BATCH_ID + " =  \"" + batchid + "\"";
+    	return findBatch(query);
+    }
+    private Batch findBatch(String query){
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	Cursor cursor = db.rawQuery(query, null);
+    	
+    	Batch batch = new Batch();
+    	
+    	if (cursor.moveToFirst()) {
+    		batch.setId(Integer.parseInt(cursor.getString(0)));
+    		
+    		// recipe must be loaded separately from other table
+    		int recipeId = Integer.parseInt(cursor.getString(1));
+    		List<Recipe> allrecipes = getAllRecipes(); // this could be done more elegantly by querying in the recipe table
+    		Recipe recipe = null;
+    		for (int i=0; i<allrecipes.size(); i++) {
+    			if (allrecipes.get(i).getId()==recipeId) {
+    				recipe = allrecipes.get(i);
+    			}
+    		}
+    		batch.setRecipe(recipe);
+    		
+    		batch.setQuantity(Integer.parseInt(cursor.getString(2)));
+    		batch.setStartDate(new Date(Integer.parseInt(cursor.getString(3))));
+    		batch.setFinishDate(new Date(Integer.parseInt(cursor.getString(4))));
+    		cursor.close();
+    	} else {
+    		batch = null;
+    	}
+            db.close();
+    	return batch;
+    }
+    
+//    public List<Batch> getAllBatches() {
+//        List<Batch> batches = new LinkedList<Batch>();
+//        
+//        String query = "SELECT  * FROM " + BatchTable.TABLE_NAME;
+//        
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(query, null);
+//        
+//        Batch b = null;
+//        if (cursor.moveToFirst()) {
+//            do {
+//            	Integer id = Integer.parseInt(cursor.getString(0));
+//            	
+//            	for (Recipe r : recipes){
+//            		if (r.getProduct().getId() == productId) {
+//            			recipe = r;
+//            		}
+//            	}
+//            	if (recipe == null){
+//            		recipe = new Recipe();
+//            		recipe.setProduct(findProductById(productId));
+//                	recipe.setId(productId);
+//                	//recipes.add(recipe);
+//            	}
+//    			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
+//    			RawMaterial material = findRawMaterialById(raw_material_id);
+//    			double quantity = Double.parseDouble(cursor.getString(2));
+//    			
+//    			HashMap<RawMaterial, Double> ingredients = recipe.getIngredients();
+//    			ingredients.put(material, quantity);
+//    			recipe.setIngredients(ingredients);
+//    			recipes.remove(recipe); // remove (if already present, determined by product ID) and re-insert
+//    			recipes.add(recipe);
+//    			
+//    			recipe = null;
+//            } while (cursor.moveToNext());
+//        }
+//        return recipes;
+//    }
+    
 }

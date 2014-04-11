@@ -87,7 +87,7 @@ public class ProductionPlanActivity extends Activity{
 		
 		public PlaceholderFragment() {
 		}
-
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -331,9 +331,14 @@ public class ProductionPlanActivity extends Activity{
 					Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
 					toast.show();
 					
+					// put into database here
 					Bundle bundle = new Bundle();
 					bundle.putParcelable("recipe", recipe);
 					bundle.putInt("quantity", quantity);
+					
+					Batch batch = new Batch(recipe, 1, quantity);
+					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					helper.addBatch(batch);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);
 					startActivity(i);

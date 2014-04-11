@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.model.Recipe;
 
 /**
  * A fragment representing a single ProductionDocument detail screen. This
@@ -46,21 +47,7 @@ public class ProductionDocumentDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Batch batch = (Batch)getArguments().getParcelable("batch");
 		
-		if (batch != null) {
-			
-			Toast toast = Toast.makeText(getActivity(), batch.toString(), Toast.LENGTH_SHORT);
-			toast.show();
-			
-			// Load the dummy content specified by the fragment
-			 //arguments. In a real-world scenario, use a Loader
-			/// to load content from a content provider.
-			//mItem = DummyContent.ITEM_MAP.get(getArguments().getString(
-			//		ARG_ITEM_ID));
-			//
-			
-		}
 	}
 
 	@Override
@@ -69,11 +56,23 @@ public class ProductionDocumentDetailFragment extends Fragment {
 		View rootView = inflater.inflate(
 				R.layout.fragment_productiondocument_detail, container, false);
 
-		// Show the dummy content as text in a TextView.
-		if (mItem != null) {
-			((TextView) rootView.findViewById(R.id.productiondocument_detail))
-					.setText(mItem.content);
+		Batch batch = (Batch)getArguments().getParcelable("batch");
+		
+		if (batch != null) {
+			
+			Toast toast = Toast.makeText(getActivity(), batch.toString(), Toast.LENGTH_SHORT);
+			toast.show();
+			
+			TextView textViewHeading = (TextView) rootView.findViewById(R.id.productiondocument_detail);
+			textViewHeading.setText(batch.getRecipe().getProduct().getCode() + " " +
+					batch.getRecipe().getProduct().getName());
 		}
+		
+		// Show the dummy content as text in a TextView.
+		//if (mItem != null) {
+		//	((TextView) rootView.findViewById(R.id.productiondocument_detail))
+		//			.setText(mItem.content);
+		//}
 
 		return rootView;
 	}

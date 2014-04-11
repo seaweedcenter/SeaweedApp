@@ -79,16 +79,11 @@ public class ProductionDocumentListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		
-		Batch a = new Batch();
-		a.setId(11114);
 		LinkedList<Batch> batchList = new LinkedList<Batch>(); 
-		Batch b = new Batch();
-		b.setId(5123);
 		
-		batchList.add(a);
-		batchList.add(b);
+		//batchList.add(a);
+		//batchList.add(b);
 		Collections.sort(batchList);
 		Collections.reverse(batchList);
 		
