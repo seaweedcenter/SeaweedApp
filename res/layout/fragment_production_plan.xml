@@ -46,17 +46,21 @@
         android:layout_width="match_parent"
         android:layout_margin="2dp"
         android:gravity="center_horizontal">
+
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/textViewHeadingRawMaterials"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_span="6"
+            android:gravity="left"
+            android:text="Raw Materials"
+            android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="serif"
-            android:textSize="18dp"
-            android:text="Raw Materials"
-            android:gravity="left"
-            android:layout_margin="2dp"
-            android:layout_span="6"></TextView>
+            android:visibility="invisible" >
+
+</TextView>
     </TableRow>
     <TableRow></TableRow>
     <TableRow
@@ -65,27 +69,39 @@
         android:layout_margin="2dp"
         android:layout_width="match_parent">
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/TextViewHeadingItem"
             android:layout_margin="2dp"
             android:text=""></TextView>
+
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/TextViewHeadingItem"
+            android:layout_margin="2dp"
             android:text="Item"
             android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:typeface="serif"></TextView>
+            android:typeface="serif"
+            android:visibility="visible" >
+
+</TextView>
+
         <TextView
-            android:id="@+id/TextView03"
+            android:id="@+id/TextViewHeadingNeedQty"
+            android:layout_margin="2dp"
             android:text="Need"
             android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:typeface="serif"></TextView>
+            android:typeface="serif"
+            android:visibility="visible" >
+
+</TextView>
+
         <TextView
-            android:id="@+id/TextView02"
+            android:id="@+id/TextViewHeadingStock"
+            android:layout_margin="2dp"
             android:text="In Stock"
             android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:typeface="serif"></TextView>
+            android:typeface="serif"
+            android:visibility="visible" >
+
+</TextView>
     </TableRow>
 </TableLayout>
 

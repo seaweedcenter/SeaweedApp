@@ -19,6 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
 
-public class ProductionPlanActivity extends Activity{
+public class ProductionPlanActivity extends Activity {
 	
 	private List<RawMaterial> rawMaterialList;
 	//Recipe recipe;
@@ -75,15 +77,19 @@ public class ProductionPlanActivity extends Activity{
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
+	
 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment implements OnItemSelectedListener, OnClickListener {
+	public static class PlaceholderFragment extends Fragment implements OnItemSelectedListener, OnClickListener, TextWatcher {
 		
 		private ImageButton buttonCancel;
 		private ImageButton buttonOK;
 		private Recipe recipe;
+		private Spinner productSpinner;
 		
 		public PlaceholderFragment() {
 		}
@@ -98,7 +104,7 @@ public class ProductionPlanActivity extends Activity{
 			List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
 			List<Recipe> recipes = helper.getAllRecipes();
 			
-			Spinner productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
+			productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
 			//ArrayAdapter<CharSequence> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);	
 			//ArrayAdapter<Map<String, Recipe>> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
 			ArrayAdapter<Recipe> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
@@ -132,6 +138,31 @@ public class ProductionPlanActivity extends Activity{
 			// register a listener to deal with selections in spinner
 			productSpinner.setOnItemSelectedListener(this); 
 			
+			
+//			//TextWatcher textWatcher = new TextWatcher() {
+//			class MyTextWatcher implements TextWatcher {
+//								
+//		        @Override
+//		        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//		            //after text changed
+//		        	
+//		        }
+//		        @Override
+//		        public void beforeTextChanged(CharSequence s, int start, int count,
+//		                int after) {
+//		        }
+//		        @Override
+//		        public void afterTextChanged(Editable s) {
+//
+//		        }
+////		        public MyTextWatcher(TableLayout table) {
+////		        	this.table = table;
+////		        }
+//		    };
+		    
+		    EditText editTextQuantity = (EditText)rootView.getRootView().findViewById(R.id.production_planned_quantity);
+		    editTextQuantity.addTextChangedListener(this);
+			
 			return rootView;
 		}
 		
@@ -142,154 +173,129 @@ public class ProductionPlanActivity extends Activity{
 		// spinner selection listener
 		public void onItemSelected(AdapterView<?> parent, View view, int position,long id)
 		{
+			TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+			EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
+			//editTextQuantity.setHintTextColor(Color.RED);
+			editTextQuantity.setVisibility(View.INVISIBLE);
+			String msg = editTextQuantity.getText().toString();
+			int quantity = msg.isEmpty() ? 0 : Integer.parseInt(msg);
+			
+			TextView textViewHeadingItem = (TextView)view.getRootView().findViewById(R.id.TextViewHeadingItem);
+			TextView textViewHeadingNeededQty = (TextView)view.getRootView().findViewById(R.id.TextViewHeadingNeedQty);
+			TextView textViewHeadingStock = (TextView)view.getRootView().findViewById(R.id.TextViewHeadingStock);
+			
 			// no choice, clear
-			if (position==0) {
-				TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+			if ( (position==0) | (quantity==0)) {
+				//TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
 				while (table.getChildCount()>3) {
 					table.removeViewAt(3);
 				}
+				textViewHeadingItem.setVisibility(View.INVISIBLE);
+				textViewHeadingNeededQty.setVisibility(View.INVISIBLE);
+				textViewHeadingStock.setVisibility(View.INVISIBLE);
+				editTextQuantity.setVisibility(View.INVISIBLE);
 			}
+			
 			// actual choice of product recipe
 			if (position > 0) { 
-				
-				MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-				
-				// pick up Recipe passed by adapter
-				recipe = (Recipe)parent.getAdapter().getItem(position);	
-				String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
-				Map<RawMaterial, Double> ingredients = recipe.getIngredients();
-				
-				Toast toast = Toast.makeText(view.getContext().getApplicationContext(), "Selected " + s, Toast.LENGTH_SHORT);
-				toast.show();
-				
-				// clear table rows beyond heading rows and add data
-				// TODO: make the layout of table rows defined in XML
-				// would also be neater if the managing of rows worked on ids instead of hard coded numbers
-				TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
-				while (table.getChildCount()>3) {
-					table.removeViewAt(3);
-				}
-				
-				TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
-				textViewFragrance.setText(recipe.getProduct().getFragance());
-				TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
-				textViewSize.setText(recipe.getProduct().getSize());
-				
-				EditText editTextQuantity = (EditText)view.getRootView().findViewById(R.id.production_planned_quantity);
+				textViewHeadingItem.setVisibility(View.VISIBLE);
+				textViewHeadingNeededQty.setVisibility(View.VISIBLE);
+				textViewHeadingStock.setVisibility(View.VISIBLE);
 				editTextQuantity.setVisibility(View.VISIBLE);
+				
+				if (quantity > 0) {
+					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					// pick up Recipe passed by adapter
+					recipe = (Recipe)parent.getAdapter().getItem(position);	
+					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
+					Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+					
+					// clear table rows beyond heading rows and add data
+					// TODO: make the layout of table rows defined in XML
+					// would also be neater if the managing of rows worked on ids instead of hard coded numbers
+					//TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
+					while (table.getChildCount()>3) {
+						table.removeViewAt(3);
+					}
+					
+					TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
+					textViewFragrance.setText(recipe.getProduct().getFragance());
+					TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
+					textViewSize.setText(recipe.getProduct().getSize());
 						
-				// (re-)populate table with recipe ingredients
-				for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
-					
-					TableRow rowRecipe = new TableRow(this.getActivity());
-					RawMaterial mtrl = entry.getKey();
-					Double quantityNeeded = entry.getValue();
-					List<RawMaterial> materials = helper.getAllRawMaterials();
-					Double quantityStock = 0.0;
-					
-					if (materials.contains(mtrl)) {
-						quantityStock = materials.get(materials.indexOf(mtrl)).getStockQuantity();
+					// (re-)populate table with recipe ingredients
+					for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+						
+						TableRow rowRecipe = new TableRow(this.getActivity());
+						RawMaterial mtrl = entry.getKey();
+						Double quantityNeeded = entry.getValue() * quantity;
+						List<RawMaterial> materials = helper.getAllRawMaterials();
+						Double quantityStock = 0.0;
+						
+						if (materials.contains(mtrl)) {
+							quantityStock = materials.get(materials.indexOf(mtrl)).getStockQuantity();
+						}
+						
+						TextView textEmpty = new TextView(this.getActivity());
+						textEmpty.setText("");
+						
+						TextView textMaterial = new TextView(this.getActivity());
+						textMaterial.setText(mtrl.getName());
+						
+						TextView textNeeded = new TextView(this.getActivity());
+						textNeeded.setText(Double.toString(quantityNeeded) + " " + mtrl.getUnit());
+						
+						TextView textInstock = new TextView(this.getActivity());
+						textInstock.setText(Double.toString(quantityStock) + " " + mtrl.getUnit());
+						
+						if (quantityStock >= quantityNeeded) {
+							textNeeded.setTextColor(Color.GREEN);
+							textInstock.setTextColor(Color.GREEN);
+						}
+						else {
+							textNeeded.setTextColor(Color.RED);
+							textInstock.setTextColor(Color.RED);
+						}
+						
+						rowRecipe.addView(textEmpty);
+						rowRecipe.addView(textMaterial);
+						rowRecipe.addView(textNeeded);
+						rowRecipe.addView(textInstock);
+						table.addView(rowRecipe);
 					}
-					//materials.
 					
-					TextView textEmpty = new TextView(this.getActivity());
-					textEmpty.setText("");
+					TableRow rowRecipe2 = new TableRow(this.getActivity());
+					TextView emptyText = new TextView(this.getActivity());
+					emptyText.setText(" ");
+					rowRecipe2.addView(emptyText);
+					rowRecipe2.addView(new TextView(this.getActivity()));
+					rowRecipe2.addView(new TextView(this.getActivity()));
+					rowRecipe2.addView(new TextView(this.getActivity()));
+					rowRecipe2.addView(new TextView(this.getActivity()));
+					table.addView(rowRecipe2);
+									
+					TableRow rowRecipe3 = new TableRow(this.getActivity());
+					LinearLayout buttonsLayout = new LinearLayout(this.getActivity());
+					buttonCancel = new ImageButton(this.getActivity());
+					buttonCancel.setImageResource(R.drawable.error_bullet_large);
+					buttonCancel.setId(View.generateViewId());
 					
-					TextView textMaterial = new TextView(this.getActivity());
-					textMaterial.setText(mtrl.getName());
+					buttonOK = new ImageButton(this.getActivity());
+					buttonOK.setImageResource(R.drawable.ok_bullet_large);
+					buttonOK.setId(View.generateViewId());
+					buttonsLayout.addView(buttonCancel);
+					buttonsLayout.addView(buttonOK);
 					
-					TextView textNeeded = new TextView(this.getActivity());
-					textNeeded.setText(Double.toString(quantityNeeded) + " " + mtrl.getUnit());
+					rowRecipe3.addView(new TextView(this.getActivity()));
+					rowRecipe3.addView(new TextView(this.getActivity()));
+					rowRecipe3.addView(new TextView(this.getActivity()));
+					rowRecipe3.addView(buttonsLayout);
+					rowRecipe3.addView(new TextView(this.getActivity()));
+					table.addView(rowRecipe3);
 					
-					TextView textInstock = new TextView(this.getActivity());
-					textInstock.setText(Double.toString(quantityStock) + " " + mtrl.getUnit());
-					
-					if (quantityStock >= quantityNeeded) {
-						textNeeded.setTextColor(Color.GREEN);
-						textInstock.setTextColor(Color.GREEN);
-					}
-					else {
-						textNeeded.setTextColor(Color.RED);
-						textInstock.setTextColor(Color.RED);
-					}
-					
-					rowRecipe.addView(textEmpty);
-					rowRecipe.addView(textMaterial);
-					rowRecipe.addView(textNeeded);
-					rowRecipe.addView(textInstock);
-					table.addView(rowRecipe);
+					buttonCancel.setOnClickListener(this);
+					buttonOK.setOnClickListener(this);
 				}
-				
-				TableRow rowRecipe2 = new TableRow(this.getActivity());
-				TextView emptyText = new TextView(this.getActivity());
-				emptyText.setText(" ");
-				rowRecipe2.addView(emptyText);
-				rowRecipe2.addView(new TextView(this.getActivity()));
-				rowRecipe2.addView(new TextView(this.getActivity()));
-				rowRecipe2.addView(new TextView(this.getActivity()));
-				rowRecipe2.addView(new TextView(this.getActivity()));
-				table.addView(rowRecipe2);
-								
-				TableRow rowRecipe3 = new TableRow(this.getActivity());
-				LinearLayout buttonsLayout = new LinearLayout(this.getActivity());
-				buttonCancel = new ImageButton(this.getActivity());
-				buttonCancel.setImageResource(R.drawable.error_bullet_large);
-				buttonCancel.setId(View.generateViewId());
-				
-				buttonOK = new ImageButton(this.getActivity());
-				buttonOK.setImageResource(R.drawable.ok_bullet_large);
-				buttonOK.setId(View.generateViewId());
-				buttonsLayout.addView(buttonCancel);
-				buttonsLayout.addView(buttonOK);
-				
-				rowRecipe3.addView(new TextView(this.getActivity()));
-				rowRecipe3.addView(new TextView(this.getActivity()));
-				rowRecipe3.addView(new TextView(this.getActivity()));
-				rowRecipe3.addView(buttonsLayout);
-				rowRecipe3.addView(new TextView(this.getActivity()));
-				table.addView(rowRecipe3);
-				
-				buttonCancel.setOnClickListener(this);
-				buttonOK.setOnClickListener(this);
-				
-//				buttonCancel.setOnClickListener(new OnClickListener()
-//				{
-//					public void onClick(View v)
-//					{
-//						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
-//						toast.show();
-//						
-//						// start new activity production planning, visible effect: clear table
-//						Intent i = new Intent(v.getContext(),
-//								ProductionPlanActivity.class);
-//						startActivity(i);
-//						
-//					}
-//				});
-				
-//				buttonOK.setOnClickListener(new OnClickListener()
-//				{
-//					public void onClick(View v)
-//					{
-//						Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
-//						toast.show();
-//						
-//						// need: "getLastBatchNo" eller dylikt i sqlhelper
-//						Batch newBatch = new Batch(recipe, 1, 100);
-//						
-//						Bundle bundle = new Bundle();
-//												
-//						Intent i = new Intent(v.getContext(),
-//								ProductionPlanActivity.class);
-//						startActivity(i, bundle);
-////						EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
-////						editText.setText("");
-////						CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);
-////		            	CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
-////		            	chkBoxStock.setChecked(false);
-////		            	chkBoxOrdered.setChecked(false);
-//					}
-//				});
 				
 			}
 		}
@@ -300,9 +306,7 @@ public class ProductionPlanActivity extends Activity{
 			TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_recipe);
 			// on cancel reset table and spinner
 			if (v.getId()==buttonCancel.getId()) {
-				Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT);
-				toast.show();
-				
+
 				while (table.getChildCount()>3) {
 					table.removeViewAt(3);
 				}
@@ -314,12 +318,22 @@ public class ProductionPlanActivity extends Activity{
 				TextView textViewSize = (TextView)table.getRootView().findViewById(R.id.text_product_variation);
 				textViewSize.setText("");
 				
+				TextView textViewHeadingItem = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingItem);
+				textViewHeadingItem.setVisibility(View.INVISIBLE);
+				TextView textViewHeadingNeededQty = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingNeedQty);
+				textViewHeadingNeededQty.setVisibility(View.INVISIBLE);
+				TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingStock);
+				textViewHeadingStock.setVisibility(View.INVISIBLE);
+//				TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.textViewProdPlanHeading);
+//				textViewHeadingStock.setVisibility(View.INVISIBLE);
+				
 				EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
 				editTextQuantity.setVisibility(View.INVISIBLE);
 				editTextQuantity.setText("");
 				editTextQuantity.setHintTextColor(Color.GRAY);
 				
 			}
+			
 			// on OK create new batch, add to database and pass data to new Activity
 			if (v.getId()==buttonOK.getId()) {
 				
@@ -328,7 +342,7 @@ public class ProductionPlanActivity extends Activity{
 				int quantity = 0;
 				if (!msg.isEmpty()) {
 					quantity = Integer.parseInt(msg);
-					Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "OK", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(v.getContext().getApplicationContext(), "New batch created", Toast.LENGTH_SHORT);
 					toast.show();
 					
 					// put into database here
@@ -342,7 +356,6 @@ public class ProductionPlanActivity extends Activity{
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);
 					startActivity(i);
-					
 				}
 				else {
 					editTextQuantity.setHintTextColor(Color.RED);
@@ -351,7 +364,28 @@ public class ProductionPlanActivity extends Activity{
 			}
 		}
 		
+		// For TextWatcher for EditText field (quantity field)
+		@Override
+		// behaviour is that when text field is changed the spinner acts as if a selection was made
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+		         //after text changed
+			long id = productSpinner.getSelectedItemId();
+			int position = productSpinner.getSelectedItemPosition();
+			View view = productSpinner.getSelectedView();
+			onItemSelected((AdapterView<?>)productSpinner, view, position, id);
+		}
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+		        int after) {
+			
+		}
+		@Override
+		public void afterTextChanged(Editable s) {
+			
+		}
+		
 	}
+	
 	
 }
 

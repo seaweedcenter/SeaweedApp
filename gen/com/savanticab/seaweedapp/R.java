@@ -30,9 +30,9 @@ public final class R {
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f080010;
-        public static final int TextView02=0x7f080022;
-        public static final int TextView03=0x7f080021;
-        public static final int TextView04=0x7f080020;
+        public static final int TextViewHeadingItem=0x7f080020;
+        public static final int TextViewHeadingNeedQty=0x7f080021;
+        public static final int TextViewHeadingStock=0x7f080022;
         public static final int action_settings=0x7f08002d;
         public static final int button_factory_click=0x7f080013;
         public static final int button_report=0x7f080014;
@@ -69,7 +69,7 @@ public final class R {
         public static final int textView1=0x7f080003;
         public static final int textView2=0x7f080004;
         public static final int textView4=0x7f080005;
-        public static final int textView9=0x7f08001e;
+        public static final int textViewHeadingRawMaterials=0x7f08001e;
         public static final int textViewOrdered=0x7f080028;
         public static final int textViewProdPlanHeading=0x7f080018;
         public static final int text_product_size=0x7f08001a;
