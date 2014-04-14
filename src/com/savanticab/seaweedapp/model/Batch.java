@@ -65,7 +65,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		if (recipe == null) {
 			return returnstring;
 		}
-		if (recipe.getProduct() == null) {
+		if (recipe.getProduct() != null) {
 			returnstring += " " + recipe.getProduct().getCode();
 		}
 		return returnstring;

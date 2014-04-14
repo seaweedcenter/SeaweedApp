@@ -350,8 +350,8 @@ public class ProductionPlanActivity extends Activity {
 					bundle.putParcelable("recipe", recipe);
 					bundle.putInt("quantity", quantity);
 					
-					Batch batch = new Batch(recipe, 1, quantity);
 					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					Batch batch = new Batch(recipe, helper.getLastBatchId()+1, quantity);
 					helper.addBatch(batch);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);

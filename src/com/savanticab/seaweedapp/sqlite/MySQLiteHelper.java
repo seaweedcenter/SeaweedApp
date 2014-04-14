@@ -3,6 +3,7 @@ package com.savanticab.seaweedapp.sqlite;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -374,6 +375,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             db.close();
     	return recipe;
     }
+    
+    // recipe id should be identical to product id in current implementation
+    public Recipe findRecipeById(int id){
+    	return findRecipeByProductId(id);
+    }
+    
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new LinkedList<Recipe>();
         
@@ -583,44 +590,74 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	return batch;
     }
     
-//    public List<Batch> getAllBatches() {
-//        List<Batch> batches = new LinkedList<Batch>();
-//        
-//        String query = "SELECT  * FROM " + BatchTable.TABLE_NAME;
-//        
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(query, null);
-//        
-//        Batch b = null;
-//        if (cursor.moveToFirst()) {
-//            do {
-//            	Integer id = Integer.parseInt(cursor.getString(0));
-//            	
-//            	for (Recipe r : recipes){
-//            		if (r.getProduct().getId() == productId) {
-//            			recipe = r;
-//            		}
-//            	}
-//            	if (recipe == null){
-//            		recipe = new Recipe();
-//            		recipe.setProduct(findProductById(productId));
-//                	recipe.setId(productId);
-//                	//recipes.add(recipe);
-//            	}
-//    			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
-//    			RawMaterial material = findRawMaterialById(raw_material_id);
-//    			double quantity = Double.parseDouble(cursor.getString(2));
-//    			
-//    			HashMap<RawMaterial, Double> ingredients = recipe.getIngredients();
-//    			ingredients.put(material, quantity);
-//    			recipe.setIngredients(ingredients);
-//    			recipes.remove(recipe); // remove (if already present, determined by product ID) and re-insert
-//    			recipes.add(recipe);
-//    			
-//    			recipe = null;
-//            } while (cursor.moveToNext());
-//        }
-//        return recipes;
-//    }
+    public List<Batch> getAllBatches() {
+        List<Batch> batches = new LinkedList<Batch>();
+        
+        String query = "SELECT  * FROM " + BatchTable.TABLE_NAME;
+        
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        
+        Batch batch = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	Integer id = Integer.parseInt(cursor.getString(0));
+            	Integer recipeId = Integer.parseInt(cursor.getString(1));
+            	Integer quantity = Integer.parseInt(cursor.getString(2));
+            	
+            	for (Batch b : batches){
+            		if (b.getId() == id) {
+            			batch = b;
+            		}
+            	}
+            	if (batch == null){
+            		batch = new Batch();
+            		batch.setRecipe(findRecipeById(recipeId));
+                	batch.setId(id);
+                	batch.setQuantity(quantity);
+                	//recipes.add(recipe);
+            	}
+            	
+            	Date start, finish;
+            	String s = cursor.getString(3);
+            	if (s.equals("null")) {
+            		start = null;
+            	}
+            	else {
+            		start = new Date();
+            		start.setTime(Long.parseLong(s));;
+            	}
+            	batch.setStartDate(start);
+            	
+            	String s2 = cursor.getString(4);
+            	if (s2.equals("null")) {
+            		finish = null;
+            	}
+            	else {
+            		finish = new Date();
+            		finish.setTime(Long.parseLong(s2));;
+            	}
+            	batch.setFinishDate(finish);
+            	
+            	batches.remove(batch); // remove (if already present, determined by product ID) and re-insert
+    			batches.add(batch);
+    			
+    			batch = null;
+            } while (cursor.moveToNext());
+        }
+        return batches;
+    }
+    
+    public int getLastBatchId() {
+    	int lastId = 0;
+    	List<Batch> allbatches = getAllBatches();
+    	
+    	if (!allbatches.isEmpty()) {
+    		Collections.sort(allbatches);
+    		//Collections.reverse(allbatches);
+    		lastId = allbatches.get(allbatches.size()-1).getId();
+    	}
+		return lastId;
+    }
     
 }

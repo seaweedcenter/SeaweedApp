@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
+import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
  * A list fragment representing a list of ProductionDocuments. This fragment
@@ -80,12 +81,14 @@ public class ProductionDocumentListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		LinkedList<Batch> batchList = new LinkedList<Batch>(); 
+		//LinkedList<Batch> batchList = new LinkedList<Batch>(); 
 		
+		MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+		List<Batch> batchList = helper.getAllBatches();
 		//batchList.add(a);
 		//batchList.add(b);
-		Collections.sort(batchList);
-		Collections.reverse(batchList);
+		//Collections.sort(batchList);
+		//Collections.reverse(batchList);
 		
 //		// TODO: replace with a real list adapter.
 //		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),

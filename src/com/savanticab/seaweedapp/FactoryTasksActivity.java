@@ -77,7 +77,7 @@ public class FactoryTasksActivity extends Activity {
 	
 	public void clickProductionDocumentation(View view)
 	{
-		Intent intent = new Intent(this, RawMaterialListActivity.class);
+		Intent intent = new Intent(this, ProductionDocumentListActivity.class);
 		startActivity(intent);
 	}
 	
