@@ -29,6 +29,7 @@ public class Recipe implements Parcelable {
 
 	public void setProduct(Product product) {
 		this.product = product;
+		this.id = product.getId();
 		//this.ingredients = null;
 		//this.id = product.getId();
 	}

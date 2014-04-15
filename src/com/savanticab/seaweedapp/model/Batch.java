@@ -29,11 +29,12 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		return (finishDate != null);
 	}
 	public void setIsFinished(boolean finished) {
-		if (finishDate==null) {
-			this.finishDate = null;
+		if (finished) {
+			this.finishDate = new Date();
+			
 		}
 		else {
-			this.finishDate = new Date();
+			this.finishDate = null;
 		}
 	}
 	public Recipe getRecipe() {

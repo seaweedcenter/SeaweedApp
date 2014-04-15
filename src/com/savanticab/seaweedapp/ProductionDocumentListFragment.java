@@ -85,10 +85,20 @@ public class ProductionDocumentListFragment extends ListFragment {
 		
 		MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 		List<Batch> batchList = helper.getAllBatches();
-		//batchList.add(a);
-		//batchList.add(b);
-		//Collections.sort(batchList);
-		//Collections.reverse(batchList);
+		List<Batch> batchListUnfinished = new LinkedList<Batch>();
+		List<Batch> batchListFinished = new LinkedList<Batch>();
+		
+		for (Batch b : batchList) {
+			if (b.isFinished()) {
+				batchListFinished.add(b);
+			}
+			else {
+				batchListUnfinished.add(b);
+			}
+		}
+		batchList = batchListUnfinished;
+		batchList.addAll(batchListFinished);
+		
 		
 //		// TODO: replace with a real list adapter.
 //		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),

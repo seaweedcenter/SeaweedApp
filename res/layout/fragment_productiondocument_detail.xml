@@ -14,11 +14,11 @@
 <GridLayout android:layout_width="wrap_content"
     android:layout_height="wrap_content" 
     android:rowCount="8"
-    android:columnCount="9">
+    android:columnCount="10">
 
     <TextView
         android:id="@+id/productiondocument_detail_batchid"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_column="3"
@@ -28,8 +28,41 @@
         android:text="Batch id:"
         android:textIsSelectable="true" />
     <TextView
+        android:id="@+id/productiondocument_detail_quantity"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_column="5"
+        android:layout_gravity="left|top"
+        android:layout_row="3"
+        android:padding="10dp"
+        android:text="Quantity to produce:"
+        android:textIsSelectable="true" />
+    <TextView
+        android:id="@+id/productiondocument_detail_startdate"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_column="6"
+        android:layout_gravity="left|top"
+        android:layout_row="4"
+        android:padding="10dp"
+        android:text="Start date"
+        android:textIsSelectable="true" />
+    <TextView
+        android:id="@+id/productiondocument_detail_finishdate"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_column="6"
+        android:layout_gravity="left|top"
+        android:layout_row="5"
+        android:padding="10dp"
+        android:text="Finish date"
+        android:textIsSelectable="true" />
+    <TextView
         android:id="@+id/productiondocument_detail_productname"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_column="5"
@@ -38,20 +71,10 @@
         android:padding="10dp"
         android:text="Product name"
         android:textIsSelectable="true" />
-    <TextView
-        android:id="@+id/productiondocument_detail_quantity"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_column="8"
-        android:layout_gravity="left|top"
-        android:layout_row="4"
-        android:padding="10dp"
-        android:text="Quantity to produce:"
-        android:textIsSelectable="true" />
+    
 	<TextView
         android:id="@+id/productiondocument_detail_product_codeid"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_column="5"
@@ -62,7 +85,7 @@
         android:textIsSelectable="true" />
 	<TextView
         android:id="@+id/productiondocument_detail_product_fragrance"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_column="5"
@@ -73,7 +96,7 @@
         android:textIsSelectable="true" />
     <TextView
         android:id="@+id/productiondocument_detail_product_size"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_column="5"

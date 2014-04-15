@@ -664,4 +664,40 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		return lastId;
     }
     
+    public int updateBatch(Batch batch) {
+    	 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(BatchTable.COLUMN_BATCH_ID, batch.getId());
+        values.put(BatchTable.COLUMN_RECIPE_ID, batch.getRecipe().getId());
+        values.put(BatchTable.COLUMN_QUANTITY, batch.getQuantity());
+        
+        int id = batch.getId();
+        int rid = batch.getRecipe().getId();
+        int q = batch.getQuantity();
+        
+        String startDate = (batch.getStartDate() != null) ? Long.toString(batch.getStartDate().getTime()) : "null";
+        String finishDate = (batch.getFinishDate() != null) ? Long.toString(batch.getFinishDate().getTime()) : "null";
+        values.put(BatchTable.COLUMN_STARTDATE, startDate);
+        values.put(BatchTable.COLUMN_FINISHDATE, finishDate);
+        
+        int i = 0;
+        if (true) { //findRecipeByProductId(batch.getRecipe().getProduct().getId()) != null) {
+	        // 3. updating row
+	        i = db.update(BatchTable.TABLE_NAME, //table
+	                values, // column/value
+	                BatchTable.COLUMN_BATCH_ID+" = ?", // selections
+	                new String[] { String.valueOf(batch.getId()) }); //selection args
+	        
+	        // 4. close
+	        
+        }
+        db.close();
+        return i;
+ 
+    }
+    
 }

@@ -1,5 +1,7 @@
 package com.savanticab.seaweedapp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.ListFragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -82,11 +85,24 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			
 			Recipe r = batch.getRecipe();
 			Product p = r.getProduct();
+			//DateFormat df = DateFormat.getDateTimeInstance();
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			
 			TextView textViewDescription = (TextView) rootView.findViewById(R.id.productiondocument_detail_productname);
 			textViewDescription.setText("Product: " + p.getName());
+			TextView textViewStartDate = (TextView) rootView.findViewById(R.id.productiondocument_detail_startdate);
+			textViewStartDate.setText("Started: " + df.format(batch.getStartDate()));
+			TextView textViewFinishDate = (TextView) rootView.findViewById(R.id.productiondocument_detail_finishdate);
+			if (batch.getFinishDate()==null) {
+				textViewFinishDate.setText("Unfinished");
+				textViewFinishDate.setTextColor(Color.RED);
+			}
+			else {
+				textViewFinishDate.setText("Finished: " + df.format(batch.getFinishDate()));
+				textViewFinishDate.setTextColor(Color.GREEN);
+			}
 			TextView textViewQuantity = (TextView) rootView.findViewById(R.id.productiondocument_detail_quantity);
-			textViewQuantity.setText("Quantity: " + batch.getQuantity());
+			textViewQuantity.setText("Quantity to produce: " + batch.getQuantity());
 			TextView textViewProductCode = (TextView) rootView.findViewById(R.id.productiondocument_detail_product_codeid);
 			textViewProductCode.setText("Code: " + p.getCode() + ", ID: " + p.getId());
 			TextView textViewProductFragrance = (TextView) rootView.findViewById(R.id.productiondocument_detail_product_fragrance);
@@ -160,7 +176,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 	
 		TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_ProdDoc);
 		
-		if (v.getId()==buttonOK.getId()) {
+		if (v.getId()==buttonOK.getId() & !batch.isFinished()) {
 			// do stuff, 
 			//present a summary of finished products 
 			// add to stock inventory too
@@ -171,7 +187,19 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			product.setInProductionQty(product.getInProductionQty()-batch.getQuantity());
 			helper.updateProduct(product);
 			batch.setIsFinished(true);
+			helper.updateBatch(batch);
 			// TODO: helper.updateBatch(batch);
+			
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			TextView textViewFinishDate = (TextView) v.getRootView().findViewById(R.id.productiondocument_detail_finishdate);
+			if (batch.getFinishDate()==null) {
+				textViewFinishDate.setText("Unfinished");
+				textViewFinishDate.setTextColor(Color.RED);
+			}
+			else {
+				textViewFinishDate.setText("Finished: " + df.format(batch.getFinishDate()));
+				textViewFinishDate.setTextColor(Color.GREEN);
+			}
 			
 		}
 		
