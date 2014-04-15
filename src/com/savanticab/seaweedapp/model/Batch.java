@@ -3,6 +3,8 @@ package com.savanticab.seaweedapp.model;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -62,12 +64,12 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		this.finishDate = finishDate;
 	}
 	public String toString() {
-		String returnstring = ""+id;
+		String returnstring = "ID: "+id;
 		if (recipe == null) {
 			return returnstring;
 		}
 		if (recipe.getProduct() != null) {
-			returnstring += " " + recipe.getProduct().getCode();
+			returnstring += "Code: " + recipe.getProduct().getCode();
 		}
 		return returnstring;
 	}

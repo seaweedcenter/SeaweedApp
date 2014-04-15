@@ -352,6 +352,14 @@ public class ProductionPlanActivity extends Activity {
 					
 					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 					Batch batch = new Batch(recipe, helper.getLastBatchId()+1, quantity);
+					
+					// reserve material
+//					HashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
+//					for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+//						double quantity = entry.getValue();
+//						RawMaterial material = entry.getKey();
+//						material.setStockQuantity(material.get);
+//					}
 					helper.addBatch(batch);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);

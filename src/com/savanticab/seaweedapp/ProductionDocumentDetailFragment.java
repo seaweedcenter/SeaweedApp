@@ -181,6 +181,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			//present a summary of finished products 
 			// add to stock inventory too
 			// set batch job as finished, TODO: divide batch listing into unfinished and finished jobs?
+			
 			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 			Product product = batch.getRecipe().getProduct();
 			product.setInStockQty(product.getInStockQty()+batch.getQuantity()); // should throw an exception or something if this goes towards negative
