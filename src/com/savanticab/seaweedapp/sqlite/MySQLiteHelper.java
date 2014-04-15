@@ -48,19 +48,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         addProduct(new Product("SOAP3", "Soap", "Langi-langi", "Big", 14.0, 300, 0));
         addProduct(new Product("SOAP4", "Soap", "Lemongrass", "Medium", 16.0, 150, 0));
         
-        addRawMaterial(new RawMaterial("Coconut oil", "L", 100, 0));
-        addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0));
-        addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2));
+        addRawMaterial(new RawMaterial("Coconut oil", "L", 100, 0, 0.0));
+        addRawMaterial(new RawMaterial("Seaweed", "Kg", 50, 0, 0.0));
+        addRawMaterial(new RawMaterial("Bee wax", "Kg", 5, 2, 0.0));
         
         HashMap m = new HashMap<RawMaterial, Double>();
-        m.put(new RawMaterial("Coconut oil", "L", 100, 0), 1.0);
-        m.put(new RawMaterial("Seaweed", "Kg", 50, 0), 0.5);
+        m.put(new RawMaterial("Coconut oil", "L", 100, 0, 0.0), 1.0);
+        m.put(new RawMaterial("Seaweed", "Kg", 50, 0, 0.0), 0.5);
         Recipe r = new Recipe(new Product("SOAP1", "Soap", "Lime", "Big", 10.0, 200, 0), m);
         addRecipe(r);
         
         m = new HashMap<RawMaterial, Double>();
-        m.put(new RawMaterial("Coconut oil", "L", 100, 0), 2.0);
-        m.put(new RawMaterial("Bee wax", "Kg", 50, 0), 0.25);
+        m.put(new RawMaterial("Coconut oil", "L", 100, 0, 0.0), 2.0);
+        m.put(new RawMaterial("Bee wax", "Kg", 50, 0, 0.0), 0.25);
         r = new Recipe(new Product("SOAP2", "Soap", "Clove", "Small", 6.0, 100, 0), m);
         addRecipe(r);
         
@@ -221,6 +221,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(RawMaterialTable.COLUMN_UNIT, material.getUnit());
         values.put(RawMaterialTable.COLUMN_STOCK_QUANTITY, material.getStockQuantity());
         values.put(RawMaterialTable.COLUMN_ORDERED_QUANTITY, material.getOrderedQuantity());
+        values.put(RawMaterialTable.COLUMN_ALLOCATED_FOR_PRODUCTION_QUANTITY, material.getAllocatedProdQty());
         values.put(RawMaterialTable.COLUMN_ICON, material.getIcon());
  
         SQLiteDatabase db = this.getWritableDatabase();
@@ -249,7 +250,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     		material.setUnit(cursor.getString(2));
     		material.setStockQuantity(Double.parseDouble(cursor.getString(3)));
     		material.setOrderedQuantity(Double.parseDouble(cursor.getString(4)));
-    		material.setIcon(cursor.getString(5));
+    		material.setAllocatedProdQty(Double.parseDouble(cursor.getString(5)));
+    		material.setIcon(cursor.getString(6));
     		cursor.close();
     	} else {
     		material = null;
@@ -274,7 +276,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         		material.setUnit(cursor.getString(2));
         		material.setStockQuantity(Double.parseDouble(cursor.getString(3)));
         		material.setOrderedQuantity(Double.parseDouble(cursor.getString(4)));
-        		material.setIcon(cursor.getString(5));
+        		material.setAllocatedProdQty(Double.parseDouble(cursor.getString(5)));
+        		material.setIcon(cursor.getString(6));
  
         		materials.add(material);
             } while (cursor.moveToNext());
@@ -292,6 +295,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(RawMaterialTable.COLUMN_UNIT, material.getUnit());
         values.put(RawMaterialTable.COLUMN_STOCK_QUANTITY, material.getStockQuantity());
         values.put(RawMaterialTable.COLUMN_ORDERED_QUANTITY, material.getOrderedQuantity());
+        values.put(RawMaterialTable.COLUMN_ALLOCATED_FOR_PRODUCTION_QUANTITY, material.getAllocatedProdQty());
         values.put(RawMaterialTable.COLUMN_ICON, material.getIcon());
  
         // 3. updating row

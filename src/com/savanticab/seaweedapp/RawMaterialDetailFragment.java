@@ -170,6 +170,10 @@ public class RawMaterialDetailFragment extends Fragment {
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_ordered_quantity))
 		.setText(Double.toString(mtrl.getOrderedQuantity()) + " " + mtrl.getUnit());
+		
+		((TextView) rootView.findViewById(R.id.rawmaterial_allocated_quantity))
+		.setText(Double.toString(mtrl.getAllocatedProdQty()) + " " + mtrl.getUnit());
+		
 	}
 		
 	public void updateQuantity(View view) {

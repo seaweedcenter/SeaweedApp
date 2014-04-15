@@ -33,7 +33,7 @@ public final class R {
         public static final int TextViewHeadingItem=0x7f080020;
         public static final int TextViewHeadingNeedQty=0x7f080021;
         public static final int TextViewHeadingStock=0x7f080022;
-        public static final int action_settings=0x7f080039;
+        public static final int action_settings=0x7f08003b;
         public static final int button_factory_click=0x7f080013;
         public static final int button_report=0x7f080014;
         public static final int button_report_click=0x7f080015;
@@ -42,18 +42,18 @@ public final class R {
         public static final int button_to_shop=0x7f080016;
         public static final int checkBox1=0x7f080006;
         public static final int checkBox2=0x7f080008;
-        public static final int checkBoxOrdered=0x7f080035;
-        public static final int checkBoxStock=0x7f080033;
+        public static final int checkBoxOrdered=0x7f080037;
+        public static final int checkBoxStock=0x7f080035;
         public static final int container=0x7f080001;
-        public static final int editTextEnterQuantity=0x7f080036;
+        public static final int editTextEnterQuantity=0x7f080038;
         public static final int imageButton1=0x7f08000a;
-        public static final int imageButtonCancel=0x7f080037;
+        public static final int imageButtonCancel=0x7f080039;
         public static final int imageButtonOK=0x7f080009;
         public static final int imageView1=0x7f080011;
         public static final int item_detail=0x7f08000f;
         public static final int item_detail_container=0x7f080002;
         public static final int item_list=0x7f080000;
-        public static final int ok_button_generic=0x7f080038;
+        public static final int ok_button_generic=0x7f08003a;
         public static final int production_planned_quantity=0x7f080007;
         public static final int productiondocument_detail_batchid=0x7f080023;
         public static final int productiondocument_detail_container=0x7f08000b;
@@ -64,10 +64,11 @@ public final class R {
         public static final int productiondocument_detail_quantity=0x7f080025;
         public static final int productiondocument_list=0x7f08000c;
         public static final int productiondocument_recipe_title=0x7f080029;
+        public static final int rawmaterial_allocated_quantity=0x7f080034;
         public static final int rawmaterial_detail_container=0x7f08000d;
         public static final int rawmaterial_list=0x7f08000e;
-        public static final int rawmaterial_ordered_quantity=0x7f080032;
-        public static final int rawmaterial_stock_quantity=0x7f080031;
+        public static final int rawmaterial_ordered_quantity=0x7f080033;
+        public static final int rawmaterial_stock_quantity=0x7f080032;
         public static final int spinner_product_name=0x7f080019;
         public static final int tableRowHeading1=0x7f08001d;
         public static final int tableRowHeading2=0x7f08001f;
@@ -81,11 +82,12 @@ public final class R {
         public static final int textViewHeadingMtrlQtyProdDoc=0x7f08002e;
         public static final int textViewHeadingNotesProdDoc=0x7f08002f;
         public static final int textViewHeadingRawMaterials=0x7f08001e;
-        public static final int textViewOrdered=0x7f080034;
+        public static final int textViewOrdered=0x7f080036;
         public static final int textViewProdPlanHeading=0x7f080018;
         public static final int textViewSpaceProdDoc1=0x7f08002c;
         public static final int text_product_size=0x7f08001a;
         public static final int text_product_variation=0x7f08001b;
+        public static final int title_rawmaterial_allocated_quantity=0x7f080031;
         public static final int title_rawmaterial_detail=0x7f080030;
     }
     public static final class layout {
@@ -157,6 +159,7 @@ public final class R {
         public static final int title_activity_factory_tasks=0x7f050012;
         public static final int title_activity_production_plan=0x7f05001a;
         public static final int title_item_detail=0x7f050010;
+        public static final int title_material_allocatedProduction=0x7f05001f;
         public static final int title_material_ordered=0x7f050019;
         public static final int title_material_stock=0x7f050018;
         public static final int title_productiondocument_detail=0x7f05001e;

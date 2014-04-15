@@ -32,5 +32,6 @@
     <string name="heading_production_planning"></string>
     <string name="title_productiondocument_list">ProductionDocuments</string>
     <string name="title_productiondocument_detail">ProductionDocument Detail</string>
+    <string name="title_material_allocatedProduction">Reserved for production:</string>
 
 </resources>

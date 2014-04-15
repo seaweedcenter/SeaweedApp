@@ -10,6 +10,7 @@ public class RawMaterial implements Parcelable {
 	private String unit;
 	private double stockQuantity;
 	private double orderedQuantity;
+	private double allocatedProdQty;
 	private String icon;
 	
 	public int getId() {
@@ -43,6 +44,12 @@ public class RawMaterial implements Parcelable {
 	public void setOrderedQuantity(double orderedQuantity) {
 		this.orderedQuantity = orderedQuantity;
 	}
+	public double getAllocatedProdQty() {
+		return allocatedProdQty;
+	}
+	public void setAllocatedProdQty(double allocatedProdQty) {
+		this.allocatedProdQty = allocatedProdQty;
+	}
 	public String getIcon() {
 		return icon;
 	}
@@ -55,12 +62,14 @@ public class RawMaterial implements Parcelable {
 	}
 	
 	public RawMaterial(){}
-	public RawMaterial(String name, String unit, double stockQuantity, double orderedQuantity){
+	public RawMaterial(String name, String unit, double stockQuantity, 
+			double orderedQuantity, double allocatedProdQty){
 		this.id = name.hashCode();
 		this.name = name;
 		this.unit = unit;
 		this.stockQuantity = stockQuantity;
 		this.orderedQuantity = orderedQuantity;
+		this.allocatedProdQty = allocatedProdQty;
 	}
 	
 	// needed for List.contains()
@@ -82,6 +91,7 @@ public class RawMaterial implements Parcelable {
     	out.writeString(unit);
     	out.writeDouble(stockQuantity);
     	out.writeDouble(orderedQuantity);
+    	out.writeDouble(allocatedProdQty);
     }
     public static final Parcelable.Creator<RawMaterial> CREATOR
         = new Parcelable.Creator<RawMaterial>() {
@@ -98,6 +108,7 @@ public class RawMaterial implements Parcelable {
     	unit = in.readString();
     	stockQuantity = in.readDouble();
     	orderedQuantity = in.readDouble();
+    	allocatedProdQty = in.readDouble();
     }
 
 }
