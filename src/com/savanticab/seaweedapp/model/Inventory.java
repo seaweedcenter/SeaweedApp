@@ -101,8 +101,14 @@ public class Inventory {
 			double ordered, double reserved) {
 		setMaterialQuantities(mtrl, stock, ordered, reserved); // should create new entry if does not exist
 	}
+	public void addAllMaterials(HashMap<RawMaterial, MaterialInventory> in) {
+		materials.putAll(in);
+	}
 	public void addProduct(Product product, int stock, int inproduction) {
 		setProductQuantities(product, stock, inproduction); // should create new entry if does not exist
+	}
+	public void addAllProducts(HashMap<Product, ProductInventory> in) {
+		products.putAll(in);
 	}
 	public void deleteMaterial(RawMaterial mtrl) {
 		materials.remove(mtrl);
@@ -136,6 +142,14 @@ public class Inventory {
 		inv.stock += qty;
 		inv.inproduction -= qty;
 		products.put(product, inv);
+	}
+	
+	// check for "contains"
+	public boolean contains(RawMaterial material) {
+		return materials.containsKey(material);
+	}
+	public boolean contains(Product product) {
+		return products.containsKey(product);
 	}
 }
 

@@ -1,6 +1,8 @@
 package com.savanticab.seaweedapp;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.Application;
@@ -17,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
+import com.savanticab.seaweedapp.model.Inventory;
+import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.*;
 
@@ -92,18 +96,22 @@ public class RawMaterialDetailFragment extends Fragment {
 				            	 
 				            	 if (!msg.isEmpty() & oneChecked) {
 				            		 
+				            		 Inventory inventory = sqlhelper.getInventory();
 				            		 RawMaterial mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
 				            		 if (chkBoxStock.isChecked())
 				            		 {
-				            			 double newQuantity = mtrl.getStockQuantity() + Double.parseDouble(msg);
-				            			 mtrl.setStockQuantity(newQuantity);
+				            			 double newQuantity = inventory.getMtrlStock(mtrl) + Double.parseDouble(msg);
+				            			 inventory.setMtrlStock(mtrl, newQuantity);
+				            			 //mtrl.setStockQuantity(newQuantity);
 				            		 }
 				            		 if (chkBoxOrdered.isChecked())
 				            		 {
-				            			 double newQuantity = mtrl.getOrderedQuantity() + Double.parseDouble(msg);
-				            			 mtrl.setOrderedQuantity(newQuantity);
+				            			 double newQuantity = inventory.getMtrlOrdered(mtrl) + Double.parseDouble(msg);
+				            			 inventory.setMtrlOrdered(mtrl, newQuantity);
+				            			 //mtrl.setOrderedQuantity(newQuantity);
 				            		 }				            		 
-				            		 sqlhelper.updateRawMaterial(mtrl);
+				            		 //sqlhelper.updateRawMaterial(mtrl);
+				            		 sqlhelper.updateInventory(inventory);
 				            		 editText.setText("");
 				            		 updateObjects(v.getRootView());
 				            	 }
@@ -158,21 +166,23 @@ public class RawMaterialDetailFragment extends Fragment {
 	
 	// just updates textViewes etc
 	private void updateObjects(View rootView) {
-		
-		//List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
-		RawMaterial mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
+
+		// TODO: look into this, looks very cumbersome to extract objects...
+		HashMap<RawMaterial, MaterialInventory> mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
+		RawMaterial material = mtrl.keySet().iterator().next();
+		MaterialInventory inv = mtrl.get(material);
 		
 		((TextView) rootView.findViewById(R.id.title_rawmaterial_detail))
-		.setText(mtrl.getName()); //.setText(mItem.content);
+		.setText(material.getName()); //.setText(mItem.content);
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_stock_quantity))
-		.setText(Double.toString(mtrl.getStockQuantity()) + " " + mtrl.getUnit());
+		.setText(Double.toString(inv.stock) + " " + material.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_ordered_quantity))
-		.setText(Double.toString(mtrl.getOrderedQuantity()) + " " + mtrl.getUnit());
+		.setText(Double.toString(inv.ordered) + " " + material.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_allocated_quantity))
-		.setText(Double.toString(mtrl.getAllocatedProdQty()) + " " + mtrl.getUnit());
+		.setText(Double.toString(inv.reserved) + " " + material.getUnit());
 		
 	}
 		

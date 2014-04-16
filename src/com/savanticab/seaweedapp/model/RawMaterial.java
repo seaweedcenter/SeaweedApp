@@ -8,9 +8,6 @@ public class RawMaterial implements Parcelable {
 	private int id;
 	private String name;
 	private String unit;
-	private double stockQuantity;
-	private double orderedQuantity;
-	private double allocatedProdQty;
 	private String icon;
 	
 	public int getId() {
@@ -32,24 +29,6 @@ public class RawMaterial implements Parcelable {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	public double getStockQuantity() {
-		return stockQuantity;
-	}
-	public void setStockQuantity(double stockQuantity) {
-		this.stockQuantity = stockQuantity;
-	}
-	public double getOrderedQuantity() {
-		return orderedQuantity;
-	}
-	public void setOrderedQuantity(double orderedQuantity) {
-		this.orderedQuantity = orderedQuantity;
-	}
-	public double getAllocatedProdQty() {
-		return allocatedProdQty;
-	}
-	public void setAllocatedProdQty(double allocatedProdQty) {
-		this.allocatedProdQty = allocatedProdQty;
-	}
 	public String getIcon() {
 		return icon;
 	}
@@ -62,14 +41,11 @@ public class RawMaterial implements Parcelable {
 	}
 	
 	public RawMaterial(){}
-	public RawMaterial(String name, String unit, double stockQuantity, 
-			double orderedQuantity, double allocatedProdQty){
+	public RawMaterial(String name, String unit, String icon){
 		this.id = name.hashCode();
 		this.name = name;
 		this.unit = unit;
-		this.stockQuantity = stockQuantity;
-		this.orderedQuantity = orderedQuantity;
-		this.allocatedProdQty = allocatedProdQty;
+		this.icon = icon;
 	}
 	
 	// needed for List.contains()
@@ -89,9 +65,7 @@ public class RawMaterial implements Parcelable {
     	out.writeInt(id);
     	out.writeString(name);
     	out.writeString(unit);
-    	out.writeDouble(stockQuantity);
-    	out.writeDouble(orderedQuantity);
-    	out.writeDouble(allocatedProdQty);
+    	out.writeString(icon);
     }
     public static final Parcelable.Creator<RawMaterial> CREATOR
         = new Parcelable.Creator<RawMaterial>() {
@@ -106,9 +80,7 @@ public class RawMaterial implements Parcelable {
     	id = in.readInt();
     	name = in.readString();
     	unit = in.readString();
-    	stockQuantity = in.readDouble();
-    	orderedQuantity = in.readDouble();
-    	allocatedProdQty = in.readDouble();
+    	icon = in.readString();
     }
 
 }

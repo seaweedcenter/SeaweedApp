@@ -11,7 +11,7 @@ public class RawMaterialTable {
 	  public static final String COLUMN_UNIT = "unit";
 	  public static final String COLUMN_STOCK_QUANTITY = "stock_quantity";
 	  public static final String COLUMN_ORDERED_QUANTITY = "ordered_quantity";
-	  public static final String COLUMN_ALLOCATED_FOR_PRODUCTION_QUANTITY = "allocated_for_production_qty";
+	  public static final String COLUMN_RESERVED_QUANTITY = "reserved_quantity";
 	  public static final String COLUMN_ICON = "icon";
 
 	  // Database creation SQL statement
@@ -24,7 +24,7 @@ public class RawMaterialTable {
 	      + COLUMN_UNIT + " text, " 
 	      + COLUMN_STOCK_QUANTITY + " real, " 
 	      + COLUMN_ORDERED_QUANTITY + " real, "
-	      + COLUMN_ALLOCATED_FOR_PRODUCTION_QUANTITY + " real, "
+	      + COLUMN_RESERVED_QUANTITY + " real, "
 	      + COLUMN_ICON + " text"
 	      + ");";
 	  

@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
+import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
@@ -183,13 +184,19 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			// set batch job as finished, TODO: divide batch listing into unfinished and finished jobs?
 			
 			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+			Inventory inventory = helper.getInventory();
+			
 			Product product = batch.getRecipe().getProduct();
-			product.setInStockQty(product.getInStockQty()+batch.getQuantity()); // should throw an exception or something if this goes towards negative
-			product.setInProductionQty(product.getInProductionQty()-batch.getQuantity());
-			helper.updateProduct(product);
+			inventory.ProductProductionFinish(product, batch.getQuantity());
+			//product.setInStockQty(product.getInStockQty()+batch.getQuantity()); // should throw an exception or something if this goes towards negative
+			//product.setInProductionQty(product.getInProductionQty()-batch.getQuantity());
+			//helper.updateProduct(product);
 			batch.setIsFinished(true);
+			
+			// update database
+			// TODO: consolidate updateBatch and updateInventory to "updateDB" ?
 			helper.updateBatch(batch);
-			// TODO: helper.updateBatch(batch);
+			helper.updateInventory(inventory);
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			TextView textViewFinishDate = (TextView) v.getRootView().findViewById(R.id.productiondocument_detail_finishdate);

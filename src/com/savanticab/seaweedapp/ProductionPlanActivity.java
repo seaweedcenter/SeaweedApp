@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.savanticab.seaweedapp.model.Inventory;
+import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
@@ -101,36 +103,28 @@ public class ProductionPlanActivity extends Activity {
 					container, false);
 			
 			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-			List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
+			//List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
 			List<Recipe> recipes = helper.getAllRecipes();
+			//Inventory inventory = helper.getInventory();
 			
+			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
+			// which holds Recipe objects. The Recipe.toString() provides the text description shown
 			productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
-			//ArrayAdapter<CharSequence> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);	
-			//ArrayAdapter<Map<String, Recipe>> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
 			ArrayAdapter<Recipe> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
-			
 			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			
 			TextView textVariation = (TextView) rootView.findViewById(R.id.text_product_variation);
 			TextView textSize = (TextView) rootView.findViewById(R.id.text_product_size);
 			textVariation.setText(" ");
 			textSize.setText(" ");
 			
-			// ugly solution: add "empty" recipe to get a default description field in spinner
+			// add "empty" recipe to get a default description field in spinner
 			Recipe emptyRecipe = new Recipe();
-			emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 
-					0.0, 0, 0));
-			//Map<String, Recipe> map = new HashMap<String, Recipe>();
-			//map.put(emptyProduct);
-			//aa.add(map);
+			emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 0.0));
 			aa.add(emptyRecipe);
 			
 			for(int i=0; i<recipes.size(); i++){
 				Recipe tmp = recipes.get(i);
-				//aa.add(recipes.get(i).getProduct().getCode());
-				//map.clear();
-				//map = new HashMap<String, Recipe>();
-				//map.put(recipes.get(i).getProduct().getCode(), recipes.get(i));
-				//aa.add(map);
 				aa.add(tmp);
 			}
 			
@@ -138,28 +132,6 @@ public class ProductionPlanActivity extends Activity {
 			// register a listener to deal with selections in spinner
 			productSpinner.setOnItemSelectedListener(this); 
 			
-			
-//			//TextWatcher textWatcher = new TextWatcher() {
-//			class MyTextWatcher implements TextWatcher {
-//								
-//		        @Override
-//		        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//		            //after text changed
-//		        	
-//		        }
-//		        @Override
-//		        public void beforeTextChanged(CharSequence s, int start, int count,
-//		                int after) {
-//		        }
-//		        @Override
-//		        public void afterTextChanged(Editable s) {
-//
-//		        }
-////		        public MyTextWatcher(TableLayout table) {
-////		        	this.table = table;
-////		        }
-//		    };
-		    
 		    EditText editTextQuantity = (EditText)rootView.getRootView().findViewById(R.id.production_planned_quantity);
 		    editTextQuantity.addTextChangedListener(this);
 			
@@ -205,6 +177,8 @@ public class ProductionPlanActivity extends Activity {
 				
 				if (quantity > 0) {
 					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					Inventory inventory = helper.getInventory();
+					
 					// pick up Recipe passed by adapter
 					recipe = (Recipe)parent.getAdapter().getItem(position);	
 					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
@@ -229,11 +203,12 @@ public class ProductionPlanActivity extends Activity {
 						TableRow rowRecipe = new TableRow(this.getActivity());
 						RawMaterial mtrl = entry.getKey();
 						Double quantityNeeded = entry.getValue() * quantity;
-						List<RawMaterial> materials = helper.getAllRawMaterials();
+						//HashMap<RawMaterial, MaterialInventory> materials = helper.getAllRawMaterials();
 						Double quantityStock = 0.0;
 						
-						if (materials.contains(mtrl)) {
-							quantityStock = materials.get(materials.indexOf(mtrl)).getStockQuantity();
+						if (inventory.contains(mtrl)) {
+							quantityStock = inventory.getMtrlStock(mtrl);
+									//materials.get(materials.indexOf(mtrl)).getStockQuantity();
 						}
 						
 						TextView textEmpty = new TextView(this.getActivity());
