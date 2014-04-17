@@ -1,7 +1,11 @@
 package com.savanticab.seaweedapp.model;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 // TODO: think about handling cases such as
@@ -9,16 +13,17 @@ import java.util.Set;
 
 public class Inventory {
 	
-	private Map<RawMaterial, MaterialInventory> materials;
-	private Map<Product, ProductInventory> products;
+	// LinkedHashMap: makes life easier as it iterates over objects in consistent way every time
+	private LinkedHashMap<RawMaterial, MaterialInventory> materials;
+	private LinkedHashMap<Product, ProductInventory> products;
 	
 	// constructors..
 	public Inventory() {
-		materials = new HashMap<RawMaterial, MaterialInventory>();
-		products = new HashMap<Product, ProductInventory>();
+		materials = new LinkedHashMap<RawMaterial, MaterialInventory>();
+		products = new LinkedHashMap<Product, ProductInventory>();
 	}
-	public Inventory(Map<RawMaterial, MaterialInventory> materials, 
-			Map<Product, ProductInventory> products) {
+	public Inventory(LinkedHashMap<RawMaterial, MaterialInventory> materials, 
+			LinkedHashMap<Product, ProductInventory> products) {
 		this.materials = materials;
 		this.products = products;
 	}
@@ -27,18 +32,33 @@ public class Inventory {
 	public Map<RawMaterial, MaterialInventory> getMaterialInventory(){
 		return materials;
 	}
-	public void setMaterialInventory(Map<RawMaterial, MaterialInventory> materials){
+	public List<RawMaterial> getMaterialList() {
+		List <RawMaterial> materialList = new LinkedList();
+		for (Entry<RawMaterial, MaterialInventory> entry : materials.entrySet()) {
+			materialList.add(entry.getKey());
+		}
+		return materialList;
+	}
+	public void setMaterialInventory(LinkedHashMap<RawMaterial, MaterialInventory> materials){
 		this.materials = materials;
 	}
 	public Map<Product, ProductInventory> getProductInventory(){
 		return products;
 	}
-	public void setProductInventory(Map<Product, ProductInventory> products)  {
+	public LinkedList<Product> getProductList() {
+		LinkedList <Product> productList = new LinkedList();
+		for (Entry<Product, ProductInventory> entry : products.entrySet()) {
+			productList.add(entry.getKey());
+		}
+		return productList;
+	}
+	public void setProductInventory(LinkedHashMap<Product, ProductInventory> products)  {
 		this.products = products;
 	}
 	
 	// access inventory numbers
 	public double getMtrlStock(RawMaterial mtrl) {
+		MaterialInventory t = materials.get(mtrl);
 		return materials.get(mtrl).stock;
 	}
 	public double getMtrlOrdered(RawMaterial mtrl) {
@@ -101,13 +121,13 @@ public class Inventory {
 			double ordered, double reserved) {
 		setMaterialQuantities(mtrl, stock, ordered, reserved); // should create new entry if does not exist
 	}
-	public void addAllMaterials(HashMap<RawMaterial, MaterialInventory> in) {
+	public void addAllMaterials(LinkedHashMap<RawMaterial, MaterialInventory> in) {
 		materials.putAll(in);
 	}
 	public void addProduct(Product product, int stock, int inproduction) {
 		setProductQuantities(product, stock, inproduction); // should create new entry if does not exist
 	}
-	public void addAllProducts(HashMap<Product, ProductInventory> in) {
+	public void addAllProducts(LinkedHashMap<Product, ProductInventory> in) {
 		products.putAll(in);
 	}
 	public void deleteMaterial(RawMaterial mtrl) {

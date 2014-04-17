@@ -55,6 +55,11 @@ public class RawMaterial implements Parcelable {
 		return (m.getName().equals(this.name));
 	}
 	
+	// needed for storing RawMaterial objects in HashMaps properly
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+	
     // Parcelable implementation
 	// This was done with minimal effort
 	// just to make it possible to put objects in bundle

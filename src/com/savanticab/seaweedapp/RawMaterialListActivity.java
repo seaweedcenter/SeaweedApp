@@ -2,6 +2,7 @@ package com.savanticab.seaweedapp;
 
 import java.util.List;
 
+import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
@@ -50,7 +51,9 @@ public class RawMaterialListActivity extends FragmentActivity implements
 		
 		// load raw materials to populate list
 		MySQLiteHelper helper = MySQLiteHelper.getInstance(this);
-		rawMaterialList = helper.getAllRawMaterials();
+		Inventory inventory = helper.getInventory();
+		rawMaterialList = inventory.getMaterialList();
+		//rawMaterialList = helper.getAllRawMaterials();
 				
 		if (findViewById(R.id.rawmaterial_detail_container) != null) {
 			// The detail container view will be present only in the

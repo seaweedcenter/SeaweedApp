@@ -1,6 +1,7 @@
 package com.savanticab.seaweedapp.model;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class Recipe implements Parcelable {
 	private Product product;
 	//private RawMaterial rawMaterial;
 	//private double quantity;
-	private HashMap<RawMaterial, Double> ingredients;
+	private LinkedHashMap<RawMaterial, Double> ingredients;
 	
 	public int getId() {
 		return id;
@@ -34,27 +35,30 @@ public class Recipe implements Parcelable {
 		//this.id = product.getId();
 	}
 
-	public HashMap<RawMaterial, Double> getIngredients() {
+	public LinkedHashMap<RawMaterial, Double> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(HashMap<RawMaterial, Double> ingredients) {
+	public void setIngredients(LinkedHashMap<RawMaterial, Double> ingredients) {
 		this.ingredients = ingredients;
 	}
 
 	public Recipe(){
-		ingredients = new HashMap<RawMaterial, Double>();
+		ingredients = new LinkedHashMap<RawMaterial, Double>();
 	}
 	
-	public Recipe(Product p, HashMap<RawMaterial, Double> ingredients){
+	public Recipe(Product p, LinkedHashMap<RawMaterial, Double> ingredients){
 		this.product = p;
 		this.id = p.getId();	// is recipe ID supposed to be the same as prod. ID?
 		this.ingredients = ingredients; //new HashMap<RawMaterial, Double>();
 	}
 	
-	// TODO: should implement hashCode() too...for all model classes... SHA-1 based hashcode?
+	// TODO: think about a more proper way of implementing equals and hashCode ?
 	public boolean equals(Recipe r){
 		return (r.getId() == this.getId());
+	}
+	public int hashCode() {
+		return (this.id + " " + product.getName() + product.getCode()).hashCode();
 	}
 		
 	public String toString() {
@@ -98,7 +102,7 @@ public class Recipe implements Parcelable {
     private Recipe(Parcel in) {
     	id = in.readInt();
     	product = (Product) in.readParcelable(Product.class.getClassLoader());
-    	ingredients = (HashMap<RawMaterial, Double>) in.readSerializable();
+    	ingredients = (LinkedHashMap<RawMaterial, Double>) in.readSerializable();
     }
 	
 }

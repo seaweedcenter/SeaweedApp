@@ -42,6 +42,7 @@ public class RawMaterialDetailFragment extends Fragment {
 	//private DummyContent.DummyItem mItem;
 	private RawMaterial mItem;
 	private MySQLiteHelper sqlhelper;
+	private Inventory inventory;
 	
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,6 +56,7 @@ public class RawMaterialDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		
 		sqlhelper = MySQLiteHelper.getInstance(getActivity().getApplicationContext());
+		inventory = sqlhelper.getInventory();
 		
 		if (getArguments().containsKey(ARG_ITEM_ID)) {
 			// Load the dummy content specified by the fragment
@@ -96,8 +98,7 @@ public class RawMaterialDetailFragment extends Fragment {
 				            	 
 				            	 if (!msg.isEmpty() & oneChecked) {
 				            		 
-				            		 Inventory inventory = sqlhelper.getInventory();
-				            		 RawMaterial mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
+				            		 RawMaterial mtrl = mItem; //sqlhelper.findRawMaterialByName(mItem.getName()).entrySet().iterator().next().getKey();
 				            		 if (chkBoxStock.isChecked())
 				            		 {
 				            			 double newQuantity = inventory.getMtrlStock(mtrl) + Double.parseDouble(msg);
@@ -168,21 +169,22 @@ public class RawMaterialDetailFragment extends Fragment {
 	private void updateObjects(View rootView) {
 
 		// TODO: look into this, looks very cumbersome to extract objects...
-		HashMap<RawMaterial, MaterialInventory> mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
-		RawMaterial material = mtrl.keySet().iterator().next();
-		MaterialInventory inv = mtrl.get(material);
+		//HashMap<RawMaterial, MaterialInventory> mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
+		//RawMaterial material = mtrl.keySet().iterator().next();
+		//MaterialInventory inv = inventory.get//mtrl.get(material);
+		// använd bara mItem?
 		
 		((TextView) rootView.findViewById(R.id.title_rawmaterial_detail))
-		.setText(material.getName()); //.setText(mItem.content);
+		.setText(mItem.getName()); //.setText(mItem.content);
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_stock_quantity))
-		.setText(Double.toString(inv.stock) + " " + material.getUnit());
+		.setText(Double.toString(inventory.getMtrlStock(mItem)) + " " + mItem.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_ordered_quantity))
-		.setText(Double.toString(inv.ordered) + " " + material.getUnit());
+		.setText(Double.toString(inventory.getMtrlOrdered(mItem)) + " " + mItem.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_allocated_quantity))
-		.setText(Double.toString(inv.reserved) + " " + material.getUnit());
+		.setText(Double.toString(inventory.getMtrlReserved(mItem)) + " " + mItem.getUnit());
 		
 	}
 		

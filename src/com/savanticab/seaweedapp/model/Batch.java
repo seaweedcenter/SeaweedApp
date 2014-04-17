@@ -89,6 +89,14 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		quantity = 0;
 	}
 	
+	public boolean equals(Object o){
+		Batch other = (Batch) o;
+		return (other.getId() == this.id);
+	}
+	public int hashCode() {
+		return (id + " " + recipe.getProduct().getName() 
+				+ recipe.getProduct().getCode() + " " + startDate).hashCode();
+	}
 	
 	// Parcelable implementation
 		// This was done with minimal effort

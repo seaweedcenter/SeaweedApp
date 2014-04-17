@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
+import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
@@ -75,7 +76,8 @@ public class RawMaterialListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		
 		MySQLiteHelper helper = MySQLiteHelper.getInstance(this.getActivity());
-		List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
+		Inventory inventory = helper.getInventory();
+		List<RawMaterial> rawMaterialList = inventory.getMaterialList();
 		
 		// TODO: replace with a real list adapter.
 		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
@@ -85,7 +87,7 @@ public class RawMaterialListFragment extends ListFragment {
 				android.R.layout.simple_list_item_activated_1,
 				android.R.id.text1, rawMaterialList));
 	}
-
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);

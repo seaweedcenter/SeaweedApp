@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +56,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         addRawMaterial(new RawMaterial("Seaweed", "Kg", ""), new MaterialInventory(50, 0, 0.0));
         addRawMaterial(new RawMaterial("Bee wax", "Kg", ""), new MaterialInventory(5, 2, 0.0));
         
-        HashMap m = new HashMap<RawMaterial, Double>();
+        LinkedHashMap m = new LinkedHashMap<RawMaterial, Double>();
         m.put(new RawMaterial("Coconut oil", "L", ""), 1.0);
         m.put(new RawMaterial("Seaweed", "Kg", ""), 0.5);
         Recipe r = new Recipe(new Product("SOAP1", "Soap", "Lime", "Big", 10.0), m);
         addRecipe(r);
         
-        m = new HashMap<RawMaterial, Double>();
+        m = new LinkedHashMap<RawMaterial, Double>();
         m.put(new RawMaterial("Coconut oil", "L", ""), 2.0);
         m.put(new RawMaterial("Bee wax", "Kg", ""), 0.25);
         r = new Recipe(new Product("SOAP2", "Soap", "Clove", "Small", 6.0), m);
@@ -118,12 +119,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	return findProduct(query);
     }
     
-    private HashMap<Product, ProductInventory> findProduct(String query) {
+    private LinkedHashMap<Product, ProductInventory> findProduct(String query) {
     	    	
     	SQLiteDatabase db = this.getWritableDatabase();
     	Cursor cursor = db.rawQuery(query, null);
     	
-    	HashMap<Product, ProductInventory> p = new HashMap<Product, ProductInventory>();
+    	LinkedHashMap<Product, ProductInventory> p = new LinkedHashMap<Product, ProductInventory>();
     	Product product = new Product();
     	ProductInventory quantities = new ProductInventory();
     	
@@ -146,9 +147,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	return p;
     }
     
-    public HashMap<Product, ProductInventory> getAllProducts() {
+    public LinkedHashMap<Product, ProductInventory> getAllProducts() {
     	
-    	HashMap<Product, ProductInventory> products = new HashMap<Product, ProductInventory>();
+    	LinkedHashMap<Product, ProductInventory> products = new LinkedHashMap<Product, ProductInventory>();
  
         String query = "SELECT  * FROM " + ProductTable.TABLE_NAME;
  
@@ -156,10 +157,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
  
         Product product = null;
-        ProductInventory quantities = new ProductInventory();
+        
         if (cursor.moveToFirst()) {
             do {
             	product = new Product();
+            	ProductInventory quantities = new ProductInventory();
+            	
             	product.setId(Integer.parseInt(cursor.getString(0)));
         		product.setCode(cursor.getString(1));
         		product.setName(cursor.getString(2));
@@ -252,9 +255,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 //    	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
 //    	return findRawMaterial(query);
 //    }
-    public RawMaterial findRawMaterialByName(String materialname){
+    public HashMap<RawMaterial, MaterialInventory> findRawMaterialByName(String materialname){
     	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
-    	return findRawMaterial(query).entrySet().iterator().next().getKey();
+    	return findRawMaterial(query);
     }
     private HashMap<RawMaterial, MaterialInventory> findRawMaterial(String query){    	
     	SQLiteDatabase db = this.getWritableDatabase();
@@ -283,9 +286,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	return m;
     }
     
-    public HashMap<RawMaterial, MaterialInventory> getAllRawMaterials() {
+    public LinkedHashMap<RawMaterial, MaterialInventory> getAllRawMaterials() {
     	
-        HashMap<RawMaterial, MaterialInventory> materials = new HashMap<RawMaterial, MaterialInventory>();
+    	LinkedHashMap<RawMaterial, MaterialInventory> materials = new LinkedHashMap<RawMaterial, MaterialInventory>();
         
         String query = "SELECT  * FROM " + RawMaterialTable.TABLE_NAME;
  
@@ -293,11 +296,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
  
         RawMaterial material = null;
-        MaterialInventory quantities = new MaterialInventory();
+        
         
         if (cursor.moveToFirst()) {
             do {
             	material = new RawMaterial();
+            	MaterialInventory quantities = new MaterialInventory();
+            	
             	material.setId(Integer.parseInt(cursor.getString(0)));
         		material.setName(cursor.getString(1));
         		material.setUnit(cursor.getString(2));
@@ -390,13 +395,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	Cursor cursor = db.rawQuery(query, null);
     	
     	Recipe recipe = new Recipe();
-    	HashMap<RawMaterial, Double> ingredients = new HashMap<RawMaterial, Double>();
+    	LinkedHashMap<RawMaterial, Double> ingredients = new LinkedHashMap<RawMaterial, Double>();
     	if (cursor.moveToFirst()) {
     		Integer productId = Integer.parseInt(cursor.getString(0));
     		recipe.setProduct(findProductById(productId).entrySet().iterator().next().getKey());
     		do {
     			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
-    			RawMaterial material = findRawMaterialById(raw_material_id);
+    			RawMaterial material = findRawMaterialById(raw_material_id).entrySet().iterator().next().getKey();
     			double quantity = Double.parseDouble(cursor.getString(2));
     			ingredients.put(material, quantity);
             } while (cursor.moveToNext());
@@ -440,10 +445,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 	//recipes.add(recipe);
             	}
     			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
-    			RawMaterial material = findRawMaterialById(raw_material_id);
+    			RawMaterial material = findRawMaterialById(raw_material_id).entrySet().iterator().next().getKey();
     			double quantity = Double.parseDouble(cursor.getString(2));
     			
-    			HashMap<RawMaterial, Double> ingredients = recipe.getIngredients();
+    			LinkedHashMap<RawMaterial, Double> ingredients = recipe.getIngredients();
     			ingredients.put(material, quantity);
     			recipe.setIngredients(ingredients);
     			recipes.remove(recipe); // remove (if already present, determined by product ID) and re-insert
@@ -734,9 +739,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public Inventory getInventory() {
     	
     	Inventory inventory = new Inventory();
-    	HashMap<RawMaterial, MaterialInventory> materials = getAllRawMaterials();
+    	LinkedHashMap<RawMaterial, MaterialInventory> materials = getAllRawMaterials();
     	inventory.addAllMaterials(materials);
-    	HashMap<Product, ProductInventory> products = getAllProducts();
+    	LinkedHashMap<Product, ProductInventory> products = getAllProducts();
     	inventory.addAllProducts(products);
     	
     	return inventory;
