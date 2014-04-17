@@ -15,12 +15,13 @@ import com.savanticab.seaweedapp.model.RawMaterial;
 
 public class Batch implements Parcelable, Comparable<Batch> {
 
-	private int id;
+	private int id;		// incremented in app as batches are created
 	private Recipe recipe;
-	private int quantity;
+	private int quantity;	// to produce
 	private Date startDate;
-	private Date finishDate;
+	private Date finishDate;	// null if job is unfinished
 	
+	// getters and setters
 	public int getId() {
 		return id;
 	}
@@ -33,7 +34,6 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	public void setIsFinished(boolean finished) {
 		if (finished) {
 			this.finishDate = new Date();
-			
 		}
 		else {
 			this.finishDate = null;
@@ -63,6 +63,8 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
 	}
+	
+	// controls eg. how Batch objects are represented in Spinners, ListViews etc
 	public String toString() {
 		String returnstring = "ID: "+id;
 		if (recipe == null) {
@@ -74,6 +76,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		return returnstring;
 	}
 	
+	// constructors
 	public Batch(Recipe recipe, int id, int quantity) {
 		startDate = new Date();
 		finishDate = null; // not yet finished
@@ -89,6 +92,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		quantity = 0;
 	}
 	
+	// equals and hashCode needed for LinkedHashMaps elsewhere
 	public boolean equals(Object o){
 		Batch other = (Batch) o;
 		return (other.getId() == this.id);
@@ -99,38 +103,37 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	}
 	
 	// Parcelable implementation
-		// This was done with minimal effort
-		// just to make it possible to put objects in bundle
-	    public int describeContents() {
-	      return 0;
-	    }
-	    public void writeToParcel(Parcel out, int flags) {
-	    	out.writeInt(id);
-	    	out.writeParcelable(recipe, flags);
-	    	out.writeInt(quantity);
-	    	out.writeSerializable(startDate);
-	    	out.writeSerializable(finishDate);
-	    }
-	    public static final Parcelable.Creator<Batch> CREATOR
-	        = new Parcelable.Creator<Batch>() {
-	    	public Batch createFromParcel(Parcel in) {
-	    		return new Batch(in);
-	      }
-	      public Batch[] newArray(int size) {
-	        return new Batch[size];
-	      }
-	    };
-	    private Batch(Parcel in) {
-	    	id = in.readInt();
-	    	recipe = in.readParcelable(Recipe.class.getClassLoader());
-	    	quantity = in.readInt();
-	    	startDate = (Date)in.readSerializable();
-	    	finishDate = (Date)in.readSerializable();
-	    }
-	    
-	    // Comparator implementation
-	    public int compareTo(Batch other) {
-	    	return (this.getId()<other.getId() ? 1 : this.getId() > other.getId() ? 1 : 0);
-	    }
+	// needed to pass objects around between activities etc
+    public int describeContents() {
+      return 0;
+    }
+    public void writeToParcel(Parcel out, int flags) {
+    	out.writeInt(id);
+    	out.writeParcelable(recipe, flags);
+    	out.writeInt(quantity);
+    	out.writeSerializable(startDate);
+    	out.writeSerializable(finishDate);
+    }
+    public static final Parcelable.Creator<Batch> CREATOR
+        = new Parcelable.Creator<Batch>() {
+    	public Batch createFromParcel(Parcel in) {
+    		return new Batch(in);
+      }
+      public Batch[] newArray(int size) {
+        return new Batch[size];
+      }
+    };
+    private Batch(Parcel in) {
+    	id = in.readInt();
+    	recipe = in.readParcelable(Recipe.class.getClassLoader());
+    	quantity = in.readInt();
+    	startDate = (Date)in.readSerializable();
+    	finishDate = (Date)in.readSerializable();
+    }
+    
+    // Comparator implementation
+    public int compareTo(Batch other) {
+    	return (this.getId()<other.getId() ? 1 : this.getId() > other.getId() ? 1 : 0);
+    }
 	
 }

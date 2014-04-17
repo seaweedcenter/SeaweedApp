@@ -9,6 +9,14 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 /**
+ * 
+ * "Main" activity for creating the list of Batches on side
+ * and when selecting one batch launch user interaction to work with given Batch
+ * 
+ * Catch callbacks from list fragment (ProductionDocumentListFragment)
+ * using onItemSelected(). onItemSelected activates the fragment for further
+ * user interaction: ProductionDocumentDetailFragment
+ * 
  * An activity representing a list of ProductionDocuments. This activity has
  * different presentations for handset and tablet-size devices. On handsets, the
  * activity presents a list of items, which when touched, lead to a

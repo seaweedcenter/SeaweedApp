@@ -26,6 +26,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+// read/write to local SQLite DB
+// TODO: think about homogenizing the different find* methods, not so consistent now...
+// could even think about merging this class and Inventory class?
+
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
 	// Database Version
@@ -44,7 +48,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         return sInstance;
       }
+    
     public MySQLiteHelper(Context context) {
+    	
+    	// set up a basic database to start from
     	// TODO: addProduct and the rest "adders" should check if item variation already exists
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
         addProduct(new Product("SOAP1", "Soap", "Lime", "Big", 10.0), new ProductInventory(200, 0));
@@ -68,9 +75,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         r = new Recipe(new Product("SOAP2", "Soap", "Clove", "Small", 6.0), m);
         addRecipe(r);
         
-        //Batch b = new Batch(r, 1, 100);
-        //addBatch(b);
-        
     }
     
     @Override
@@ -92,7 +96,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     
     //Products
     public void addProduct(Product product, ProductInventory quantities) {
-
         ContentValues values = new ContentValues();
         values.put(ProductTable.COLUMN_ID, product.getId());
         values.put(ProductTable.COLUMN_CODE, product.getCode());
@@ -104,7 +107,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(ProductTable.COLUMN_INPRODUCTIONQTY, quantities.inproduction);
         
         SQLiteDatabase db = this.getWritableDatabase();
-        
         db.insert(ProductTable.TABLE_NAME, null, values);
         db.close();
     }
@@ -149,13 +151,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     
     public LinkedHashMap<Product, ProductInventory> getAllProducts() {
     	
-    	LinkedHashMap<Product, ProductInventory> products = new LinkedHashMap<Product, ProductInventory>();
- 
         String query = "SELECT  * FROM " + ProductTable.TABLE_NAME;
- 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
- 
+        
+        LinkedHashMap<Product, ProductInventory> products = new LinkedHashMap<Product, ProductInventory>();
         Product product = null;
         
         if (cursor.moveToFirst()) {
@@ -171,10 +171,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         		product.setPrice(Double.parseDouble(cursor.getString(5)));
         		quantities.stock = Integer.parseInt(cursor.getString(6));
         		quantities.inproduction = Integer.parseInt(cursor.getString(7));
-        		//product.setInStockQty(Integer.parseInt(cursor.getString(6)));
-        		//product.setInProductionQty(Integer.parseInt(cursor.getString(7)));
         		
-            	products.put(product, quantities);
+        		products.put(product, quantities);
             } while (cursor.moveToNext());
         }
         db.close();
@@ -194,28 +192,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(ProductTable.COLUMN_PRICE, product.getPrice());
         values.put(ProductTable.COLUMN_INSTOCKQTY, quantities.stock);
         values.put(ProductTable.COLUMN_INPRODUCTIONQTY, quantities.inproduction);
-        
         // 3. updating row
         int i = db.update(ProductTable.TABLE_NAME, //table
                 values, // column/value
                 ProductTable.COLUMN_ID+" = ?", // selections
                 new String[] { String.valueOf(product.getId()) }); //selection args
- 
         // 4. close
         db.close();
- 
         return i;
  
     }
     public boolean deleteProduct(String productcode) {
     	
     	boolean result = false;
-    	
     	String query = "Select * FROM " + ProductTable.TABLE_NAME + " WHERE " + ProductTable.COLUMN_CODE + " =  \"" + productcode + "\"";
-
-    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
     	
     	Product product = new Product();
@@ -243,10 +234,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(RawMaterialTable.COLUMN_ICON, material.getIcon());
  
         SQLiteDatabase db = this.getWritableDatabase();
-        
         db.insert(RawMaterialTable.TABLE_NAME, null, values);
         db.close();
     }
+
     public HashMap<RawMaterial, MaterialInventory> findRawMaterialById(int materialId){
     	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_ID + " =  \"" + materialId + "\"";
     	return findRawMaterial(query);
@@ -259,9 +250,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
     	return findRawMaterial(query);
     }
+    
     private HashMap<RawMaterial, MaterialInventory> findRawMaterial(String query){    	
+    
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
     	
     	HashMap<RawMaterial, MaterialInventory> m = new HashMap<RawMaterial, MaterialInventory>();
@@ -281,22 +273,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     		material = null;
     	}
         db.close();
-        
         m.put(material, quantities);
     	return m;
     }
     
     public LinkedHashMap<RawMaterial, MaterialInventory> getAllRawMaterials() {
     	
-    	LinkedHashMap<RawMaterial, MaterialInventory> materials = new LinkedHashMap<RawMaterial, MaterialInventory>();
-        
         String query = "SELECT  * FROM " + RawMaterialTable.TABLE_NAME;
- 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
  
         RawMaterial material = null;
-        
+        LinkedHashMap<RawMaterial, MaterialInventory> materials = new LinkedHashMap<RawMaterial, MaterialInventory>();
         
         if (cursor.moveToFirst()) {
             do {
@@ -306,14 +294,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             	material.setId(Integer.parseInt(cursor.getString(0)));
         		material.setName(cursor.getString(1));
         		material.setUnit(cursor.getString(2));
-        		
         		quantities.stock = Double.parseDouble(cursor.getString(3));
         		quantities.ordered = Double.parseDouble(cursor.getString(4));
         		quantities.reserved = Double.parseDouble(cursor.getString(5));
-        		
         		material.setIcon(cursor.getString(6));
         		materials.put(material, quantities);
- 
             } while (cursor.moveToNext());
         }
         return materials;
@@ -341,20 +326,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         
         // 4. close
         db.close();
-        
         return i;
-        
     }
+    
     public boolean deleteRawMaterial(String materialname){
+    	
     	boolean result = false;
-    	
     	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
-
-    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
-    	
     	RawMaterial material = new RawMaterial();
     	
     	if (cursor.moveToFirst()) {
@@ -374,6 +354,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	ContentValues values;
     	int productId = recipe.getProduct().getId();
     	Set<Entry<RawMaterial, Double>> s = recipe.getIngredients().entrySet();
+
     	for(Entry<RawMaterial, Double> entry : recipe.getIngredients().entrySet()) {
     		RawMaterial ingredient = entry.getKey();
     	    Double quantity = entry.getValue();
@@ -387,15 +368,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	}
         db.close();
     }
+    
     public Recipe findRecipeByProductId(int productid){
+    
     	String query = "Select * FROM " + RecipeTable.TABLE_NAME + " WHERE " + RecipeTable.COLUMN_PRODUCT_ID + " =  \"" + productid + "\"";
-    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
-    	
     	Recipe recipe = new Recipe();
     	LinkedHashMap<RawMaterial, Double> ingredients = new LinkedHashMap<RawMaterial, Double>();
+    	
     	if (cursor.moveToFirst()) {
     		Integer productId = Integer.parseInt(cursor.getString(0));
     		recipe.setProduct(findProductById(productId).entrySet().iterator().next().getKey());
@@ -421,18 +402,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
     
     public List<Recipe> getAllRecipes() {
-        List<Recipe> recipes = new LinkedList<Recipe>();
         
+    	List<Recipe> recipes = new LinkedList<Recipe>();
         String query = "SELECT  * FROM " + RecipeTable.TABLE_NAME;
-        
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        
         Recipe recipe = null;
+        
         if (cursor.moveToFirst()) {
             do {
             	Integer productId = Integer.parseInt(cursor.getString(0));
-            	
             	for (Recipe r : recipes){
             		if (r.getProduct().getId() == productId) {
             			recipe = r;
@@ -442,8 +421,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             		recipe = new Recipe();
             		recipe.setProduct(findProductById(productId).entrySet().iterator().next().getKey());
                 	recipe.setId(productId);
-                	//recipes.add(recipe);
-            	}
+                }
     			Integer raw_material_id = Integer.parseInt(cursor.getString(1));
     			RawMaterial material = findRawMaterialById(raw_material_id).entrySet().iterator().next().getKey();
     			double quantity = Double.parseDouble(cursor.getString(2));
@@ -459,6 +437,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         return recipes;
     }
+    
     public int updateRecipe(Recipe recipe) {
  
         // 1. get reference to writable DB
@@ -517,17 +496,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	}
         // 4. close
         db.close();
- 
         return i;
     }
+ 
     public boolean deleteRecipe(int productid){
+    
     	boolean result = false;
-    	
     	String query = "Select * FROM " + RecipeTable.TABLE_NAME + " WHERE " + RecipeTable.COLUMN_PRODUCT_ID + " =  \"" + productid + "\"";
-
-    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
     	
     	if (cursor.moveToFirst()) {
@@ -572,17 +548,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public boolean deleteBatch(int id) {
     	
     	boolean result = false;
-    	
     	String query = "Select * FROM " + BatchTable.TABLE_NAME + " WHERE " + BatchTable.COLUMN_BATCH_ID + " =  \"" + id + "\"";
-    	
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
     	
-    	//Batch batch = new Batch();
-    	
     	if (cursor.moveToFirst()) {
-    		//batch.setId(Integer.parseInt(cursor.getString(0)));
     		db.delete(BatchTable.TABLE_NAME, BatchTable.COLUMN_BATCH_ID + " = ?",
     	            new String[] { String.valueOf(id) });
     		cursor.close();
@@ -597,11 +567,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	String query = "Select * FROM " + BatchTable.TABLE_NAME + " WHERE " + BatchTable.COLUMN_BATCH_ID + " =  \"" + batchid + "\"";
     	return findBatch(query);
     }
+
     private Batch findBatch(String query){
+
     	SQLiteDatabase db = this.getWritableDatabase();
-    	
     	Cursor cursor = db.rawQuery(query, null);
-    	
     	Batch batch = new Batch();
     	
     	if (cursor.moveToFirst()) {
@@ -617,7 +587,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     			}
     		}
     		batch.setRecipe(recipe);
-    		
     		batch.setQuantity(Integer.parseInt(cursor.getString(2)));
     		batch.setStartDate(new Date(Integer.parseInt(cursor.getString(3))));
     		batch.setFinishDate(new Date(Integer.parseInt(cursor.getString(4))));
@@ -630,10 +599,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
     
     public List<Batch> getAllBatches() {
-        List<Batch> batches = new LinkedList<Batch>();
-        
+    
+    	List<Batch> batches = new LinkedList<Batch>();
         String query = "SELECT  * FROM " + BatchTable.TABLE_NAME;
-        
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         
@@ -654,7 +622,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             		batch.setRecipe(findRecipeById(recipeId));
                 	batch.setId(id);
                 	batch.setQuantity(quantity);
-                	//recipes.add(recipe);
             	}
             	
             	Date start, finish;
@@ -677,10 +644,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             		finish.setTime(Long.parseLong(s2));;
             	}
             	batch.setFinishDate(finish);
-            	
             	batches.remove(batch); // remove (if already present, determined by product ID) and re-insert
     			batches.add(batch);
-    			
     			batch = null;
             } while (cursor.moveToNext());
         }
@@ -688,12 +653,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
     
     public int getLastBatchId() {
+    	
     	int lastId = 0;
     	List<Batch> allbatches = getAllBatches();
-    	
     	if (!allbatches.isEmpty()) {
     		Collections.sort(allbatches);
-    		//Collections.reverse(allbatches);
     		lastId = allbatches.get(allbatches.size()-1).getId();
     	}
 		return lastId;
@@ -726,24 +690,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	                values, // column/value
 	                BatchTable.COLUMN_BATCH_ID+" = ?", // selections
 	                new String[] { String.valueOf(batch.getId()) }); //selection args
-	        
-	        // 4. close
-	        
-        }
-        db.close();
+	    }
+        // 4. close
+	    db.close();
         return i;
- 
     }
     
     // get inventory
     public Inventory getInventory() {
-    	
     	Inventory inventory = new Inventory();
     	LinkedHashMap<RawMaterial, MaterialInventory> materials = getAllRawMaterials();
     	inventory.addAllMaterials(materials);
     	LinkedHashMap<Product, ProductInventory> products = getAllProducts();
     	inventory.addAllProducts(products);
-    	
     	return inventory;
     }
     
@@ -755,7 +714,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     	for (Entry<RawMaterial, MaterialInventory> material : materials.entrySet()) {
     		updateRawMaterial(material.getKey(), material.getValue());
     	}
-    	
     	Map<Product, ProductInventory> products = inventory.getProductInventory();
     	for (Entry<Product, ProductInventory> product : products.entrySet()) {
     		updateProduct(product.getKey(), product.getValue());

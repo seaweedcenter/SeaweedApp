@@ -5,11 +5,12 @@ import android.os.Parcelable;
 
 public class RawMaterial implements Parcelable {
 	
-	private int id;
+	private int id;	// id in SQL table and in app, hashed from name
 	private String name;
 	private String unit;
 	private String icon;
 	
+	// getters and setters
 	public int getId() {
 		return id;
 	}
@@ -36,6 +37,7 @@ public class RawMaterial implements Parcelable {
 		this.icon = icon;
 	}
 	
+	// describes object in Spinners, ListViews etc
 	public String toString() {
 		return this.name;
 	}
@@ -48,21 +50,19 @@ public class RawMaterial implements Parcelable {
 		this.icon = icon;
 	}
 	
-	// needed for List.contains()
+	// equals needed for List.contains()
+	// equals and hashCode needed for LinkedHashMap
 	public boolean equals(Object other) {
 		RawMaterial m = (RawMaterial)other;
 		boolean result = (m.getName().equals(this.name));
 		return (m.getName().equals(this.name));
 	}
-	
-	// needed for storing RawMaterial objects in HashMaps properly
 	public int hashCode() {
 		return this.name.hashCode();
 	}
 	
     // Parcelable implementation
-	// This was done with minimal effort
-	// just to make it possible to put objects in bundle
+	// for passing object in Bundle between activities etc
     public int describeContents() {
       return 0;
     }

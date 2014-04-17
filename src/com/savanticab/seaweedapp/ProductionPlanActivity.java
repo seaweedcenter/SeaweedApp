@@ -43,6 +43,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
 
+/*
+ * Present user with a dropdown (or Spinner to be precise)
+ * where Recipes can be selected
+ * an ArrayAdapter is loaded with Recipe objects
+ * 
+ * onItemSelected() in PlaceHolderFragment below handles Spinner selections
+ * the user can then create new Batch jobs
+ * 
+ */
+
+
 public class ProductionPlanActivity extends Activity {
 	
 	private List<RawMaterial> rawMaterialList;
@@ -56,13 +67,11 @@ public class ProductionPlanActivity extends Activity {
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		
+		}		
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.production_plan, menu);
 		return true;
@@ -79,9 +88,6 @@ public class ProductionPlanActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-	
 
 	/**
 	 * A placeholder fragment containing a simple view.

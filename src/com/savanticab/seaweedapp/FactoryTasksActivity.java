@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.content.Intent;
 
+// This Activity presents the user with a simple menu selection
+// in the form of simple buttons, each starting other Activities
+
 public class FactoryTasksActivity extends Activity {
 
 	@Override

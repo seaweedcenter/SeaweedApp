@@ -34,6 +34,9 @@ import com.savanticab.seaweedapp.model.Recipe;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
+ * Show selection from list (ProductionDocumentListActivity + Fragment)
+ * and handle user interaction
+ * 
  * A fragment representing a single ProductionDocument detail screen. This
  * fragment is either contained in a {@link ProductionDocumentListActivity} in
  * two-pane mode (on tablets) or a {@link ProductionDocumentDetailActivity} on

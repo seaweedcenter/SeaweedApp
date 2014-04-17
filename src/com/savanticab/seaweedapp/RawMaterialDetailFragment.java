@@ -25,6 +25,9 @@ import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.*;
 
 /**
+ *  User interactions (change material quantities basically) is handled here
+ * and in RawMaterialDetailFragment
+ * 
  * A fragment representing a single RawMaterial detail screen. This fragment is
  * either contained in a {@link RawMaterialListActivity} in two-pane mode (on
  * tablets) or a {@link RawMaterialDetailActivity} on handsets.
@@ -36,10 +39,6 @@ public class RawMaterialDetailFragment extends Fragment {
 	 */
 	public static final String ARG_ITEM_ID = "rawMaterial";//"item_id";
 
-	/**
-	 * The dummy content this fragment is presenting.
-	 */
-	//private DummyContent.DummyItem mItem;
 	private RawMaterial mItem;
 	private MySQLiteHelper sqlhelper;
 	private Inventory inventory;

@@ -16,6 +16,11 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 /**
+ * 
+ * "Main activity" for RawMaterial management
+ * 
+ * catch list selection and send user to "interaction screen" in RawMaterialDetailFragment.
+ * 
  * An activity representing a list of RawMaterials. This activity has different
  * presentations for handset and tablet-size devices. On handsets, the activity
  * presents a list of items, which when touched, lead to a

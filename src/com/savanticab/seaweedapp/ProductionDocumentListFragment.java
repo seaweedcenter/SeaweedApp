@@ -17,6 +17,10 @@ import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
+ * Responsible for listing Batches
+ * Batch objects are loaded into an ArrayAdapter object used in the listing
+ * when selecting an object, callback goes to ProductionDocumentListActivity
+ * 
  * A list fragment representing a list of ProductionDocuments. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is currently
@@ -153,7 +157,7 @@ public class ProductionDocumentListFragment extends ListFragment {
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
 		//mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
-		mCallbacks.onItemSelected(b);
+		mCallbacks.onItemSelected(b); // this goes to ProductionDocumentListActivity
 	}
 
 	@Override

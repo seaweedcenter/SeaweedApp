@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp.model;
 
+// minimalist helper class for use in Inventory
 public class MaterialInventory {
 	public double stock;
 	public double ordered;

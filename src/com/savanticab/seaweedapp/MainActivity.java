@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.app.ActionBar;
 
+// Title self-explanatory
+// starting point of App
+
 public class MainActivity extends Activity {
 
 	@Override

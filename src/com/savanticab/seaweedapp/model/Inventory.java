@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
+// Inventory class holds quantities of RawMaterials and Products
+// typically read from database and created by MySQLiteHelper "helper.getInventory()" when needed
+// 
+
 // TODO: think about handling cases such as
 // TODO: - material/product not found in Map
 
@@ -116,7 +121,7 @@ public class Inventory {
 		products.put(product, inv);
 	}
 	
-	// add and delete materials
+	// add and delete materials and products
 	public void addMaterial(RawMaterial mtrl, double stock, 
 			double ordered, double reserved) {
 		setMaterialQuantities(mtrl, stock, ordered, reserved); // should create new entry if does not exist

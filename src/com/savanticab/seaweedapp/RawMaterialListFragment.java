@@ -15,6 +15,11 @@ import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
+ * 
+ * Most things for listing materials to the side of the screen is handled here
+ * A list of RawMaterials is loaded into a list from Inventory 
+ * the list is then loaded into an ArrayAdapter used in the material listing
+ * 
  * A list fragment representing a list of RawMaterials. This fragment also
  * supports tablet devices by allowing list items to be given an 'activated'
  * state upon selection. This helps indicate which item is currently being

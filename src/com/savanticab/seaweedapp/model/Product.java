@@ -5,13 +5,14 @@ import android.os.Parcelable;
 
 public class Product implements Parcelable {
 	
-	private int id;
+	private int id;	// id in SQL table and in app, hashed from code member
 	private String code;
 	private String name;
 	private String fragance;
 	private String size;
 	private Double price;
 	
+	// getters and setters...
 	public String getCode() {
 		return code;
 	}
@@ -25,7 +26,6 @@ public class Product implements Parcelable {
 	public void setPrice(Double p) {
 		this.price = p;
 	}
-	
 	public String getName() {
 		return name;
 	}
@@ -51,6 +51,7 @@ public class Product implements Parcelable {
 		this.id = id;
 	}
 	
+	// equals and hashcode needed for proper LinkedHashMap compatibility
 	public boolean equals(Object other) {
 		Product p = (Product)other;
 		if (!p.getCode().equals(this.code)){ return false; }
@@ -59,7 +60,6 @@ public class Product implements Parcelable {
 		if (!p.getSize().equals(this.size)) { return false; }
 		return true;
 	}
-	
 	public int hashCode() {
 		return (this.name + this.code + this.fragance + this.size).hashCode();
 	}
@@ -74,11 +74,9 @@ public class Product implements Parcelable {
 		this.size = size;
 		this.price = price;
 	}
-
 	
 	// Parcelable implementation
-	// This was done with minimal effort
-	// just to make it possible to put objects in bundle
+	// needed when passing Products around in Bundles for example
     public int describeContents() {
       return 0;
     }
