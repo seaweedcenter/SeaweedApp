@@ -143,19 +143,20 @@ public class Inventory {
 	}
 	
 	// material transactions
-	public void MtrlReserve(RawMaterial mtrl, int qty) {
-		MaterialInventory inv = materials.get(mtrl); // TODO: handle when object not found?
+	// TODO: handle when object not found?
+	public void MtrlReserve(RawMaterial mtrl, double qty) { // when batch is created
+		MaterialInventory inv = materials.get(mtrl); 
 		inv.stock -= qty;
 		inv.reserved += qty;
 		materials.put(mtrl, inv);
 	}
-	public void MtrlUnreserve(RawMaterial mtrl, int qty) {	// use if batch is cancelled
+	public void MtrlUnreserve(RawMaterial mtrl, double qty) {	// use if batch is cancelled
 		MaterialInventory inv = materials.get(mtrl);
 		inv.stock += qty;
 		inv.reserved -= qty;
 		materials.put(mtrl, inv);
 	}
-	public void MtrlReservedUsed(RawMaterial mtrl, int qty) {
+	public void MtrlReservedFinished(RawMaterial mtrl, double qty) { // when batch job is finished
 		MaterialInventory inv = materials.get(mtrl);
 		inv.reserved -= qty;
 		materials.put(mtrl, inv);

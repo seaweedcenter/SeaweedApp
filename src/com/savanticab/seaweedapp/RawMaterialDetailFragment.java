@@ -102,13 +102,12 @@ public class RawMaterialDetailFragment extends Fragment {
 				            		 {
 				            			 double newQuantity = inventory.getMtrlStock(mtrl) + Double.parseDouble(msg);
 				            			 inventory.setMtrlStock(mtrl, newQuantity);
-				            			 //mtrl.setStockQuantity(newQuantity);
+				            			 inventory.setMtrlOrdered(mtrl, inventory.getMtrlOrdered(mtrl)-Double.parseDouble(msg));
 				            		 }
 				            		 if (chkBoxOrdered.isChecked())
 				            		 {
 				            			 double newQuantity = inventory.getMtrlOrdered(mtrl) + Double.parseDouble(msg);
 				            			 inventory.setMtrlOrdered(mtrl, newQuantity);
-				            			 //mtrl.setOrderedQuantity(newQuantity);
 				            		 }				            		 
 				            		 //sqlhelper.updateRawMaterial(mtrl);
 				            		 sqlhelper.updateInventory(inventory);
@@ -182,7 +181,7 @@ public class RawMaterialDetailFragment extends Fragment {
 		((TextView) rootView.findViewById(R.id.rawmaterial_ordered_quantity))
 		.setText(Double.toString(inventory.getMtrlOrdered(mItem)) + " " + mItem.getUnit());
 		
-		((TextView) rootView.findViewById(R.id.rawmaterial_allocated_quantity))
+		((TextView) rootView.findViewById(R.id.rawmaterial_reserved_quantity))
 		.setText(Double.toString(inventory.getMtrlReserved(mItem)) + " " + mItem.getUnit());
 		
 	}

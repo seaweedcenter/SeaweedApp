@@ -66,10 +66,10 @@ public final class R {
         public static final int productiondocument_detail_startdate=0x7f080025;
         public static final int productiondocument_list=0x7f08000c;
         public static final int productiondocument_recipe_title=0x7f08002b;
-        public static final int rawmaterial_allocated_quantity=0x7f080036;
         public static final int rawmaterial_detail_container=0x7f08000d;
         public static final int rawmaterial_list=0x7f08000e;
         public static final int rawmaterial_ordered_quantity=0x7f080035;
+        public static final int rawmaterial_reserved_quantity=0x7f080036;
         public static final int rawmaterial_stock_quantity=0x7f080034;
         public static final int spinner_product_name=0x7f080019;
         public static final int tableRowHeading1=0x7f08001d;

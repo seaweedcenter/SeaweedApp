@@ -196,6 +196,8 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			//helper.updateProduct(product);
 			batch.setIsFinished(true);
 			
+			// todo: subtract from reserved materials here!
+			
 			// update database
 			// TODO: consolidate updateBatch and updateInventory to "updateDB" ?
 			helper.updateBatch(batch);

@@ -53,7 +53,7 @@
             android:layout_row="3"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 		<TextView
-            android:id="@+id/rawmaterial_allocated_quantity"
+            android:id="@+id/rawmaterial_reserved_quantity"
             android:layout_column="3"
             android:layout_gravity="left"
             android:layout_row="3"

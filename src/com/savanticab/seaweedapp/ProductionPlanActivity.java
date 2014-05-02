@@ -332,16 +332,18 @@ public class ProductionPlanActivity extends Activity {
 					bundle.putInt("quantity", quantity);
 					
 					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					Inventory inventory = helper.getInventory();
 					Batch batch = new Batch(recipe, helper.getLastBatchId()+1, quantity);
 					
 					// reserve material
-//					HashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
-//					for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
-//						double quantity = entry.getValue();
-//						RawMaterial material = entry.getKey();
-//						material.setStockQuantity(material.get);
-//					}
+					HashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
+					for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+						double qty = entry.getValue()*quantity;
+						RawMaterial material = entry.getKey();
+						inventory.MtrlReserve(material, qty);
+					}
 					helper.addBatch(batch);
+					helper.updateInventory(inventory);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);
 					startActivity(i);
