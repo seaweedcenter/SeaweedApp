@@ -116,7 +116,7 @@ public class ProductionPlanActivity extends Activity {
 			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
 			// which holds Recipe objects. The Recipe.toString() provides the text description shown
 			productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
-			ArrayAdapter<Recipe> aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item);
+			ArrayAdapter<Recipe> aa = new ArrayAdapter<Recipe>(getActivity(), android.R.layout.simple_spinner_item);
 			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			
 			TextView textVariation = (TextView) rootView.findViewById(R.id.text_product_variation);

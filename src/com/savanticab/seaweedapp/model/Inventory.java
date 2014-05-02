@@ -38,7 +38,7 @@ public class Inventory {
 		return materials;
 	}
 	public List<RawMaterial> getMaterialList() {
-		List <RawMaterial> materialList = new LinkedList();
+		List <RawMaterial> materialList = new LinkedList<RawMaterial>();
 		for (Entry<RawMaterial, MaterialInventory> entry : materials.entrySet()) {
 			materialList.add(entry.getKey());
 		}
@@ -51,7 +51,7 @@ public class Inventory {
 		return products;
 	}
 	public LinkedList<Product> getProductList() {
-		LinkedList <Product> productList = new LinkedList();
+		LinkedList <Product> productList = new LinkedList<Product>();
 		for (Entry<Product, ProductInventory> entry : products.entrySet()) {
 			productList.add(entry.getKey());
 		}

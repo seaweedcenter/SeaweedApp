@@ -63,7 +63,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         addRawMaterial(new RawMaterial("Seaweed", "Kg", ""), new MaterialInventory(50, 0, 0.0));
         addRawMaterial(new RawMaterial("Bee wax", "Kg", ""), new MaterialInventory(5, 2, 0.0));
         
-        LinkedHashMap m = new LinkedHashMap<RawMaterial, Double>();
+        LinkedHashMap<RawMaterial, Double> m = new LinkedHashMap<RawMaterial, Double>();
         m.put(new RawMaterial("Coconut oil", "L", ""), 1.0);
         m.put(new RawMaterial("Seaweed", "Kg", ""), 0.5);
         Recipe r = new Recipe(new Product("SOAP1", "Soap", "Lime", "Big", 10.0), m);
