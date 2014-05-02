@@ -163,11 +163,19 @@ public class Inventory {
 	}
 	
 	// product transactions
-	public void ProductProductionFinish(Product product, int qty) {
+	public void ProductProductionFinish(Product product, Batch batch) {
+		int productQty = batch.getQuantity();
 		ProductInventory inv = products.get(product);
-		inv.stock += qty;
-		inv.inproduction -= qty;
+		inv.stock += productQty;
+		inv.inproduction -= productQty;
 		products.put(product, inv);
+		
+		// unreserve materials that were allocated for production
+		LinkedHashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
+		for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
+			RawMaterial mtrl =  entry.getKey();
+			this.MtrlReservedFinished(mtrl, entry.getValue()*productQty);
+		}
 	}
 	
 	// check for "contains"

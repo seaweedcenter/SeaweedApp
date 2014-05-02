@@ -169,7 +169,6 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			rowRecipeButtons.addView(new TextView(this.getActivity()));
 			table.addView(rowRecipeButtons);
 			
-			
 		}
 		
 		return rootView;
@@ -180,26 +179,18 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 	
 		TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_ProdDoc);
 		
+		// user click: batch finished
 		if (v.getId()==buttonOK.getId() & !batch.isFinished()) {
-			// do stuff, 
-			//present a summary of finished products 
-			// add to stock inventory too
-			// set batch job as finished, TODO: divide batch listing into unfinished and finished jobs?
 			
 			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 			Inventory inventory = helper.getInventory();
 			
+			// update inventories and mark batch finished
 			Product product = batch.getRecipe().getProduct();
-			inventory.ProductProductionFinish(product, batch.getQuantity());
-			//product.setInStockQty(product.getInStockQty()+batch.getQuantity()); // should throw an exception or something if this goes towards negative
-			//product.setInProductionQty(product.getInProductionQty()-batch.getQuantity());
-			//helper.updateProduct(product);
+			inventory.ProductProductionFinish(product, batch);
 			batch.setIsFinished(true);
 			
-			// todo: subtract from reserved materials here!
-			
 			// update database
-			// TODO: consolidate updateBatch and updateInventory to "updateDB" ?
 			helper.updateBatch(batch);
 			helper.updateInventory(inventory);
 			
