@@ -1,17 +1,11 @@
 package com.savanticab.seaweedapp.model;
 
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.savanticab.seaweedapp.model.Recipe;
-import com.savanticab.seaweedapp.model.Product;
-import com.savanticab.seaweedapp.model.RawMaterial;
 
 public class Batch implements Parcelable, Comparable<Batch> {
 

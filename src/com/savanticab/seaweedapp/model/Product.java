@@ -75,6 +75,7 @@ public class Product implements Parcelable {
 		this.price = price;
 	}
 	
+	
 	// Parcelable implementation
 	// needed when passing Products around in Bundles for example
     public int describeContents() {

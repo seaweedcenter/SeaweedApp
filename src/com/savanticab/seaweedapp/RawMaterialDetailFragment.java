@@ -40,8 +40,8 @@ public class RawMaterialDetailFragment extends Fragment {
 	public static final String ARG_ITEM_ID = "rawMaterial";//"item_id";
 
 	private RawMaterial mItem;
-	private MySQLiteHelper sqlhelper;
-	private Inventory inventory;
+	private MaterialInventoryDBAdapter mDBAdaptor;
+	//private Inventory inventory;
 	
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,8 +54,8 @@ public class RawMaterialDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		sqlhelper = MySQLiteHelper.getInstance(getActivity().getApplicationContext());
-		inventory = sqlhelper.getInventory();
+		mDBAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
+		//inventory = sqlhelper.getInventory();
 		
 		if (getArguments().containsKey(ARG_ITEM_ID)) {
 			// Load the dummy content specified by the fragment
@@ -98,19 +98,23 @@ public class RawMaterialDetailFragment extends Fragment {
 				            	 if (!msg.isEmpty() & oneChecked) {
 				            		 
 				            		 RawMaterial mtrl = mItem; //sqlhelper.findRawMaterialByName(mItem.getName()).entrySet().iterator().next().getKey();
+				            		 MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mtrl.getId());
 				            		 if (chkBoxStock.isChecked())
 				            		 {
-				            			 double newQuantity = inventory.getMtrlStock(mtrl) + Double.parseDouble(msg);
-				            			 inventory.setMtrlStock(mtrl, newQuantity);
-				            			 inventory.setMtrlOrdered(mtrl, inventory.getMtrlOrdered(mtrl)-Double.parseDouble(msg));
+				            			 double newQuantity = mInventory.getStock() + Double.parseDouble(msg);
+				            			 mInventory.setStock(newQuantity);
+				            			 mInventory.setOrdered(mInventory.getOrdered() - Double.parseDouble(msg));
+				            			 //inventory.setMtrlStock(mtrl, newQuantity);
+				            			 //inventory.setMtrlOrdered(mtrl, inventory.getMtrlOrdered(mtrl)-Double.parseDouble(msg));
 				            		 }
 				            		 if (chkBoxOrdered.isChecked())
 				            		 {
-				            			 double newQuantity = inventory.getMtrlOrdered(mtrl) + Double.parseDouble(msg);
-				            			 inventory.setMtrlOrdered(mtrl, newQuantity);
+				            			 double newQuantity = mInventory.getOrdered() + Double.parseDouble(msg); // inventory.getMtrlOrdered(mtrl) + Double.parseDouble(msg);
+				            			 mInventory.setOrdered(newQuantity); //inventory.setMtrlOrdered(mtrl, newQuantity);
 				            		 }				            		 
 				            		 //sqlhelper.updateRawMaterial(mtrl);
-				            		 sqlhelper.updateInventory(inventory);
+				            		 //sqlhelper.updateInventory(inventory);
+				            		 mDBAdaptor.updateMaterialInventory(mInventory);
 				            		 editText.setText("");
 				            		 updateObjects(v.getRootView());
 				            	 }
@@ -171,18 +175,19 @@ public class RawMaterialDetailFragment extends Fragment {
 		//RawMaterial material = mtrl.keySet().iterator().next();
 		//MaterialInventory inv = inventory.get//mtrl.get(material);
 		// använd bara mItem?
+		MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mItem.getId());
 		
 		((TextView) rootView.findViewById(R.id.title_rawmaterial_detail))
 		.setText(mItem.getName()); //.setText(mItem.content);
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_stock_quantity))
-		.setText(Double.toString(inventory.getMtrlStock(mItem)) + " " + mItem.getUnit());
+		.setText(Double.toString(mInventory.getStock()) + " " + mItem.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_ordered_quantity))
-		.setText(Double.toString(inventory.getMtrlOrdered(mItem)) + " " + mItem.getUnit());
+		.setText(Double.toString(mInventory.getOrdered()) + " " + mItem.getUnit());
 		
 		((TextView) rootView.findViewById(R.id.rawmaterial_reserved_quantity))
-		.setText(Double.toString(inventory.getMtrlReserved(mItem)) + " " + mItem.getUnit());
+		.setText(Double.toString(mInventory.getReserved()) + " " + mItem.getUnit());
 		
 	}
 		

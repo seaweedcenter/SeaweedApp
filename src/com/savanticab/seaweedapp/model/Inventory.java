@@ -19,7 +19,7 @@ import java.util.Set;
 public class Inventory {
 	
 	// LinkedHashMap: makes life easier as it iterates over objects in consistent way every time
-	private LinkedHashMap<RawMaterial, MaterialInventory> materials;
+	/*private LinkedHashMap<RawMaterial, MaterialInventory> materials;
 	private LinkedHashMap<Product, ProductInventory> products;
 	
 	// constructors..
@@ -184,6 +184,6 @@ public class Inventory {
 	}
 	public boolean contains(Product product) {
 		return products.containsKey(product);
-	}
+	}*/
 }
 

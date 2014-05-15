@@ -2,18 +2,15 @@ package com.savanticab.seaweedapp;
 
 import java.util.List;
 
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 
 /**
  * 
@@ -55,9 +52,7 @@ public class RawMaterialListActivity extends FragmentActivity implements
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// load raw materials to populate list
-		MySQLiteHelper helper = MySQLiteHelper.getInstance(this);
-		Inventory inventory = helper.getInventory();
-		rawMaterialList = inventory.getMaterialList();
+		rawMaterialList = new MaterialInventoryDBAdapter(this.getApplicationContext()).getAllMaterialsInInventory();
 		//rawMaterialList = helper.getAllRawMaterials();
 				
 		if (findViewById(R.id.rawmaterial_detail_container) != null) {

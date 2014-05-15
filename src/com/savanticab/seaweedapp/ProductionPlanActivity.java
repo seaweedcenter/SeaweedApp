@@ -10,7 +10,10 @@ import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
+import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
+import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.sqlite.RecipeDBAdapter;
 import com.savanticab.seaweedapp.model.Batch;
 
 import android.app.Activity;
@@ -108,10 +111,7 @@ public class ProductionPlanActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_production_plan,
 					container, false);
 			
-			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-			//List<RawMaterial> rawMaterialList = helper.getAllRawMaterials();
-			List<Recipe> recipes = helper.getAllRecipes();
-			//Inventory inventory = helper.getInventory();
+			List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAllRecipes();
 			
 			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
 			// which holds Recipe objects. The Recipe.toString() provides the text description shown
@@ -182,9 +182,9 @@ public class ProductionPlanActivity extends Activity {
 				editTextQuantity.setVisibility(View.VISIBLE);
 				
 				if (quantity > 0) {
-					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-					Inventory inventory = helper.getInventory();
-					
+					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					//Inventory inventory = helper.getInventory();
+					List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAllMaterialInventories();
 					// pick up Recipe passed by adapter
 					recipe = (Recipe)parent.getAdapter().getItem(position);	
 					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
@@ -212,9 +212,10 @@ public class ProductionPlanActivity extends Activity {
 						//HashMap<RawMaterial, MaterialInventory> materials = helper.getAllRawMaterials();
 						Double quantityStock = 0.0;
 						
-						if (inventory.contains(mtrl)) {
-							quantityStock = inventory.getMtrlStock(mtrl);
-									//materials.get(materials.indexOf(mtrl)).getStockQuantity();
+						for (MaterialInventory mI : mInventory){
+							if (mI.getMaterial().equals(mtrl)){
+								quantityStock = mI.getStock();
+							}
 						}
 						
 						TextView textEmpty = new TextView(this.getActivity());
@@ -331,19 +332,21 @@ public class ProductionPlanActivity extends Activity {
 					bundle.putParcelable("recipe", recipe);
 					bundle.putInt("quantity", quantity);
 					
-					MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-					Inventory inventory = helper.getInventory();
-					Batch batch = new Batch(recipe, helper.getLastBatchId()+1, quantity);
+					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+					//Inventory inventory = helper.getInventory();
+					BatchDBAdapter bAdapter = new BatchDBAdapter(this.getActivity().getApplicationContext());
+					Batch batch = new Batch(recipe, bAdapter.getLastBatchId()+1, quantity);
 					
 					// reserve material
+					MaterialInventoryDBAdapter mAdapter = new MaterialInventoryDBAdapter(this.getActivity().getApplicationContext());
 					HashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
 					for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
 						double qty = entry.getValue()*quantity;
 						RawMaterial material = entry.getKey();
-						inventory.MtrlReserve(material, qty);
+						mAdapter.MtrlReserve(material, qty);
 					}
-					helper.addBatch(batch);
-					helper.updateInventory(inventory);
+					bAdapter.addBatch(batch);
+					//helper.updateInventory(inventory);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);
 					startActivity(i);

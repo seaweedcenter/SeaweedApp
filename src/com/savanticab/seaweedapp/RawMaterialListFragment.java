@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
@@ -80,9 +81,8 @@ public class RawMaterialListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		MySQLiteHelper helper = MySQLiteHelper.getInstance(this.getActivity());
-		Inventory inventory = helper.getInventory();
-		List<RawMaterial> rawMaterialList = inventory.getMaterialList();
+		MaterialInventoryDBAdapter mAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
+		List<RawMaterial> rawMaterialList = mAdaptor.getAllMaterialsInInventory();
 		
 		// TODO: replace with a real list adapter.
 		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),

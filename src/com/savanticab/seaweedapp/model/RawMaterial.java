@@ -50,11 +50,11 @@ public class RawMaterial implements Parcelable {
 		this.icon = icon;
 	}
 	
+	
 	// equals needed for List.contains()
 	// equals and hashCode needed for LinkedHashMap
 	public boolean equals(Object other) {
 		RawMaterial m = (RawMaterial)other;
-		boolean result = (m.getName().equals(this.name));
 		return (m.getName().equals(this.name));
 	}
 	public int hashCode() {

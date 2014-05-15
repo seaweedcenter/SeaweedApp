@@ -1,18 +1,48 @@
 package com.savanticab.seaweedapp.model;
 
-// minimalist helper class for use in Inventory
 public class MaterialInventory {
-	public double stock;
-	public double ordered;
-	public double reserved;
+	private RawMaterial material;
+	private double stock;
+	private double ordered;
+	private double reserved;
 	
-	public MaterialInventory() {
-		stock = 0.0;
-		ordered = 0.0;
-		reserved = 0.0;
+	
+	public RawMaterial getMaterial() {
+		return material;
 	}
+
+	public void setMaterial(RawMaterial material) {
+		this.material = material;
+	}
+
+	public double getStock() {
+		return stock;
+	}
+
+	public void setStock(double stock) {
+		this.stock = stock;
+	}
+
+	public double getOrdered() {
+		return ordered;
+	}
+
+	public void setOrdered(double ordered) {
+		this.ordered = ordered;
+	}
+
+	public double getReserved() {
+		return reserved;
+	}
+
+	public void setReserved(double reserved) {
+		this.reserved = reserved;
+	}
+
+	public MaterialInventory() {}
 	
-	public MaterialInventory(double stock, double ordered, double reserved) {
+	public MaterialInventory(RawMaterial material, double stock, double ordered, double reserved) {
+		this.material = material;
 		this.stock = stock;
 		this.ordered = ordered;
 		this.reserved = reserved;

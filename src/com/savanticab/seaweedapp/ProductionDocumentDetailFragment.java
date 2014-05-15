@@ -31,7 +31,9 @@ import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
+import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.sqlite.ProductInventoryDBAdaptor;
 
 /**
  * Show selection from list (ProductionDocumentListActivity + Fragment)
@@ -182,17 +184,17 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 		// user click: batch finished
 		if (v.getId()==buttonOK.getId() & !batch.isFinished()) {
 			
-			MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-			Inventory inventory = helper.getInventory();
-			
+			//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
+			//Inventory inventory = helper.getInventory();
+			ProductInventoryDBAdaptor pIAdaptor = new ProductInventoryDBAdaptor(this.getActivity().getApplicationContext());
 			// update inventories and mark batch finished
 			Product product = batch.getRecipe().getProduct();
-			inventory.ProductProductionFinish(product, batch);
+			pIAdaptor.ProductProductionFinish(product, batch);
 			batch.setIsFinished(true);
 			
 			// update database
-			helper.updateBatch(batch);
-			helper.updateInventory(inventory);
+			new BatchDBAdapter(getActivity().getApplicationContext()).updateBatch(batch);//helper.updateBatch(batch);
+			//helper.updateInventory(inventory);
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			TextView textViewFinishDate = (TextView) v.getRootView().findViewById(R.id.productiondocument_detail_finishdate);

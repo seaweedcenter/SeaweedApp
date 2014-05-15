@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
+import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
@@ -85,10 +86,8 @@ public class ProductionDocumentListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//LinkedList<Batch> batchList = new LinkedList<Batch>(); 
-		
-		MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
-		List<Batch> batchList = helper.getAllBatches();
+		BatchDBAdapter bAdaptor = new BatchDBAdapter(this.getActivity().getApplicationContext());
+		List<Batch> batchList = bAdaptor.getAllBatches(); // helper.getAllBatches();
 		List<Batch> batchListUnfinished = new LinkedList<Batch>();
 		List<Batch> batchListFinished = new LinkedList<Batch>();
 		

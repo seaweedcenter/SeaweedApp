@@ -1,16 +1,34 @@
 package com.savanticab.seaweedapp.model;
 
-//minimalist helper class for use in Inventory
 public class ProductInventory {
-	public int stock;
-	public int inproduction;
+	private Product product;
+	private int stock;
+	private int inproduction;
 	
-	public ProductInventory() {
-		stock = 0;
-		inproduction = 0;
+	public Product getProduct() {
+		return product;
 	}
-	public ProductInventory(int stock, int inproduction) {
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public int getStock() {
+		return stock;
+	}
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+	public int getInproduction() {
+		return inproduction;
+	}
+	public void setInproduction(int inproduction) {
+		this.inproduction = inproduction;
+	}
+	
+	public ProductInventory() {}
+	public ProductInventory(Product product, int stock, int inproduction) {
+		this.product = product;
 		this.stock = stock;
 		this.inproduction = inproduction;
 	}
+	
 }
