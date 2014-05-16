@@ -42,8 +42,8 @@
     <string name="finish_date_heading_proddoc">Finish date</string>
     <string name="product_name_heading_proddoc">Product name</string>
     <string name="code_id_heading_proddoc">CodeID</string>
-    <string name="fragrance_heading_proddoc">Fragrance</string>
-    <string name="size_heading_proddoc">Size</string>
+    <string name="fragrance_heading_proddoc">Fragrance:</string>
+    <string name="size_heading_proddoc">Size:</string>
     <string name="recipe_list_heading_proddoc">Recipe list:</string>
     <string name="item_heading_proddoc">Item</string>
     <string name="notes_heading_proddoc">Notes</string>

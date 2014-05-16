@@ -72,6 +72,7 @@ public final class R {
         public static final int rawmaterial_reserved_quantity=0x7f080036;
         public static final int rawmaterial_stock_quantity=0x7f080034;
         public static final int spinner_product_name=0x7f080019;
+        public static final int tableRowExtra=0x7f08001e;
         public static final int tableRowHeading1=0x7f08001d;
         public static final int tableRowHeading2=0x7f08001f;
         public static final int tableRowHeadingProdDoc1=0x7f08002d;
@@ -83,12 +84,11 @@ public final class R {
         public static final int textViewHeadingItemProdDoc=0x7f08002f;
         public static final int textViewHeadingMtrlQtyProdDoc=0x7f080030;
         public static final int textViewHeadingNotesProdDoc=0x7f080031;
-        public static final int textViewHeadingRawMaterials=0x7f08001e;
         public static final int textViewOrdered=0x7f080038;
         public static final int textViewProdPlanHeading=0x7f080018;
         public static final int textViewSpaceProdDoc1=0x7f08002e;
+        public static final int text_product_fragrance=0x7f08001b;
         public static final int text_product_size=0x7f08001a;
-        public static final int text_product_variation=0x7f08001b;
         public static final int title_rawmaterial_allocated_quantity=0x7f080033;
         public static final int title_rawmaterial_detail=0x7f080032;
     }

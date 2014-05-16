@@ -1,15 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ItemDetailActivity"
-    tools:ignore="MergeRootFrame" >
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="8" >
+    tools:ignore="MergeRootFrame" 
+    android:columnCount="8" >
 
         <TextView
             android:id="@+id/textView1"
@@ -181,6 +178,4 @@
             android:layout_height="94dp"
             android:layout_row="6" />
     </GridLayout>
-
-</FrameLayout>
 

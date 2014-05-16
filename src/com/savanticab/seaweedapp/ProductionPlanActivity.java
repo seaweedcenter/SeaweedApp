@@ -119,10 +119,10 @@ public class ProductionPlanActivity extends Activity {
 			ArrayAdapter<Recipe> aa = new ArrayAdapter<Recipe>(getActivity(), android.R.layout.simple_spinner_item);
 			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			
-			TextView textVariation = (TextView) rootView.findViewById(R.id.text_product_variation);
-			TextView textSize = (TextView) rootView.findViewById(R.id.text_product_size);
-			textVariation.setText(" ");
-			textSize.setText(" ");
+			TextView textViewFragrance = (TextView) rootView.findViewById(R.id.text_product_fragrance);
+			TextView textViewSize = (TextView) rootView.findViewById(R.id.text_product_size);
+			textViewFragrance.setText(" ");
+			textViewSize.setText(" ");
 			
 			// add "empty" recipe to get a default description field in spinner
 			Recipe emptyRecipe = new Recipe();
@@ -162,6 +162,9 @@ public class ProductionPlanActivity extends Activity {
 			TextView textViewHeadingNeededQty = (TextView)view.getRootView().findViewById(R.id.TextViewHeadingNeedQty);
 			TextView textViewHeadingStock = (TextView)view.getRootView().findViewById(R.id.TextViewHeadingStock);
 			
+			TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_fragrance);
+			TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_size);
+			
 			// no choice, clear
 			if ( (position==0) | (quantity==0)) {
 				//TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
@@ -172,6 +175,8 @@ public class ProductionPlanActivity extends Activity {
 				textViewHeadingNeededQty.setVisibility(View.INVISIBLE);
 				textViewHeadingStock.setVisibility(View.INVISIBLE);
 				editTextQuantity.setVisibility(View.INVISIBLE);
+				textViewFragrance.setVisibility(View.INVISIBLE);
+				textViewSize.setVisibility(View.INVISIBLE);
 			}
 			
 			// actual choice of product recipe
@@ -180,6 +185,8 @@ public class ProductionPlanActivity extends Activity {
 				textViewHeadingNeededQty.setVisibility(View.VISIBLE);
 				textViewHeadingStock.setVisibility(View.VISIBLE);
 				editTextQuantity.setVisibility(View.VISIBLE);
+				textViewFragrance.setVisibility(View.VISIBLE);
+				textViewSize.setVisibility(View.VISIBLE);
 				
 				if (quantity > 0) {
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
@@ -198,9 +205,8 @@ public class ProductionPlanActivity extends Activity {
 						table.removeViewAt(3);
 					}
 					
-					TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
+					
 					textViewFragrance.setText(recipe.getProduct().getFragance());
-					TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_variation);
 					textViewSize.setText(recipe.getProduct().getSize());
 						
 					// (re-)populate table with recipe ingredients
@@ -295,24 +301,27 @@ public class ProductionPlanActivity extends Activity {
 				Spinner spinner = (Spinner)table.getRootView().findViewById(R.id.spinner_product_name);
 				spinner.setSelection(0);
 				
-				TextView textViewFragrance = (TextView)table.getRootView().findViewById(R.id.text_product_variation);
-				textViewFragrance.setText("");
-				TextView textViewSize = (TextView)table.getRootView().findViewById(R.id.text_product_variation);
-				textViewSize.setText("");
+				//KW removed these lines, they caused the app to crasch. They seems redundant!
+				//Still seems to render some problem....need more tests
+				//TODO: Test the cancel button more thoroughly!
 				
-				TextView textViewHeadingItem = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingItem);
-				textViewHeadingItem.setVisibility(View.INVISIBLE);
-				TextView textViewHeadingNeededQty = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingNeedQty);
-				textViewHeadingNeededQty.setVisibility(View.INVISIBLE);
-				TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingStock);
-				textViewHeadingStock.setVisibility(View.INVISIBLE);
+				//TextView textViewFragrance = (TextView)table.getRootView().findViewById(R.id.text_product_fragrance);
+				//textViewFragrance.setText("");
+				//TextView textViewSize = (TextView)table.getRootView().findViewById(R.id.text_product_size);
+				//textViewSize.setText("");
+				//TextView textViewHeadingItem = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingItem);
+				//textViewHeadingItem.setVisibility(View.INVISIBLE);
+				//TextView textViewHeadingNeededQty = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingNeedQty);
+				//textViewHeadingNeededQty.setVisibility(View.INVISIBLE);
+				//TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.TextViewHeadingStock);
+				//textViewHeadingStock.setVisibility(View.INVISIBLE);
 //				TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.textViewProdPlanHeading);
 //				textViewHeadingStock.setVisibility(View.INVISIBLE);
 				
-				EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
-				editTextQuantity.setVisibility(View.INVISIBLE);
-				editTextQuantity.setText("");
-				editTextQuantity.setHintTextColor(Color.GRAY);
+				//EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
+				//editTextQuantity.setVisibility(View.INVISIBLE);
+				//editTextQuantity.setText("");
+				//editTextQuantity.setHintTextColor(Color.GRAY);
 				
 			}
 			

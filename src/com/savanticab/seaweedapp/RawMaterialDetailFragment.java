@@ -174,7 +174,7 @@ public class RawMaterialDetailFragment extends Fragment {
 		//HashMap<RawMaterial, MaterialInventory> mtrl = sqlhelper.findRawMaterialByName(mItem.getName());
 		//RawMaterial material = mtrl.keySet().iterator().next();
 		//MaterialInventory inv = inventory.get//mtrl.get(material);
-		// använd bara mItem?
+		// anvï¿½nd bara mItem?
 		MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mItem.getId());
 		
 		((TextView) rootView.findViewById(R.id.title_rawmaterial_detail))

@@ -72,6 +72,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
           
           m = new LinkedHashMap<RawMaterial, Double>();
           m.put(material1, 2.0);
+          m.put(material2, 0.5); 
           m.put(material3, 0.25);
           r = new Recipe(product2, m);
           recipeAdapter.addRecipe(r);

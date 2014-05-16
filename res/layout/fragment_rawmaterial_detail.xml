@@ -1,14 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rawmaterial_detail_container"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".RawMaterialDetailActivity"
-    tools:ignore="MergeRootFrame" >
-
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    tools:ignore="MergeRootFrame" 
         android:columnCount="4"
         android:rowCount="8" >
 
@@ -207,53 +204,3 @@
             android:layout_row="7" />
     </GridLayout>
 
-</FrameLayout>
-
-
-
-
-<!-- <RelativeLayout  -->
-<!-- 	android:layout_width="fill_parent"  -->
-<!-- 	android:layout_height="fill_parent"  -->
-<!-- 	xmlns:android="http://schemas.android.com/apk/res/android"> -->
-	
-<!--     <TextView -->
-<!--    		android:id="@+id/title_rawmaterial_detail" -->
-<!--    		android:layout_width="wrap_content" -->
-<!--    		android:layout_height="wrap_content"  -->
-<!--    		android:textSize="30sp" /> -->
-<!--     <TextView -->
-<!--    		android:id="@+id/stock_quantity" -->
-<!--    		android:text="@string/title_material_stock" -->
-<!--    		android:layout_width="wrap_content" -->
-<!--    		android:layout_height="wrap_content" -->
-<!--    		android:layout_below="@id/title_rawmaterial_detail" /> -->
-<!-- 	<TextView -->
-<!--    		android:id="@+id/rawmaterial_quantity" -->
-<!--    		android:layout_width="wrap_content" -->
-<!--    		android:layout_height="wrap_content" -->
-<!--    		android:layout_below="@id/title_rawmaterial_detail" -->
-<!--    		android:layout_toRightOf="@id/stock_quantity" /> -->
-
-<!-- </RelativeLayout> -->
-
-<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" -->
-<!--     android:layout_width="fill_parent" -->
-<!--     android:layout_height="fill_parent" -->
-<!--     android:orientation="vertical"> -->
-
-    
-<!-- 	<TextView android:id="@+id/title_rawmaterial_detail" -->
-<!-- 		style="?android:attr/textAppearanceLarge" -->
-<!-- 		android:layout_width="match_parent" -->
-<!-- 		android:layout_height="match_parent" -->
-<!-- 		android:padding="16dp" -->
-<!-- 		android:textIsSelectable="true"/> -->
-	 	
-<!-- 	<TextView android:id="@+id/rawmaterial_quantity" -->
-<!-- 		style="?android:attr/textAppearanceLarge" -->
-<!-- 		android:layout_width="match_parent" -->
-<!-- 		android:layout_height="match_parent" -->
-<!-- 		android:padding="16dp" -->
-<!-- 		android:textIsSelectable="true" /> -->
-<!-- </LinearLayout> -->
