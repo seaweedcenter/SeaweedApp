@@ -1,17 +1,13 @@
 package com.savanticab.seaweedapp.sqlite;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.savanticab.seaweedapp.model.Product;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 
-public class ProductDBAdapter  extends BaseDBAdapter{
+public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 	
 	// Database table
 	  public static final String TABLE_NAME = "products";
@@ -35,6 +31,9 @@ public class ProductDBAdapter  extends BaseDBAdapter{
 	      + COLUMN_SIZE + " text, " 
 	      + COLUMN_PRICE + " real"
 	      + ");";
+
+		@Override public String getTableName() { return TABLE_NAME; }
+		@Override protected String getColumnIdName() { return COLUMN_ID; }
 	  
 		public ProductDBAdapter(Context context) {
 			super(context);
@@ -61,88 +60,26 @@ public class ProductDBAdapter  extends BaseDBAdapter{
 			product.setPrice(Double.parseDouble(cursor.getString(5)));
 			return product;
 		}
-		
-	    public void addProduct(Product product) {   
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        db.insert(ProductDBAdapter.TABLE_NAME, null, getContentValues(product));
-	        db.close();
-	    }
 	    
 	    public Product findProductById(int productId){
 	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_ID + " =  \"" + productId + "\"";
-	    	return findProduct(query);
+	    	return find(query);
 	    }
 	    
 	    public Product findProductByCode(String productcode){
 	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
-	    	return findProduct(query);
+	    	return find(query);
 	    }
 	    
-	    private Product findProduct(String query) {
-	    	    	
-	    	SQLiteDatabase db = helper.getWritableDatabase();
-	    	Cursor cursor = db.rawQuery(query, null);
-	    	
-	    	Product product = null;
-	    	
-	    	if (cursor.moveToFirst()) {
-	    		product = loadFromCursor(cursor);
-	    		cursor.close();
-	    	}
-	    	
-	        db.close();
-	    	return product;
-	    }
-	    
-	    public List<Product> getAllProducts() {
-	    	
-	        String query = "SELECT  * FROM " + ProductDBAdapter.TABLE_NAME;
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        Cursor cursor = db.rawQuery(query, null);
-	        
-	        List<Product> products = new ArrayList<Product>();
-	        Product product = null;
-	        
-	        if (cursor.moveToFirst()) {
-	            do {
-	            	product = loadFromCursor(cursor);
-	        		
-	        		products.add(product);
-	            } while (cursor.moveToNext());
-	        }
-	        db.close();
-	        return products;
-	    }
 	    public int updateProduct(Product product) {
 	 
-	        //get reference to writable DB
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        
-	        //updating row
-	        int i = db.update(ProductDBAdapter.TABLE_NAME, //table
-	                getContentValues(product), // column/value
-	                ProductDBAdapter.COLUMN_ID+" = ?", // selections
-	                new String[] { String.valueOf(product.getId()) }); //selection args
-	        //close
-	        db.close();
-	        return i;
+	        return update(product, COLUMN_ID + " = ?", new String[] { String.valueOf(product.getId()) });
 	 
 	    }
 	    public boolean deleteProduct(String productcode) {
 	    	
-	    	boolean result = false;
 	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
-	    	SQLiteDatabase db = helper.getWritableDatabase();
-	    	Cursor cursor = db.rawQuery(query, null);
-	    	
-	    	if (cursor.moveToFirst()) {
-	    		db.delete(ProductDBAdapter.TABLE_NAME, ProductDBAdapter.COLUMN_ID + " = ?",
-	    	            new String[] { cursor.getString(0) });
-	    		cursor.close();
-	    		result = true;
-	    	}
-	        db.close();
-	    	return result;
+	    	return delete(query);
 	    }
 	  
 }

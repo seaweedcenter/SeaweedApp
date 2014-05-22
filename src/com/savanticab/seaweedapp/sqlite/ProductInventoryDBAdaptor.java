@@ -1,8 +1,6 @@
 package com.savanticab.seaweedapp.sqlite;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import com.savanticab.seaweedapp.model.Batch;
@@ -13,9 +11,8 @@ import com.savanticab.seaweedapp.model.RawMaterial;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-public class ProductInventoryDBAdaptor extends BaseDBAdapter{
+public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 	
 	// Database table
 		  public static final String TABLE_NAME = "product_inventories";
@@ -35,6 +32,9 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter{
 		      + COLUMN_INPRODUCTIONQTY + " real"
 		      + ");";
 
+			@Override public String getTableName() { return TABLE_NAME; }
+			@Override protected String getColumnIdName() { return COLUMN_ID; }
+			
 		  public ProductInventoryDBAdaptor(Context context) {
 				super(context);
 			}
@@ -54,77 +54,21 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter{
 				productInventory.setInproduction(Integer.parseInt(cursor.getString(2)));
 				return productInventory;
 			}
-			
-		    public void addProductInventory(ProductInventory productInventory) {   
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		        db.insert(TABLE_NAME, null, getContentValues(productInventory));
-		        db.close();
-		    }
 		    
 		    public ProductInventory findProductInventoryById(int productId){
 		    	String query = "Select * FROM " + ProductInventoryDBAdaptor.TABLE_NAME + " WHERE " + ProductInventoryDBAdaptor.COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
-		    	SQLiteDatabase db = helper.getWritableDatabase();
-		    	Cursor cursor = db.rawQuery(query, null);
-		    	
-		    	ProductInventory productInventory = null;
-		    	
-		    	if (cursor.moveToFirst()) {
-		    		productInventory = loadFromCursor(cursor);
-		    		cursor.close();
-		    	}
-		    	
-		        db.close();
-		    	return productInventory;
+		    	return find(query);
 		    }
-		public List<ProductInventory> getAllProductInventories() {
-		    	
-		        String query = "SELECT  * FROM " + TABLE_NAME;
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		        Cursor cursor = db.rawQuery(query, null);
-		        
-		        List<ProductInventory> products = new ArrayList<ProductInventory>();
-		        ProductInventory product = null;
-		        
-		        if (cursor.moveToFirst()) {
-		            do {
-		            	product = loadFromCursor(cursor);
-		        		
-		        		products.add(product);
-		            } while (cursor.moveToNext());
-		        }
-		        db.close();
-		        return products;
-		    }
+		    
 		    public int updateProductInventory(ProductInventory product) {
 		 
-		        //get reference to writable DB
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		        
-		        //updating row
-		        int i = db.update(TABLE_NAME, //table
-		                getContentValues(product), // column/value
-		                COLUMN_ID+" = ?", // selections
-		                new String[] { String.valueOf(product.getProduct().getId()) }); //selection args
-		        //close
-		        db.close();
-		        return i;
+		        return update(product, COLUMN_ID + " = ?", new String[] { String.valueOf(product.getProduct().getId()) });
 		 
 		    }
 		    public boolean deleteProductInventory(int productId) {
 		    	
-		    	boolean result = false;
 		    	String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
-		    	SQLiteDatabase db = helper.getWritableDatabase();
-		    	Cursor cursor = db.rawQuery(query, null);
-		    	
-		    	if (cursor.moveToFirst()) {
-		    		db.delete(TABLE_NAME, COLUMN_ID + " = ?",
-		    	            new String[] { cursor.getString(0) });
-		    		cursor.close();
-		    		result = true;
-		    	}
-		            db.close();
-		    	return result;
+		    	return delete(query);
 		    }
 		    
 		    //TODO: move somewhere else?
@@ -144,5 +88,6 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter{
 					mIAdapter.MtrlReservedFinished(mtrl, entry.getValue()*productQty);
 				}
 			}
+
 
 }

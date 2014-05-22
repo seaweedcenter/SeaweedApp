@@ -111,7 +111,7 @@ public class ProductionPlanActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_production_plan,
 					container, false);
 			
-			List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAllRecipes();
+			List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAll();
 			
 			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
 			// which holds Recipe objects. The Recipe.toString() provides the text description shown
@@ -191,7 +191,7 @@ public class ProductionPlanActivity extends Activity {
 				if (quantity > 0) {
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 					//Inventory inventory = helper.getInventory();
-					List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAllMaterialInventories();
+					List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAll();
 					// pick up Recipe passed by adapter
 					recipe = (Recipe)parent.getAdapter().getItem(position);	
 					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
@@ -354,7 +354,7 @@ public class ProductionPlanActivity extends Activity {
 						RawMaterial material = entry.getKey();
 						mAdapter.MtrlReserve(material, qty);
 					}
-					bAdapter.addBatch(batch);
+					bAdapter.add(batch);
 					//helper.updateInventory(inventory);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);

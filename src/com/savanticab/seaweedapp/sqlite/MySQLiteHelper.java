@@ -39,47 +39,48 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
           Product product3 = new Product("SOAP3", "Soap", "Langi-langi", "Big", 14.0);
           Product product4 = new Product("SOAP4", "Soap", "Lemongrass", "Medium", 16.0);
           ProductDBAdapter productAdapter = new ProductDBAdapter(context);
-          productAdapter.addProduct(product1);
-          productAdapter.addProduct(product2);
-          productAdapter.addProduct(product3);
-          productAdapter.addProduct(product4);
+          productAdapter.add(product1);
+          productAdapter.add(product2);
+          productAdapter.add(product3);
+          productAdapter.add(product4);
           
           ProductInventoryDBAdaptor productInventoryAdapter = new ProductInventoryDBAdaptor(context);
-          productInventoryAdapter.addProductInventory(new ProductInventory(product1, 200, 0));
-          productInventoryAdapter.addProductInventory(new ProductInventory(product2, 100, 0));
-          productInventoryAdapter.addProductInventory(new ProductInventory(product3, 300, 0));
-          productInventoryAdapter.addProductInventory(new ProductInventory(product4, 150, 0));
+          productInventoryAdapter.add(new ProductInventory(product1, 200, 0));
+          productInventoryAdapter.add(new ProductInventory(product2, 100, 0));
+          productInventoryAdapter.add(new ProductInventory(product3, 300, 0));
+          productInventoryAdapter.add(new ProductInventory(product4, 150, 0));
           
           RawMaterialDBAdapter materialAdapter = new RawMaterialDBAdapter(context);
           RawMaterial material1 = new RawMaterial("Coconut oil", "L", "");
           RawMaterial material2 = new RawMaterial("Seaweed", "Kg", "");
           RawMaterial material3 = new RawMaterial("Bee wax", "Kg", "");
-          materialAdapter.addRawMaterial(material1);
-          materialAdapter.addRawMaterial(material2);
-          materialAdapter.addRawMaterial(material3);
+          materialAdapter.add(material1);
+          materialAdapter.add(material2);
+          materialAdapter.add(material3);
           
           MaterialInventoryDBAdapter matInvAdapter = new MaterialInventoryDBAdapter(context);
-          matInvAdapter.addMaterialInventory(new MaterialInventory(material1, 100, 0, 0.0));
-          matInvAdapter.addMaterialInventory(new MaterialInventory(material2, 50, 0, 0.0));
-          matInvAdapter.addMaterialInventory(new MaterialInventory(material3, 5, 2, 0.0));
+          matInvAdapter.add(new MaterialInventory(material1, 100, 0, 0.0));
+          matInvAdapter.add(new MaterialInventory(material2, 50, 0, 0.0));
+          matInvAdapter.add(new MaterialInventory(material3, 5, 2, 0.0));
+          
           
           LinkedHashMap<RawMaterial, Double> m = new LinkedHashMap<RawMaterial, Double>();
           m.put(material1, 1.0);
           m.put(material2, 0.5);        
           Recipe r = new Recipe(product1, m);
           RecipeDBAdapter recipeAdapter = new RecipeDBAdapter(context);
-          recipeAdapter.addRecipe(r);
+          recipeAdapter.add(r);
           
           m = new LinkedHashMap<RawMaterial, Double>();
           m.put(material1, 2.0);
           m.put(material2, 0.5); 
           m.put(material3, 0.25);
           r = new Recipe(product2, m);
-          recipeAdapter.addRecipe(r);
+          recipeAdapter.add(r);
           
           Batch batch1 = new Batch(r, 1, 20);
           BatchDBAdapter bAdapter = new BatchDBAdapter(context);
-          bAdapter.addBatch(batch1);
+          bAdapter.add(batch1);
         }
         return sInstance;
       }
@@ -87,10 +88,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public MySQLiteHelper(Context context) {
     	
     	// set up a basic database to start from
-    	// TODO: addProduct and the rest "adders" should check if item variation already exists
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
-        
-        
     }
     
     @Override

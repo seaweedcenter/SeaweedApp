@@ -87,7 +87,7 @@ public class ProductionDocumentListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		
 		BatchDBAdapter bAdaptor = new BatchDBAdapter(this.getActivity().getApplicationContext());
-		List<Batch> batchList = bAdaptor.getAllBatches(); // helper.getAllBatches();
+		List<Batch> batchList = bAdaptor.getAll(); // helper.getAllBatches();
 		List<Batch> batchListUnfinished = new LinkedList<Batch>();
 		List<Batch> batchListFinished = new LinkedList<Batch>();
 		

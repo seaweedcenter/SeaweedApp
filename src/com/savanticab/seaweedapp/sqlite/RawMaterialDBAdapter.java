@@ -1,16 +1,12 @@
 package com.savanticab.seaweedapp.sqlite;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.savanticab.seaweedapp.model.RawMaterial;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-public class RawMaterialDBAdapter extends BaseDBAdapter{
+public class RawMaterialDBAdapter extends BaseDBAdapter<RawMaterial>{
 	
 
 	// Database table
@@ -31,6 +27,10 @@ public class RawMaterialDBAdapter extends BaseDBAdapter{
 	      + COLUMN_ICON + " text"
 	      + ");";
 
+
+		@Override public String getTableName() { return TABLE_NAME; }
+		@Override protected String getColumnIdName() { return COLUMN_ID; }
+		
 		public RawMaterialDBAdapter(Context context) {
 			super(context);
 		}
@@ -53,86 +53,25 @@ public class RawMaterialDBAdapter extends BaseDBAdapter{
 			material.setIcon(cursor.getString(3));
 			return material;
 		}
-		
-	    public void addRawMaterial(RawMaterial material){
-	 
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        db.insert(RawMaterialDBAdapter.TABLE_NAME, null, getContentValues(material));
-	        db.close();
-	    }
 
 	    public RawMaterial findRawMaterialById(int materialId){
 	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_ID + " =  \"" + materialId + "\"";
-	    	return findRawMaterial(query);
+	    	return find(query);
 	    }
-//	    public HashMap<RawMaterial, MaterialInventory> findRawMaterialByName(String materialname){
-//	    	String query = "Select * FROM " + RawMaterialTable.TABLE_NAME + " WHERE " + RawMaterialTable.COLUMN_NAME + " =  \"" + materialname + "\"";
-//	    	return findRawMaterial(query);
-//	    }
 	    public RawMaterial findRawMaterialByName(String materialname){
 	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
-	    	return findRawMaterial(query);
-	    }
-	    
-	    private RawMaterial findRawMaterial(String query){    	
-	    
-	    	SQLiteDatabase db = helper.getWritableDatabase();
-	    	Cursor cursor = db.rawQuery(query, null);
-	    	RawMaterial material = null;
-	    	
-	    	if (cursor.moveToFirst()) {
-	    		material = loadFromCursor(cursor);
-	    		cursor.close();
-	    	}
-	        db.close();
-	    	return material;
-	    }
-	    
-	    public List<RawMaterial> getAllRawMaterials() {
-	    	
-	        String query = "SELECT  * FROM " + RawMaterialDBAdapter.TABLE_NAME;
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        Cursor cursor = db.rawQuery(query, null);
-	 
-	        RawMaterial material = null;
-	        List<RawMaterial> materials = new ArrayList<RawMaterial>();
-	        
-	        if (cursor.moveToFirst()) {
-	            do {
-	            	material = loadFromCursor(cursor);
-	            	materials.add(material);
-	            } while (cursor.moveToNext());
-	        }
-	        return materials;
+	    	return find(query);
 	    }
 	    
 	    public int updateRawMaterial(RawMaterial material) {
 	    	
-	        SQLiteDatabase db = helper.getWritableDatabase();
-	        
-	        int i = db.update(RawMaterialDBAdapter.TABLE_NAME, //table
-	                getContentValues(material), // column/value
-	                RawMaterialDBAdapter.COLUMN_ID+" = ?", // selections
-	                new String[] { String.valueOf(material.getId()) }); //selection args
-	        
-	        db.close();
-	        return i;
+	        return update(material, COLUMN_ID + " = ?", new String[] { String.valueOf(material.getId()) });
 	    }
 	    
 	    public boolean deleteRawMaterial(String materialname){
 	    	
-	    	boolean result = false;
 	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
-	    	SQLiteDatabase db = helper.getWritableDatabase();
-	    	Cursor cursor = db.rawQuery(query, null);
-	    	
-	    	if (cursor.moveToFirst()) {
-	    		db.delete(RawMaterialDBAdapter.TABLE_NAME, RawMaterialDBAdapter.COLUMN_ID + " = ?",
-	    	            new String[] { cursor.getString(0) });
-	    		cursor.close();
-	    		result = true;
-	    	}
-	        db.close();
-	    	return result;
+	    	return delete(query);
 	    }
+
 }

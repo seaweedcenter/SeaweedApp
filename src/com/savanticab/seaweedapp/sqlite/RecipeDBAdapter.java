@@ -2,8 +2,6 @@ package com.savanticab.seaweedapp.sqlite;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
 
 import com.savanticab.seaweedapp.model.RawMaterial;
@@ -12,12 +10,11 @@ import com.savanticab.seaweedapp.model.Recipe;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class RecipeDBAdapter extends BaseDBAdapter{
+public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 	
 
 		// Database table
@@ -39,8 +36,10 @@ public class RecipeDBAdapter extends BaseDBAdapter{
 			  //+ "primary key(" + COLUMN_PRODUCT_ID + ", " + COLUMN_RAW_MATERIAL_ID + ")"
 		      + COLUMN_INGREDIENTS + " text"
 		      + ");";
-		  
-		  
+
+			@Override public String getTableName() { return TABLE_NAME; }
+			@Override protected String getColumnIdName() { return COLUMN_PRODUCT_ID; }
+			
 		  public RecipeDBAdapter(Context context) {
 				super(context);
 			}
@@ -73,27 +72,11 @@ public class RecipeDBAdapter extends BaseDBAdapter{
 				}
 				recipe.setIngredients(ingredients);
 				return recipe;
-			}
-			
-		    public void addRecipe(Recipe recipe){
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		    	db.insert(TABLE_NAME, null, getContentValues(recipe));
-		        db.close();
-		    }
+			}		
 		    
-		    public Recipe findRecipeByProductId(int productid){
-		    
+		    public Recipe findRecipeByProductId(int productid){	    
 		    	String query = "Select * FROM " + RecipeDBAdapter.TABLE_NAME + " WHERE " + RecipeDBAdapter.COLUMN_PRODUCT_ID + " =  \"" + productid + "\"";
-		    	SQLiteDatabase db = helper.getWritableDatabase();
-		    	Cursor cursor = db.rawQuery(query, null);
-		    	Recipe recipe = null;
-		    	
-		    	if (cursor.moveToFirst()) {
-		    		recipe = loadFromCursor(cursor);
-		    		cursor.close();
-		    	}
-		            db.close();
-		    	return recipe;
+		    	return find(query);
 		    }
 		    
 		    // recipe id should be identical to product id in current implementation
@@ -101,56 +84,15 @@ public class RecipeDBAdapter extends BaseDBAdapter{
 		    	return findRecipeByProductId(id);
 		    }
 		    
-		    public List<Recipe> getAllRecipes() {
-		        
-		    	List<Recipe> recipes = new LinkedList<Recipe>();
-		        String query = "SELECT  * FROM " + RecipeDBAdapter.TABLE_NAME;
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		        Cursor cursor = db.rawQuery(query, null);
-		        Recipe recipe = null;
-		        
-		        if (cursor.moveToFirst()) {
-		            do {
-		            	recipe = loadFromCursor(cursor);
-		    			recipes.add(recipe);
-		    			
-		    			recipe = null;
-		            } while (cursor.moveToNext());
-		        }
-		        return recipes;
-		    }
-		    
 		    public int updateRecipe(Recipe recipe) {
 		 
-		        SQLiteDatabase db = helper.getWritableDatabase();
-		        int i = 0;
-		        
-		    	int productId = recipe.getProduct().getId();
-		    	
-		    	i =  db.update(RecipeDBAdapter.TABLE_NAME, //table
-    	                getContentValues(recipe), // column/value
-    	                RecipeDBAdapter.COLUMN_PRODUCT_ID +" = ?", // selections
-    	                new String[] { String.valueOf(productId)}); //selection args
-		        
-		        db.close();
-		        return i;
+		        return update(recipe, COLUMN_PRODUCT_ID + " = ?", new String[] { String.valueOf(recipe.getProduct().getId())});
 		    }
 		 
 		    public boolean deleteRecipe(int productid){
 		    
-		    	boolean result = false;
 		    	String query = "Select * FROM " + RecipeDBAdapter.TABLE_NAME + " WHERE " + RecipeDBAdapter.COLUMN_PRODUCT_ID + " =  \"" + productid + "\"";
-		    	SQLiteDatabase db = helper.getWritableDatabase();
-		    	Cursor cursor = db.rawQuery(query, null);
-		    	
-		    	if (cursor.moveToFirst()) {
-		    		db.delete(RecipeDBAdapter.TABLE_NAME, RecipeDBAdapter.COLUMN_PRODUCT_ID + " = ?",
-		    	            new String[] { cursor.getString(0) });
-		    		cursor.close();
-		    		result = true;
-		    	}
-		        db.close();
-		    	return result;
+		    	return delete(query);
 		    }
 		  
 }

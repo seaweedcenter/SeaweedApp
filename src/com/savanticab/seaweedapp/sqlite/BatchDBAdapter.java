@@ -2,7 +2,6 @@ package com.savanticab.seaweedapp.sqlite;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.savanticab.seaweedapp.model.Batch;
@@ -10,9 +9,8 @@ import com.savanticab.seaweedapp.model.Batch;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-public class BatchDBAdapter extends BaseDBAdapter{
+public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	// database table
 
 	public static final String TABLE_NAME = "batches";
@@ -34,7 +32,9 @@ public class BatchDBAdapter extends BaseDBAdapter{
 	  + COLUMN_FINISHDATE + " text"
 	  + ");";
 	
-
+	@Override public String getTableName() { return TABLE_NAME;}
+	@Override protected String getColumnIdName() { return COLUMN_BATCH_ID; }
+	
 	public BatchDBAdapter(Context context) {
 		super(context);
 	}
@@ -66,72 +66,22 @@ public class BatchDBAdapter extends BaseDBAdapter{
 		batch.setFinishDate(!finishDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(finishDate)):null);
 		return batch;
 	}
-    public void addBatch(Batch batch) {        
-        SQLiteDatabase db = helper.getWritableDatabase();
-        
-        db.insert(BatchDBAdapter.TABLE_NAME, null, getContentValues(batch));
-        db.close();
-    }
     
     public boolean deleteBatch(int id) {
     	
-    	boolean result = false;
-    	String query = "Select * FROM " + BatchDBAdapter.TABLE_NAME + " WHERE " + BatchDBAdapter.COLUMN_BATCH_ID + " =  \"" + id + "\"";
-    	SQLiteDatabase db = helper.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(query, null);
-    	
-    	if (cursor.moveToFirst()) {
-    		db.delete(BatchDBAdapter.TABLE_NAME, BatchDBAdapter.COLUMN_BATCH_ID + " = ?",
-    	            new String[] { String.valueOf(id) });
-    		cursor.close();
-    		result = true;
-    	}
-            db.close();
-    	return result;
+    	String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_BATCH_ID + " =  \"" + id + "\"";
+    	return delete(query);
     }
     
-    // "finders" and "getters" for Batch
     public Batch findBatchById(int batchid){
-    	String query = "Select * FROM " + BatchDBAdapter.TABLE_NAME + " WHERE " + BatchDBAdapter.COLUMN_BATCH_ID + " =  \"" + batchid + "\"";
-    	return findBatch(query);
-    }
-
-    private Batch findBatch(String query){
-
-    	SQLiteDatabase db = helper.getWritableDatabase();
-    	Cursor cursor = db.rawQuery(query, null);
-    	Batch batch = null;
-    	
-    	if (cursor.moveToFirst()) {
-    		batch = loadFromCursor(cursor);
-    		cursor.close();
-    	}
-            db.close();
-    	return batch;
-    }
-    
-    public List<Batch> getAllBatches() {
-    
-    	List<Batch> batches = new LinkedList<Batch>();
-        String query = "SELECT  * FROM " + BatchDBAdapter.TABLE_NAME;
-        SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        
-        Batch batch = null;
-        if (cursor.moveToFirst()) {
-            do {
-            	batch = loadFromCursor(cursor);
-            	batches.add(batch);
-    			batch = null;
-            } while (cursor.moveToNext());
-        }
-        return batches;
+    	String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_BATCH_ID + " =  \"" + batchid + "\"";
+    	return find(query);
     }
     
     public int getLastBatchId() {
     	
     	int lastId = 0;
-    	List<Batch> allbatches = getAllBatches();
+    	List<Batch> allbatches = getAll();
     	if (!allbatches.isEmpty()) {
     		Collections.sort(allbatches);
     		lastId = allbatches.get(allbatches.size()-1).getId();
@@ -140,16 +90,7 @@ public class BatchDBAdapter extends BaseDBAdapter{
     }
     
     public int updateBatch(Batch batch) {
-    	 
-        SQLiteDatabase db = helper.getWritableDatabase();
- 
-        int i = db.update(BatchDBAdapter.TABLE_NAME, //table
-	                getContentValues(batch), // column/value
-	                BatchDBAdapter.COLUMN_BATCH_ID+" = ?", // selections
-	                new String[] { String.valueOf(batch.getId()) }); //selection args
-	    
-	    db.close();
-        return i;
+        return update(batch, COLUMN_BATCH_ID + " = ?", new String[] { String.valueOf(batch.getId()) });
     }
 	
 }
