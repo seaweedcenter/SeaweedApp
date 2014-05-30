@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;

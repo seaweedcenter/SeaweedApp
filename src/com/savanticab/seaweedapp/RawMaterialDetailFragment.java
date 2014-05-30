@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.*;

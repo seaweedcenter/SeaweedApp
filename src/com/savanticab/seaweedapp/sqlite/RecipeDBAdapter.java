@@ -55,7 +55,7 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 			
 			public Recipe loadFromCursor(Cursor cursor) {
 				Recipe recipe = new Recipe();
-				int productId = Integer.parseInt(cursor.getString(0));
+				int productId = cursor.getInt(0);
 				recipe.setId(productId);
 				recipe.setProduct(new ProductDBAdapter(mContext).findProductById(productId));
 				

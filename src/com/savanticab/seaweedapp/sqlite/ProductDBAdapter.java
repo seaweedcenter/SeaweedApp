@@ -41,23 +41,23 @@ public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 		
 		public ContentValues getContentValues(Product product) {
 			ContentValues values = new ContentValues();
-			values.put(ProductDBAdapter.COLUMN_ID, product.getId());
-			values.put(ProductDBAdapter.COLUMN_CODE, product.getCode());
-			values.put(ProductDBAdapter.COLUMN_NAME, product.getName());
-			values.put(ProductDBAdapter.COLUMN_FRAGANCE, product.getFragance());
-			values.put(ProductDBAdapter.COLUMN_SIZE, product.getSize());
-			values.put(ProductDBAdapter.COLUMN_PRICE, product.getPrice());
+			values.put(COLUMN_ID, product.getId());
+			values.put(COLUMN_CODE, product.getCode());
+			values.put(COLUMN_NAME, product.getName());
+			values.put(COLUMN_FRAGANCE, product.getFragance());
+			values.put(COLUMN_SIZE, product.getSize());
+			values.put(COLUMN_PRICE, product.getPrice());
 			return values;
 		}
 		
 		public Product loadFromCursor(Cursor cursor) {
 			Product product = new Product();
-			product.setId(Integer.parseInt(cursor.getString(0)));
+			product.setId(cursor.getInt(0));
 			product.setCode(cursor.getString(1));
 			product.setName(cursor.getString(2));
 			product.setFragance(cursor.getString(3));
 			product.setSize(cursor.getString(4));
-			product.setPrice(Double.parseDouble(cursor.getString(5)));
+			product.setPrice(cursor.getDouble(5));
 			return product;
 		}
 	    

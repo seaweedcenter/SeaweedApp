@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.savanticab.seaweedapp.dummy.DummyContent;
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
 import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;

@@ -38,16 +38,16 @@ public class RawMaterialDBAdapter extends BaseDBAdapter<RawMaterial>{
 
 		public ContentValues getContentValues(RawMaterial material) {
 			ContentValues values = new ContentValues();
-	    	values.put(RawMaterialDBAdapter.COLUMN_ID, material.getId());
-	        values.put(RawMaterialDBAdapter.COLUMN_NAME, material.getName());
-	        values.put(RawMaterialDBAdapter.COLUMN_UNIT, material.getUnit());
-	        values.put(RawMaterialDBAdapter.COLUMN_ICON, material.getIcon());
+	    	values.put(COLUMN_ID, material.getId());
+	        values.put(COLUMN_NAME, material.getName());
+	        values.put(COLUMN_UNIT, material.getUnit());
+	        values.put(COLUMN_ICON, material.getIcon());
 			return values;
 		}
 		
 		public RawMaterial loadFromCursor(Cursor cursor) {
 			RawMaterial material = new RawMaterial();
-			material.setId(Integer.parseInt(cursor.getString(0)));
+			material.setId(cursor.getInt(0));
 			material.setName(cursor.getString(1));
 			material.setUnit(cursor.getString(2));
 			material.setIcon(cursor.getString(3));

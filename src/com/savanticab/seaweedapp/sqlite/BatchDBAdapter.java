@@ -41,25 +41,25 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 
 	public ContentValues getContentValues(Batch batch) {
 		ContentValues values = new ContentValues();
-        values.put(BatchDBAdapter.COLUMN_BATCH_ID, batch.getId());
-        values.put(BatchDBAdapter.COLUMN_RECIPE_ID, batch.getRecipe().getProduct().getId());
-        values.put(BatchDBAdapter.COLUMN_QUANTITY, batch.getQuantity());
+        values.put(COLUMN_BATCH_ID, batch.getId());
+        values.put(COLUMN_RECIPE_ID, batch.getRecipe().getProduct().getId());
+        values.put(COLUMN_QUANTITY, batch.getQuantity());
         String startDate = (batch.getStartDate() != null) ? Long.toString(batch.getStartDate().getTime()) : "null";
         String finishDate = (batch.getFinishDate() != null) ? Long.toString(batch.getFinishDate().getTime()) : "null";
-        values.put(BatchDBAdapter.COLUMN_STARTDATE, startDate);
-        values.put(BatchDBAdapter.COLUMN_FINISHDATE, finishDate);
+        values.put(COLUMN_STARTDATE, startDate);
+        values.put(COLUMN_FINISHDATE, finishDate);
 		return values;
 	}
 	
 	public Batch loadFromCursor(Cursor cursor) {
 		Batch batch = new Batch();
-		batch.setId(Integer.parseInt(cursor.getString(0)));
+		batch.setId(cursor.getInt(0));
 		
 		// recipe must be loaded separately from other table
-		int recipeId = Integer.parseInt(cursor.getString(1));
+		int recipeId = cursor.getInt(1);
 		batch.setRecipe(new RecipeDBAdapter(mContext).findRecipeById(recipeId));
 		
-		batch.setQuantity(Integer.parseInt(cursor.getString(2)));
+		batch.setQuantity(cursor.getInt(2));
 		String startDate = cursor.getString(3);
 		batch.setStartDate(!startDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(startDate)):null);
 		String finishDate = cursor.getString(4);
