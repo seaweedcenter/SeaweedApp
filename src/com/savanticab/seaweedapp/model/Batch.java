@@ -2,12 +2,17 @@ package com.savanticab.seaweedapp.model;
 
 import java.util.Date;
 
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseObject;
+import com.parse.ParseClassName;
 import com.savanticab.seaweedapp.model.Recipe;
 
-public class Batch implements Parcelable, Comparable<Batch> {
+@ParseClassName("Batch")
+public class Batch extends ParseObject implements Parcelable, Comparable<Batch> {
 
 	private int id;		// incremented in app as batches are created
 	private Recipe recipe;
@@ -17,45 +22,63 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	
 	// getters and setters
 	public int getId() {
+		id = getInt("batchId");
 		return id;
+		//return id;
 	}
 	public void setId(int id) {
 		this.id = id;
+		put("batchId", id);
 	}
 	public boolean isFinished() {
-		return (finishDate != null);
+		//return (finishDate != null);
+		return (getDate("finishDate") != JSONObject.NULL);
 	}
 	public void setIsFinished(boolean finished) {
 		if (finished) {
 			this.finishDate = new Date();
+			put("finishDate", new Date());
 		}
 		else {
 			this.finishDate = null;
+			put("finishDate", null);
 		}
 	}
 	public Recipe getRecipe() {
+		//return recipe;
+		recipe = (Recipe) getParseObject("recipe");
 		return recipe;
 	}
 	public void setRecipe(Recipe recipe) {
 		this.recipe = recipe;
+		put("recipe", recipe);
 	}
 	public int getQuantity(){
+		//return quantity;
+		quantity = getInt("quantity");
 		return quantity;
 	}
 	public void setQuantity(int quantity){
 		this.quantity = quantity;
+		put("quantity", quantity);
 	}
 	public Date getStartDate() {
+		//return startDate;
+		startDate = getDate("startDate");
 		return startDate;
 	}
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+		put("startDate", startDate);
 	}
 	public Date getFinishDate() {
+		//return finishDate;
+		this.finishDate = getDate("finishDate");
 		return finishDate;
 	}
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
+		put("finishDate", finishDate);
 	}
 	
 	// controls eg. how Batch objects are represented in Spinners, ListViews etc
@@ -77,13 +100,23 @@ public class Batch implements Parcelable, Comparable<Batch> {
 		this.recipe = recipe;
 		this.id = id;
 		this.quantity = quantity;
+		put("startDate", new Date());
+		put("finishDate", JSONObject.NULL);
+		put("recipe", recipe);
+		put("batchId", id);
+		put("quanitity", quantity);
 	}
 	public Batch() {
-		startDate = null;
+		/*startDate = null;
 		finishDate = null;
 		recipe = null;
 		id = -1;
 		quantity = 0;
+		put("startDate", JSONObject.NULL);
+		put("finishDate", JSONObject.NULL);
+		put("recipe", JSONObject.NULL);
+		put("batchId", -1);
+		put("quanitity", 0);*/
 	}
 	
 	// equals and hashCode needed for LinkedHashMaps elsewhere

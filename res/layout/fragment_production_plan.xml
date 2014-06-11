@@ -21,6 +21,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignLeft="@+id/textViewProdPlanHeading"
 	    android:layout_below="@+id/textViewProdPlanHeading"
+	    android:prompt="@string/spinner_prompt_production_planning"
 	    android:layout_marginTop="28dp" />
 	
    <!-- Enter quantity -->

@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,10 +19,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
-import com.savanticab.seaweedapp.sqlite.*;
+import com.savanticab.seaweedapp.model.Recipe;
 
 /**
  *  User interactions (change material quantities basically) is handled here
@@ -36,10 +41,11 @@ public class RawMaterialDetailFragment extends Fragment {
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
 	 */
-	public static final String ARG_ITEM_ID = "rawMaterial";//"item_id";
+	public static final String ARG_ITEM_ID = "item_id";
+	public static final String ARG_MATERIAL = "material";
 
 	private RawMaterial mItem;
-	private MaterialInventoryDBAdapter mDBAdaptor;
+	//private MaterialInventoryDBAdapter mDBAdaptor;
 	//private Inventory inventory;
 	
 	/**
@@ -53,10 +59,10 @@ public class RawMaterialDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mDBAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
+		//mDBAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
 		//inventory = sqlhelper.getInventory();
 		
-		if (getArguments().containsKey(ARG_ITEM_ID)) {
+		if (getArguments().containsKey(ARG_MATERIAL)) {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
@@ -64,7 +70,7 @@ public class RawMaterialDetailFragment extends Fragment {
 			//		ARG_ITEM_ID));
 			// här måste den ta emot rätt RawMaterial
 			//mItem = getArguments().getString(ARG_ITEM_ID);
-			mItem = getArguments().getParcelable(ARG_ITEM_ID);
+			mItem = getArguments().getParcelable(RawMaterialDetailFragment.ARG_MATERIAL);
 		}
 	}
 
@@ -97,7 +103,18 @@ public class RawMaterialDetailFragment extends Fragment {
 				            	 if (!msg.isEmpty() & oneChecked) {
 				            		 
 				            		 RawMaterial mtrl = mItem; //sqlhelper.findRawMaterialByName(mItem.getName()).entrySet().iterator().next().getKey();
-				            		 MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mtrl.getId());
+				            		 
+				         			ParseQuery<MaterialInventory> matInvQuery = ParseQuery.getQuery(MaterialInventory.class);
+				        			//matInvQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+				        			matInvQuery.whereEqualTo("material", mtrl);
+				            		 //MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mtrl.getId());
+				            		 MaterialInventory mInventory = null;
+									try {
+										mInventory = matInvQuery.getFirst();
+									} catch (ParseException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 				            		 if (chkBoxStock.isChecked())
 				            		 {
 				            			 double newQuantity = mInventory.getStock() + Double.parseDouble(msg);
@@ -113,7 +130,8 @@ public class RawMaterialDetailFragment extends Fragment {
 				            		 }				            		 
 				            		 //sqlhelper.updateRawMaterial(mtrl);
 				            		 //sqlhelper.updateInventory(inventory);
-				            		 mDBAdaptor.updateMaterialInventory(mInventory);
+				            		 //mDBAdaptor.updateMaterialInventory(mInventory);
+				            		 mInventory.saveEventually();
 				            		 editText.setText("");
 				            		 updateObjects(v.getRootView());
 				            	 }
@@ -167,6 +185,7 @@ public class RawMaterialDetailFragment extends Fragment {
 	}
 	
 	// just updates textViewes etc
+	private MaterialInventory mInventory;
 	private void updateObjects(View rootView) {
 
 		// TODO: look into this, looks very cumbersome to extract objects...
@@ -174,8 +193,27 @@ public class RawMaterialDetailFragment extends Fragment {
 		//RawMaterial material = mtrl.keySet().iterator().next();
 		//MaterialInventory inv = inventory.get//mtrl.get(material);
 		// anv�nd bara mItem?
-		MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mItem.getId());
-		
+		//MaterialInventory mInventory = mDBAdaptor.findMaterialInventoryByMaterialId(mItem.getId());
+		ParseQuery<MaterialInventory> matInvQuery = ParseQuery.getQuery(MaterialInventory.class);
+		matInvQuery.whereEqualTo("material", mItem);
+		//matInvQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+		/*matInvQuery.findInBackground(new FindCallback<MaterialInventory>() {
+			@Override
+			public void done(List<MaterialInventory> object, ParseException e) {
+				if (e == null) {
+		            mInventory = object.get(0);
+		        } else {
+		        	
+		        	Log.d("Parse", e.getMessage());
+		        }
+				
+			}
+		});*/
+		try {
+			mInventory = matInvQuery.getFirst();
+		} catch (ParseException e) {
+			Log.d("Parse", e.getMessage());
+		}
 		((TextView) rootView.findViewById(R.id.title_rawmaterial_detail))
 		.setText(mItem.getName()); //.setText(mItem.content);
 		

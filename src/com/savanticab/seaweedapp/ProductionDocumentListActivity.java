@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp;
 
+import com.parse.ParseException;
 import com.savanticab.seaweedapp.model.Batch;
 
 import android.content.Intent;
@@ -97,6 +98,7 @@ public class ProductionDocumentListActivity extends FragmentActivity implements
 			Bundle arguments = new Bundle();
 			//arguments.putString(ProductionDocumentDetailFragment.ARG_ITEM_ID,
 			//		id);
+			
 			arguments.putParcelable("batch", batch);
 			ProductionDocumentDetailFragment fragment = new ProductionDocumentDetailFragment();
 			fragment.setArguments(arguments);

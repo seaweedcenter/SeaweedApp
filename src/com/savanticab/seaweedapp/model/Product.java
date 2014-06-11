@@ -1,9 +1,13 @@
 package com.savanticab.seaweedapp.model;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Product implements Parcelable {
+@ParseClassName("Product")
+public class Product extends ParseObject implements Parcelable {
 	
 	private int id;	// id in SQL table and in app, hashed from code member
 	private String code;
@@ -14,41 +18,54 @@ public class Product implements Parcelable {
 	
 	// getters and setters...
 	public String getCode() {
-		return code;
+		//return code;
+		return getString("code");
 	}
 	public void setCode(String code) {
 		this.code = code;
-		this.id = code.hashCode();
+		//this.id = code.hashCode();
+		put("code", code);
+		//put("id", code.hashCode());
 	}
 	public Double getPrice(){
-		return price;
+		//return price;
+		return getDouble("price");
 	}
 	public void setPrice(Double p) {
 		this.price = p;
+		put("price", p);
 	}
 	public String getName() {
-		return name;
+		//return name;
+		return getString("name");
 	}
 	public void setName(String name) {
 		this.name = name;
+		put("name", name);
 	}
 	public String getFragance() {
-		return fragance;
+		//return fragance;
+		return getString("fragance");
 	}
 	public void setFragance(String fragance) {
 		this.fragance = fragance;
+		put("fragance", fragance);
 	}
 	public String getSize() {
-		return size;
+		//return size;
+		return getString("size");
 	}
 	public void setSize(String size) {
 		this.size = size;
+		put("size", size);
 	}
 	public int getId() {
-		return id;
+		//return id;
+		return getInt("id");
 	}
 	public void setId(int id) {
 		this.id = id;
+		put("id", id);
 	}
 	
 	// equals and hashcode needed for proper LinkedHashMap compatibility
@@ -73,6 +90,12 @@ public class Product implements Parcelable {
 		this.fragance = fragance;
 		this.size = size;
 		this.price = price;
+		//put("id", code.hashCode());
+		put("code", code);
+		put("name", name);
+		put("fragance", fragance);
+		put("size", size);
+		put("price", price);
 	}
 	
 	

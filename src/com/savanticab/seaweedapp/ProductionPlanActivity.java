@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.json.JSONException;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
-import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
-import com.savanticab.seaweedapp.sqlite.RecipeDBAdapter;
 import com.savanticab.seaweedapp.model.Batch;
 
 import android.app.Activity;
@@ -25,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,7 +102,7 @@ public class ProductionPlanActivity extends Activity {
 		private ImageButton buttonOK;
 		private Recipe recipe;
 		private Spinner productSpinner;
-		
+		private List<Recipe> mRecipeList;
 		public PlaceholderFragment() {
 		}
 		
@@ -110,13 +112,20 @@ public class ProductionPlanActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_production_plan,
 					container, false);
 			
-			List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAll();
+			ParseQuery<Recipe> matInvQuery = ParseQuery.getQuery(Recipe.class);
+			matInvQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+			mRecipeList = null;
+			try {
+				mRecipeList = matInvQuery.find();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAll();
 			
 			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
 			// which holds Recipe objects. The Recipe.toString() provides the text description shown
 			productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
-			ArrayAdapter<Recipe> aa = new ArrayAdapter<Recipe>(getActivity(), android.R.layout.simple_spinner_item);
-			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			
 			TextView textViewFragrance = (TextView) rootView.findViewById(R.id.text_product_fragrance);
 			TextView textViewSize = (TextView) rootView.findViewById(R.id.text_product_size);
@@ -124,13 +133,15 @@ public class ProductionPlanActivity extends Activity {
 			textViewSize.setText(" ");
 			
 			// add "empty" recipe to get a default description field in spinner
-			Recipe emptyRecipe = new Recipe();
-			emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 0.0));
-			aa.add(emptyRecipe);
-			
-			for(int i=0; i<recipes.size(); i++){
-				Recipe tmp = recipes.get(i);
-				aa.add(tmp);
+			//Recipe emptyRecipe = new Recipe();
+			//emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 0.0));
+			//aa.add(emptyRecipe);
+			ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			aa.add("Select what you want to produce");
+			for(int i=0; i<mRecipeList.size(); i++){
+				Recipe tmp = mRecipeList.get(i);
+				aa.add(tmp.toString());
 			}
 			
 			productSpinner.setAdapter(aa);
@@ -185,16 +196,40 @@ public class ProductionPlanActivity extends Activity {
 				textViewHeadingStock.setVisibility(View.VISIBLE);
 				editTextQuantity.setVisibility(View.VISIBLE);
 				textViewFragrance.setVisibility(View.VISIBLE);
-				textViewSize.setVisibility(View.VISIBLE);
+				textViewSize.setVisibility(View.VISIBLE);		
+
+				try {
+					recipe = (Recipe)mRecipeList.get(position).fetchIfNeeded();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+				textViewFragrance.setText(recipe.getProduct().getFragance());
+				textViewSize.setText(recipe.getProduct().getSize());
 				
 				if (quantity > 0) {
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 					//Inventory inventory = helper.getInventory();
-					List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAll();
+					ParseQuery<MaterialInventory> matInvQuery = ParseQuery.getQuery(MaterialInventory.class);
+					//matInvQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+					List<MaterialInventory> mInventory = null;
+					try {
+						mInventory = matInvQuery.find();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAll();
 					// pick up Recipe passed by adapter
-					recipe = (Recipe)parent.getAdapter().getItem(position);	
-					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
-					Map<RawMaterial, Double> ingredients = recipe.getIngredients();
+					//Product product = recipe.getProduct();
+					//String s = product.getCode()+" "+ product.getName();
+					Map<RawMaterial, Double> ingredients = null;
+					try {
+						ingredients = recipe.getIngredients();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					// clear table rows beyond heading rows and add data
 					// TODO: make the layout of table rows defined in XML
@@ -205,19 +240,30 @@ public class ProductionPlanActivity extends Activity {
 					}
 					
 					
-					textViewFragrance.setText(recipe.getProduct().getFragance());
-					textViewSize.setText(recipe.getProduct().getSize());
 						
 					// (re-)populate table with recipe ingredients
 					for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
 						
 						TableRow rowRecipe = new TableRow(this.getActivity());
-						RawMaterial mtrl = entry.getKey();
+						RawMaterial mtrl = null;
+						try {
+							mtrl = entry.getKey().fetchIfNeeded();
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						Double quantityNeeded = entry.getValue() * quantity;
 						//HashMap<RawMaterial, MaterialInventory> materials = helper.getAllRawMaterials();
 						Double quantityStock = 0.0;
 						
 						for (MaterialInventory mI : mInventory){
+							try {
+								mI.fetchIfNeeded();
+								mI.getMaterial().fetchIfNeeded();
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							if (mI.getMaterial().equals(mtrl)){
 								quantityStock = mI.getStock();
 							}
@@ -342,18 +388,52 @@ public class ProductionPlanActivity extends Activity {
 					
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 					//Inventory inventory = helper.getInventory();
-					BatchDBAdapter bAdapter = new BatchDBAdapter(this.getActivity().getApplicationContext());
-					Batch batch = new Batch(recipe, bAdapter.getLastBatchId()+1, quantity);
+					//BatchDBAdapter bAdapter = new BatchDBAdapter(this.getActivity().getApplicationContext());
+					
+					ParseQuery<Batch> query = ParseQuery.getQuery(Batch.class);
+					query.orderByDescending("id");
+					query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+					Batch lastIdBatch = null;
+					try {
+						lastIdBatch = query.getFirst();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					Batch batch = new Batch(recipe, lastIdBatch.getId()+1, quantity);
+					//Batch batch = new Batch(recipe, bAdapter.getLastBatchId()+1, quantity);
 					
 					// reserve material
-					MaterialInventoryDBAdapter mAdapter = new MaterialInventoryDBAdapter(this.getActivity().getApplicationContext());
-					HashMap<RawMaterial, Double> ingredients = batch.getRecipe().getIngredients();
+					//MaterialInventoryDBAdapter mAdapter = new MaterialInventoryDBAdapter(this.getActivity().getApplicationContext());
+					HashMap<RawMaterial, Double> ingredients = null;
+					try {
+						ingredients = batch.getRecipe().getIngredients();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					for (Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
 						double qty = entry.getValue()*quantity;
 						RawMaterial material = entry.getKey();
-						mAdapter.MtrlReserve(material, qty);
+						//mAdapter.MtrlReserve(material, qty);
+						MaterialInventory inv = null;//this.findMaterialInventoryByMaterialId(material.getId());// materials.get(mtrl);
+						ParseQuery<MaterialInventory> matInvQuery = ParseQuery.getQuery(MaterialInventory.class);
+						matInvQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+						matInvQuery.whereEqualTo("material", material);
+						try {
+							inv = matInvQuery.getFirst();
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						inv.setStock(inv.getStock() - qty);
+						inv.setReserved(inv.getReserved() + qty);
+						//this.updateMaterialInventory(inv);
+						inv.saveEventually();
 					}
-					bAdapter.add(batch);
+					//bAdapter.add(batch);
+					batch.saveEventually();
 					//helper.updateInventory(inventory);
 					
 					Intent i = new Intent(v.getContext(), ProductionDocumentListActivity.class);

@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -9,10 +10,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.RawMaterial;
-import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.model.Recipe;
 
 /**
  * 
@@ -56,7 +58,7 @@ public class RawMaterialListFragment extends ListFragment {
 		/**
 		 * Callback for when an item has been selected.
 		 */
-		public void onItemSelected(String id);
+		public void onItemSelected(String id, RawMaterial rawMaterial);
 	}
 
 	/**
@@ -65,7 +67,7 @@ public class RawMaterialListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(String id) {
+		public void onItemSelected(String id, RawMaterial rawMaterial) {
 		}
 	};
 
@@ -75,14 +77,23 @@ public class RawMaterialListFragment extends ListFragment {
 	 */
 	public RawMaterialListFragment() {
 	}
-
+	List<RawMaterial> rawMaterialList;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		MaterialInventoryDBAdapter mAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
-		List<RawMaterial> rawMaterialList = mAdaptor.getAllMaterialsInInventory();
-		
+		//MaterialInventoryDBAdapter mAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
+		//List<RawMaterial> rawMaterialList = mAdaptor.getAllMaterialsInInventory();
+		ParseQuery<RawMaterial> matInvQuery = ParseQuery.getQuery(RawMaterial.class);
+		//matInvQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+		rawMaterialList = new ArrayList<RawMaterial>();
+		try {
+			rawMaterialList = matInvQuery.find();//TODO: change from all rawmaterials to all materials IN materialInventory
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		// TODO: replace with a real list adapter.
 		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
 		//		android.R.layout.simple_list_item_activated_1,
@@ -132,7 +143,7 @@ public class RawMaterialListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(Integer.toString(position+1));//DummyContent.ITEMS.get(position).id);
+		mCallbacks.onItemSelected(Integer.toString(position), rawMaterialList.get(position) );//DummyContent.ITEMS.get(position).id);
 		
 	}
 

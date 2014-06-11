@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.json.JSONException;
+
 import android.app.ListFragment;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,14 +27,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
-import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
-import com.savanticab.seaweedapp.sqlite.ProductInventoryDBAdaptor;
 
 /**
  * Show selection from list (ProductionDocumentListActivity + Fragment)
@@ -79,7 +79,12 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 				R.layout.fragment_productiondocument_detail, container, false);
 
 		batch = (Batch)getArguments().getParcelable("batch");
-		
+		try {
+			batch.fetch();
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		if (batch != null) {
 			
 			Toast toast = Toast.makeText(getActivity(), batch.toString(), Toast.LENGTH_SHORT);
@@ -88,8 +93,15 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			TextView textViewHeading = (TextView) rootView.findViewById(R.id.productiondocument_detail_batchid);
 			textViewHeading.setText("Batch ID:" + batch.getId());
 			
-			Recipe r = batch.getRecipe();
-			Product p = r.getProduct();
+			Recipe r = null;
+			Product p = null;
+			try {
+				r = batch.getRecipe().fetchIfNeeded();
+				p = r.getProduct().fetchIfNeeded();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			//DateFormat df = DateFormat.getDateTimeInstance();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			
@@ -122,7 +134,13 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 //			TextView textViewQuantity = (TextView) rootView.findViewById(R.id.productiondocument_detail_quantity);
 //			textViewQuantity.setText("Quantity:" + batch.getQuantity());
 			
-			Map<RawMaterial, Double> ingredients = r.getIngredients();
+			Map<RawMaterial, Double> ingredients = null;
+			try {
+				ingredients = r.getIngredients();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			TableLayout table = (TableLayout) rootView.findViewById(R.id.table_ProdDoc);
 			int productQty = batch.getQuantity();
 			
@@ -185,15 +203,17 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			
 			//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 			//Inventory inventory = helper.getInventory();
-			ProductInventoryDBAdaptor pIAdaptor = new ProductInventoryDBAdaptor(this.getActivity().getApplicationContext());
+			//ProductInventoryDBAdaptor pIAdaptor = new ProductInventoryDBAdaptor(this.getActivity().getApplicationContext());
 			// update inventories and mark batch finished
 			Product product = batch.getRecipe().getProduct();
-			pIAdaptor.ProductProductionFinish(product, batch);
+			//TODO: product production finish needs to be readded
+			//pIAdaptor.ProductProductionFinish(product, batch);
 			batch.setIsFinished(true);
 			
 			// update database
-			new BatchDBAdapter(getActivity().getApplicationContext()).updateBatch(batch);//helper.updateBatch(batch);
+			//new BatchDBAdapter(getActivity().getApplicationContext()).updateBatch(batch);//helper.updateBatch(batch);
 			//helper.updateInventory(inventory);
+			batch.saveEventually();
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			TextView textViewFinishDate = (TextView) v.getRootView().findViewById(R.id.productiondocument_detail_finishdate);

@@ -1,9 +1,13 @@
 package com.savanticab.seaweedapp.model;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class RawMaterial implements Parcelable {
+@ParseClassName("RawMaterial")
+public class RawMaterial extends ParseObject implements Parcelable {
 	
 	private int id;	// id in SQL table and in app, hashed from name
 	private String name;
@@ -12,34 +16,43 @@ public class RawMaterial implements Parcelable {
 	
 	// getters and setters
 	public int getId() {
-		return id;
+		//return id;
+		return getInt("id");
 	}
 	public void setId(int id) {
 		this.id = id;
+		put("id", id);
 	}
 	public String getName() {
-		return name;
+		//return name;
+		return getString("name");
 	}
 	public void setName(String name) {
 		this.name = name;
 		this.id = name.hashCode();
+		put("name", name);
+		put("id", name.hashCode());
 	}
 	public String getUnit() {
-		return unit;
+		//return unit;
+		return getString("unit");
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+		put("unit", unit);
 	}
 	public String getIcon() {
-		return icon;
+		//return icon;
+		return getString("icon");
 	}
 	public void setIcon(String icon) {
 		this.icon = icon;
+		put("icon", icon);
 	}
 	
 	// describes object in Spinners, ListViews etc
 	public String toString() {
-		return this.name;
+		return getName();
 	}
 	
 	public RawMaterial(){}
@@ -48,6 +61,10 @@ public class RawMaterial implements Parcelable {
 		this.name = name;
 		this.unit = unit;
 		this.icon = icon;
+		//put("id", name.hashCode());
+		put("name", name);
+		put("unit", unit);
+		put("icon", icon);
 	}
 	
 	
@@ -55,10 +72,10 @@ public class RawMaterial implements Parcelable {
 	// equals and hashCode needed for LinkedHashMap
 	public boolean equals(Object other) {
 		RawMaterial m = (RawMaterial)other;
-		return (m.getName().equals(this.name));
+		return (m.getName().equals(getName()));
 	}
 	public int hashCode() {
-		return this.name.hashCode();
+		return getName().hashCode();
 	}
 	
     // Parcelable implementation

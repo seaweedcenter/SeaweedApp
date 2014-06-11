@@ -7,15 +7,18 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
-import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
+import com.savanticab.seaweedapp.model.MaterialInventory;
 
 /**
  * Responsible for listing Batches
@@ -81,13 +84,33 @@ public class ProductionDocumentListFragment extends ListFragment {
 	 */
 	public ProductionDocumentListFragment() {
 	}
-
+	private List<Batch> batchList;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		BatchDBAdapter bAdaptor = new BatchDBAdapter(this.getActivity().getApplicationContext());
-		List<Batch> batchList = bAdaptor.getAll(); // helper.getAllBatches();
+		//BatchDBAdapter bAdaptor = new BatchDBAdapter(this.getActivity().getApplicationContext());
+		ParseQuery<Batch> query = ParseQuery.getQuery(Batch.class);
+		//query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+		/*matInvQuery.findInBackground(new FindCallback<Batch>() {
+			@Override
+			public void done(List<Batch> objects, ParseException e) {
+				if (e == null) {
+		            batchList = objects;
+		        } else {
+		        	
+		        	Log.d("Parse", e.getMessage());
+		        }
+				
+			}
+		});*/
+		try {
+			batchList = query.find();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//List<Batch> batchList = bAdaptor.getAll(); // helper.getAllBatches();
 		List<Batch> batchListUnfinished = new LinkedList<Batch>();
 		List<Batch> batchListFinished = new LinkedList<Batch>();
 		
