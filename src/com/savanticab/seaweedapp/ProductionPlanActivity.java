@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.RawMaterial;

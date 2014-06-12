@@ -28,8 +28,8 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 		      //+ COLUMN_ID + " integer primary key autoincrement, " 
 		      //+ COLUMN_ID + " integer primary key, " 
 		      + COLUMN_PRODUCT_ID + " integer primary key references " + ProductDBAdapter.TABLE_NAME + "("+ ProductDBAdapter.COLUMN_ID + "), " 
-		      + COLUMN_INSTOCKQTY + " real, "
-		      + COLUMN_INPRODUCTIONQTY + " real"
+		      + COLUMN_INSTOCKQTY + " integer, "
+		      + COLUMN_INPRODUCTIONQTY + " integer"
 		      + ");";
 
 			@Override public String getTableName() { return TABLE_NAME; }
@@ -42,18 +42,18 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 		  @Override
 		public ContentValues getContentValues(ProductInventory productInventory) {
 				ContentValues values = new ContentValues();
-				values.put(ProductInventoryDBAdaptor.COLUMN_PRODUCT_ID, productInventory.getProduct().getId());
-				values.put(ProductInventoryDBAdaptor.COLUMN_INSTOCKQTY, productInventory.getStock());
-				values.put(ProductInventoryDBAdaptor.COLUMN_INPRODUCTIONQTY, productInventory.getInproduction());
+				values.put(COLUMN_PRODUCT_ID, productInventory.getProduct().getId());
+				values.put(COLUMN_INSTOCKQTY, productInventory.getStock());
+				values.put(COLUMN_INPRODUCTIONQTY, productInventory.getInproduction());
 				return values;
 			}
 			
 			@Override
 			public ProductInventory loadFromCursor(Cursor cursor) {
 				ProductInventory productInventory = new ProductInventory();
-				productInventory.setProduct(new ProductDBAdapter(mContext).findProductById(Integer.parseInt(cursor.getString(0))));
-				productInventory.setStock(Integer.parseInt(cursor.getString(1)));
-				productInventory.setInproduction(Integer.parseInt(cursor.getString(2)));
+				productInventory.setProduct(new ProductDBAdapter(mContext).findProductById(cursor.getInt(0)));
+				productInventory.setStock(cursor.getInt(1));
+				productInventory.setInproduction(cursor.getInt(2));
 				return productInventory;
 			}
 		    

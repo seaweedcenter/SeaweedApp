@@ -14,6 +14,7 @@ public class MaterialInventoryDBAdapter extends BaseDBAdapter<MaterialInventory>
 
 	// Database table
 		  public static final String TABLE_NAME = "material_inventories";
+		  
 		  public static final String COLUMN_ID = "_id";
 		  public static final String COLUMN_MATERIAL_ID = "material_id";
 		  public static final String COLUMN_STOCK_QUANTITY = "stock_quantity";
@@ -26,7 +27,7 @@ public class MaterialInventoryDBAdapter extends BaseDBAdapter<MaterialInventory>
 		      + "(" 
 		      //+ COLUMN_ID + " integer primary key autoincrement, " 
 		      //+ COLUMN_ID + " integer primary key, "
-		      + COLUMN_MATERIAL_ID + " text primary key references " + RawMaterialDBAdapter.TABLE_NAME + "("+ RawMaterialDBAdapter.COLUMN_ID + "), " 
+		      + COLUMN_MATERIAL_ID + " integer primary key references " + RawMaterialDBAdapter.TABLE_NAME + "("+ RawMaterialDBAdapter.COLUMN_ID + "), " 
 		      + COLUMN_STOCK_QUANTITY + " real, " 
 		      + COLUMN_ORDERED_QUANTITY + " real, "
 		      + COLUMN_RESERVED_QUANTITY + " real"
@@ -42,20 +43,20 @@ public class MaterialInventoryDBAdapter extends BaseDBAdapter<MaterialInventory>
 			@Override
 			public ContentValues getContentValues(MaterialInventory materialInventory) {
 				ContentValues values = new ContentValues();
-				values.put(MaterialInventoryDBAdapter.COLUMN_MATERIAL_ID, materialInventory.getMaterial().getId());		
-				values.put(MaterialInventoryDBAdapter.COLUMN_STOCK_QUANTITY, materialInventory.getStock());
-				values.put(MaterialInventoryDBAdapter.COLUMN_ORDERED_QUANTITY, materialInventory.getOrdered());
-				values.put(MaterialInventoryDBAdapter.COLUMN_RESERVED_QUANTITY, materialInventory.getReserved());
+				values.put(COLUMN_MATERIAL_ID, materialInventory.getMaterial().getId());		
+				values.put(COLUMN_STOCK_QUANTITY, materialInventory.getStock());
+				values.put(COLUMN_ORDERED_QUANTITY, materialInventory.getOrdered());
+				values.put(COLUMN_RESERVED_QUANTITY, materialInventory.getReserved());
 				return values;
 			}
 			
 			@Override
 			public MaterialInventory loadFromCursor(Cursor cursor) {
 				MaterialInventory materialInventory = new MaterialInventory();
-				materialInventory.setMaterial(new RawMaterialDBAdapter(mContext).findRawMaterialById(Integer.parseInt(cursor.getString(0))));
-				materialInventory.setStock(Integer.parseInt(cursor.getString(1)));
-				materialInventory.setOrdered(Integer.parseInt(cursor.getString(2)));
-				materialInventory.setReserved(Integer.parseInt(cursor.getString(3)));
+				materialInventory.setMaterial(new RawMaterialDBAdapter(mContext).findRawMaterialById(cursor.getInt(0)));
+				materialInventory.setStock(cursor.getDouble(1));
+				materialInventory.setOrdered(cursor.getDouble(2));
+				materialInventory.setReserved(cursor.getDouble(3));
 				return materialInventory;
 			}
 		    
