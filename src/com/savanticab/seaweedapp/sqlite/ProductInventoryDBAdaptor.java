@@ -39,7 +39,8 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 				super(context);
 			}
 		  
-		  public ContentValues getContentValues(ProductInventory productInventory) {
+		  @Override
+		public ContentValues getContentValues(ProductInventory productInventory) {
 				ContentValues values = new ContentValues();
 				values.put(ProductInventoryDBAdaptor.COLUMN_PRODUCT_ID, productInventory.getProduct().getId());
 				values.put(ProductInventoryDBAdaptor.COLUMN_INSTOCKQTY, productInventory.getStock());
@@ -47,6 +48,7 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 				return values;
 			}
 			
+			@Override
 			public ProductInventory loadFromCursor(Cursor cursor) {
 				ProductInventory productInventory = new ProductInventory();
 				productInventory.setProduct(new ProductDBAdapter(mContext).findProductById(Integer.parseInt(cursor.getString(0))));
@@ -62,7 +64,7 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 		    
 		    public int updateProductInventory(ProductInventory product) {
 		 
-		        return update(product, COLUMN_ID + " = ?", new String[] { String.valueOf(product.getProduct().getId()) });
+		        return update(product, COLUMN_PRODUCT_ID + " = ?", new String[] { String.valueOf(product.getProduct().getId()) });
 		 
 		    }
 		    public boolean deleteProductInventory(int productId) {

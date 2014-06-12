@@ -39,6 +39,7 @@ public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 			super(context);
 		}
 		
+		@Override
 		public ContentValues getContentValues(Product product) {
 			ContentValues values = new ContentValues();
 			values.put(ProductDBAdapter.COLUMN_ID, product.getId());
@@ -50,6 +51,7 @@ public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 			return values;
 		}
 		
+		@Override
 		public Product loadFromCursor(Cursor cursor) {
 			Product product = new Product();
 			product.setId(Integer.parseInt(cursor.getString(0)));

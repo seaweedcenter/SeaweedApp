@@ -1,12 +1,5 @@
 package com.savanticab.seaweedapp;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,8 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.savanticab.seaweedapp.dummy.DummyContent;
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.*;
@@ -128,6 +119,7 @@ public class RawMaterialDetailFragment extends Fragment {
 			ImageButton buttonCancel = (ImageButton) rootView.findViewById(R.id.imageButtonCancel);
 			buttonCancel.setOnClickListener(new OnClickListener()
 					{
+						@Override
 						public void onClick(View v)
 						{
 							EditText editText = (EditText) v.getRootView().findViewById(R.id.editTextEnterQuantity);
@@ -143,6 +135,7 @@ public class RawMaterialDetailFragment extends Fragment {
 			CheckBox chkBoxStock = (CheckBox) rootView.findViewById(R.id.checkBoxStock);
 			chkBoxStock.setOnClickListener(new OnClickListener() 
 					{
+						@Override
 						public void onClick(View v)
 						{
 							CheckBox chkBoxOrdered = (CheckBox) v.getRootView().findViewById(R.id.checkBoxOrdered);
@@ -154,6 +147,7 @@ public class RawMaterialDetailFragment extends Fragment {
 			CheckBox chkBoxOrdered = (CheckBox) rootView.findViewById(R.id.checkBoxOrdered);
 			chkBoxOrdered.setOnClickListener(new OnClickListener() 
 					{
+						@Override
 						public void onClick(View v)
 						{
 							CheckBox chkBoxStock = (CheckBox) v.getRootView().findViewById(R.id.checkBoxStock);

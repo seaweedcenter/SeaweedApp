@@ -4,14 +4,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".ProductionDocumentDetailActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame">
 
-<LinearLayout android:layout_width="fill_parent"
+ 
+<ScrollView
+    android:layout_width="fill_parent"
+    android:background="#ffffff"
+    android:layout_height="fill_parent">
+       
+<LinearLayout 
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
     
-    
-<GridLayout android:layout_width="wrap_content"
+<GridLayout 
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content" 
     android:rowCount="8"
     android:columnCount="10">
@@ -38,14 +45,15 @@
         android:padding="10dp"
         android:text="@string/qty_to_produce_heading_proddoc"
         android:textIsSelectable="true" />
+    
     <TextView
         android:id="@+id/productiondocument_detail_startdate"
         style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_column="6"
+        android:layout_column="5"
         android:layout_gravity="left|top"
-        android:layout_row="4"
+        android:layout_row="5"
         android:padding="10dp"
         android:text="@string/start_date_heading_proddoc"
         android:textIsSelectable="true" />
@@ -65,7 +73,7 @@
         style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_column="5"
+        android:layout_column="6"
         android:layout_gravity="left|top"
         android:layout_row="4"
         android:padding="10dp"
@@ -79,7 +87,7 @@
         android:layout_height="match_parent"
         android:layout_column="5"
         android:layout_gravity="left|top"
-        android:layout_row="5"
+        android:layout_row="4"
         android:padding="10dp"
         android:text="@string/code_id_heading_proddoc"
         android:textIsSelectable="true" />
@@ -88,9 +96,9 @@
         style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_column="5"
+        android:layout_column="6"
         android:layout_gravity="left|top"
-        android:layout_row="6"
+        android:layout_row="3"
         android:padding="10dp"
         android:text="@string/fragrance_heading_proddoc"
         android:textIsSelectable="true" />
@@ -99,13 +107,24 @@
         style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_column="5"
+        android:layout_column="7"
         android:layout_gravity="left|top"
-        android:layout_row="7"
+        android:layout_row="3"
         android:padding="10dp"
         android:text="@string/size_heading_proddoc"
         android:textIsSelectable="true" />
+    
 </GridLayout>
+
+             <!-- Instructions -->
+    <TextView
+        android:id="@+id/text_recipeInstructions"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"
+        android:padding="10dp"
+        android:text="@string/instructions_heading_proddoc" />
 
 <View
   android:layout_width="1dp"
@@ -121,87 +140,112 @@
     android:text="@string/recipe_list_heading_proddoc"
     android:textIsSelectable="true" />
 
-<TableLayout
-    android:id="@+id/table_ProdDoc"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:shrinkColumns="*"
-    android:stretchColumns="*"
-    android:layout_margin="2dp">
-    <TableRow
-        android:id="@+id/tableRowHeadingProdDoc1"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_margin="2dp"
-        android:gravity="center_horizontal">
-		<TextView
-            android:id="@+id/textViewSpaceProdDoc1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="left"
-            android:text="@string/blanks_string"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" >
-		</TextView>
-        <TextView
-            android:id="@+id/textViewHeadingItemProdDoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="left"
-            android:text="@string/item_heading_proddoc"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" >
-		</TextView>
-		<TextView
-            android:id="@+id/textViewHeadingMtrlQtyProdDoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="left"
-            android:text="@string/quantity_heading_proddoc"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" >
-		</TextView>
-		<TextView
-            android:id="@+id/textViewHeadingNotesProdDoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="left"
-            android:text="@string/notes_heading_proddoc"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" >
-        </TextView>
-		<TextView
-            android:id="@+id/textViewSpaceProdDoc1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="left"
-            android:text="@string/blanks_string"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" >
-		</TextView>
-    </TableRow>
+      <TableLayout 
+         android:id="@+id/table_ProdDoc"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:shrinkColumns="*"
+         android:stretchColumns="*"
+         android:layout_margin="2dp">
+           <TableRow
+               android:id="@+id/tableRowHeadingProdDoc1"
+               android:layout_height="wrap_content"
+               android:layout_width="wrap_content"
+               android:layout_margin="2dp"
+               android:gravity="center_horizontal">
+		        <TextView
+                     android:id="@+id/textViewSpaceProdDoc1"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp"
+                     android:gravity="left"
+                     android:text="@string/blanks_string"
+                     android:textSize="18dp"
+                     android:textStyle="bold"
+                     android:typeface="serif"
+                     android:visibility="visible" >
+		        </TextView>
+                <TextView
+                     android:id="@+id/textViewHeadingItemProdDoc"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp"
+                     android:gravity="left"
+                     android:text="@string/item_heading_proddoc"
+                     android:textSize="18dp"
+                     android:textStyle="bold"
+                     android:typeface="serif"
+                     android:visibility="visible" >
+		         </TextView>
+		         <TextView
+                     android:id="@+id/textViewHeadingMtrlQtyProdDoc"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp"
+                     android:gravity="left"
+                     android:text="@string/quantity_heading_proddoc"
+                     android:textSize="18dp"
+                     android:textStyle="bold"
+                     android:typeface="serif"
+                     android:visibility="visible" >
+		         </TextView>
+		         <TextView
+                     android:id="@+id/textViewHeadingNotesProdDoc"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp"
+                     android:gravity="left"
+                     android:text="@string/notes_heading_proddoc"
+                     android:textSize="18dp"
+                     android:textStyle="bold"
+                     android:typeface="serif"
+                     android:visibility="visible" >
+                 </TextView>
+		         <TextView
+                     android:id="@+id/textViewSpaceProdDoc1"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp"
+                     android:gravity="left"
+                     android:text="@string/blanks_string"
+                     android:textSize="18dp"
+                     android:textStyle="bold"
+                     android:typeface="serif"
+                     android:visibility="visible" >
+		         </TextView>
+         </TableRow>
     
     <TableRow>
-        
-    </TableRow>
-    
+      
+    </TableRow>   
 
-</TableLayout>
+          
+      </TableLayout>
+      
+                       
+                   <TableLayout
+                     android:id="@+id/table_extra"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_margin="2dp" >
+                       
+                   </TableLayout>
+                  <ImageButton
+                     android:id="@+id/imageButtonOK"
+                     android:layout_width="64dp"
+                     android:layout_height="64dp"
+                     android:layout_gravity="right|bottom"
+                     android:contentDescription="@string/OK_button"
+                     android:src="@drawable/ok_bullet_large" />
+                  
+                   <Button
+                     android:id="@+id/buttonAddRow"
+                     android:layout_width="140dp"
+                     android:layout_height="64dp"
+                     android:text="@string/add_extra_row_to_batch"/>
+                   
+                        
 
 </LinearLayout>
+</ScrollView>
 </FrameLayout>

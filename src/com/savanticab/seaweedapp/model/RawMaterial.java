@@ -9,6 +9,7 @@ public class RawMaterial implements Parcelable {
 	private String name;
 	private String unit;
 	private String icon;
+	private String test;
 	
 	// getters and setters
 	public int getId() {
@@ -37,7 +38,15 @@ public class RawMaterial implements Parcelable {
 		this.icon = icon;
 	}
 	
+	public String getTest() {
+		return test;
+	}
+	public void setTest(String test) {
+		this.test = test;
+	}
+	
 	// describes object in Spinners, ListViews etc
+	@Override
 	public String toString() {
 		return this.name;
 	}
@@ -53,31 +62,38 @@ public class RawMaterial implements Parcelable {
 	
 	// equals needed for List.contains()
 	// equals and hashCode needed for LinkedHashMap
+	@Override
 	public boolean equals(Object other) {
 		RawMaterial m = (RawMaterial)other;
 		return (m.getName().equals(this.name));
 	}
+	@Override
 	public int hashCode() {
 		return this.name.hashCode();
 	}
 	
     // Parcelable implementation
 	// for passing object in Bundle between activities etc
-    public int describeContents() {
+    @Override
+	public int describeContents() {
       return 0;
     }
-    public void writeToParcel(Parcel out, int flags) {
+    @Override
+	public void writeToParcel(Parcel out, int flags) {
     	out.writeInt(id);
     	out.writeString(name);
     	out.writeString(unit);
     	out.writeString(icon);
+    	out.writeString(test);
     }
     public static final Parcelable.Creator<RawMaterial> CREATOR
         = new Parcelable.Creator<RawMaterial>() {
-    	public RawMaterial createFromParcel(Parcel in) {
+    	@Override
+		public RawMaterial createFromParcel(Parcel in) {
     		return new RawMaterial(in);
       }
-      public RawMaterial[] newArray(int size) {
+      @Override
+	public RawMaterial[] newArray(int size) {
         return new RawMaterial[size];
       }
     };
@@ -86,6 +102,7 @@ public class RawMaterial implements Parcelable {
     	name = in.readString();
     	unit = in.readString();
     	icon = in.readString();
+    	test = in.readString();
     }
 
 }

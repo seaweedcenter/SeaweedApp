@@ -39,6 +39,7 @@ public class MaterialInventoryDBAdapter extends BaseDBAdapter<MaterialInventory>
 			  super(context);
 		  }
 			
+			@Override
 			public ContentValues getContentValues(MaterialInventory materialInventory) {
 				ContentValues values = new ContentValues();
 				values.put(MaterialInventoryDBAdapter.COLUMN_MATERIAL_ID, materialInventory.getMaterial().getId());		
@@ -48,6 +49,7 @@ public class MaterialInventoryDBAdapter extends BaseDBAdapter<MaterialInventory>
 				return values;
 			}
 			
+			@Override
 			public MaterialInventory loadFromCursor(Cursor cursor) {
 				MaterialInventory materialInventory = new MaterialInventory();
 				materialInventory.setMaterial(new RawMaterialDBAdapter(mContext).findRawMaterialById(Integer.parseInt(cursor.getString(0))));

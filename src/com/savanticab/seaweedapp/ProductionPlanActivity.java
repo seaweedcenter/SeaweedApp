@@ -121,8 +121,12 @@ public class ProductionPlanActivity extends Activity {
 			
 			TextView textViewFragrance = (TextView) rootView.findViewById(R.id.text_product_fragrance);
 			TextView textViewSize = (TextView) rootView.findViewById(R.id.text_product_size);
+
 			textViewFragrance.setText(" ");
 			textViewSize.setText(" ");
+			
+			//TextView textViewInstructions = (TextView) rootView.findViewById(R.id.text_recipeInstructions);
+			//textViewInstructions.setText(" ");
 			
 			// add "empty" recipe to get a default description field in spinner
 			Recipe emptyRecipe = new Recipe();
@@ -144,11 +148,13 @@ public class ProductionPlanActivity extends Activity {
 			return rootView;
 		}
 		
+		@Override
 		public void onNothingSelected(AdapterView<?> parent) {
 			// ?
 		}
 		
 		// spinner selection listener
+		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position,long id)
 		{
 			TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
@@ -165,6 +171,8 @@ public class ProductionPlanActivity extends Activity {
 			TextView textViewFragrance = (TextView)view.getRootView().findViewById(R.id.text_product_fragrance);
 			TextView textViewSize = (TextView)view.getRootView().findViewById(R.id.text_product_size);
 			
+			//TextView textViewInstructions = (TextView)view.getRootView().findViewById(R.id.text_recipeInstructions);
+			
 			// no choice, clear
 			if ( (position==0) | (quantity==0)) {
 				//TableLayout table = (TableLayout)view.getRootView().findViewById(R.id.table_recipe);
@@ -177,6 +185,8 @@ public class ProductionPlanActivity extends Activity {
 				editTextQuantity.setVisibility(View.INVISIBLE);
 				textViewFragrance.setVisibility(View.INVISIBLE);
 				textViewSize.setVisibility(View.INVISIBLE);
+				//textViewInstructions.setVisibility(View.INVISIBLE);
+				
 			}
 			
 			// actual choice of product recipe
@@ -187,6 +197,7 @@ public class ProductionPlanActivity extends Activity {
 				editTextQuantity.setVisibility(View.VISIBLE);
 				textViewFragrance.setVisibility(View.VISIBLE);
 				textViewSize.setVisibility(View.VISIBLE);
+				//textViewInstructions.setVisibility(View.VISIBLE);			
 				
 				if (quantity > 0) {
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
@@ -208,6 +219,7 @@ public class ProductionPlanActivity extends Activity {
 					
 					textViewFragrance.setText(recipe.getProduct().getFragance());
 					textViewSize.setText(recipe.getProduct().getSize());
+					//textViewInstructions.setText(recipe.getInstructions());
 						
 					// (re-)populate table with recipe ingredients
 					for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {
@@ -235,6 +247,7 @@ public class ProductionPlanActivity extends Activity {
 						
 						TextView textInstock = new TextView(this.getActivity());
 						textInstock.setText(Double.toString(quantityStock) + " " + mtrl.getUnit());
+						
 						
 						if (quantityStock >= quantityNeeded) {
 							textNeeded.setTextColor(Color.GREEN);
@@ -283,12 +296,14 @@ public class ProductionPlanActivity extends Activity {
 					
 					buttonCancel.setOnClickListener(this);
 					buttonOK.setOnClickListener(this);
+					
 				}
 				
 			}
 		}
 		
 		// handle buttonclicks
+		@Override
 		public void onClick(View v){
 			
 			TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_recipe);
@@ -301,7 +316,7 @@ public class ProductionPlanActivity extends Activity {
 				Spinner spinner = (Spinner)table.getRootView().findViewById(R.id.spinner_product_name);
 				spinner.setSelection(0);
 				
-				//KW removed these lines, they caused the app to crasch. They seems redundant!
+				//KW: removed these lines, they caused the app to crasch. They seems redundant!
 				//Still seems to render some problem....need more tests
 				//TODO: Test the cancel button more thoroughly!
 				
@@ -375,7 +390,7 @@ public class ProductionPlanActivity extends Activity {
 			long id = productSpinner.getSelectedItemId();
 			int position = productSpinner.getSelectedItemPosition();
 			View view = productSpinner.getSelectedView();
-			onItemSelected((AdapterView<?>)productSpinner, view, position, id);
+			onItemSelected(productSpinner, view, position, id);
 		}
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,

@@ -1,13 +1,5 @@
 package com.savanticab.seaweedapp.model;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 
 // Inventory class holds quantities of RawMaterials and Products
 // typically read from database and created by MySQLiteHelper "helper.getInventory()" when needed

@@ -20,6 +20,7 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	public static final String COLUMN_QUANTITY = "quantity";
 	public static final String COLUMN_STARTDATE = "startDate";
 	public static final String COLUMN_FINISHDATE = "finishDate";
+	public static final String COLUMN_EXTRACOMMENTS = "extraComments";
 	
 	// Database creation SQL statement
 	protected static final String DATABASE_CREATE = "create table " 
@@ -29,7 +30,8 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	  + COLUMN_RECIPE_ID + " integer not null references "  + RecipeDBAdapter.TABLE_NAME + "("+RecipeDBAdapter.COLUMN_PRODUCT_ID+"), " 
 	  + COLUMN_QUANTITY + " integer, "
 	  + COLUMN_STARTDATE + " text, "
-	  + COLUMN_FINISHDATE + " text"
+	  + COLUMN_FINISHDATE + " text,"
+	  + COLUMN_EXTRACOMMENTS + " text"
 	  + ");";
 	
 	@Override public String getTableName() { return TABLE_NAME;}
@@ -39,6 +41,7 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 		super(context);
 	}
 
+	@Override
 	public ContentValues getContentValues(Batch batch) {
 		ContentValues values = new ContentValues();
         values.put(BatchDBAdapter.COLUMN_BATCH_ID, batch.getId());
@@ -48,9 +51,11 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
         String finishDate = (batch.getFinishDate() != null) ? Long.toString(batch.getFinishDate().getTime()) : "null";
         values.put(BatchDBAdapter.COLUMN_STARTDATE, startDate);
         values.put(BatchDBAdapter.COLUMN_FINISHDATE, finishDate);
+        values.put(BatchDBAdapter.COLUMN_EXTRACOMMENTS, batch.getExtraComments());
 		return values;
 	}
 	
+	@Override
 	public Batch loadFromCursor(Cursor cursor) {
 		Batch batch = new Batch();
 		batch.setId(Integer.parseInt(cursor.getString(0)));
@@ -64,6 +69,7 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 		batch.setStartDate(!startDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(startDate)):null);
 		String finishDate = cursor.getString(4);
 		batch.setFinishDate(!finishDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(finishDate)):null);
+		batch.setExtraComments(cursor.getString(5));
 		return batch;
 	}
     

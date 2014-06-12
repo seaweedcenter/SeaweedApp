@@ -14,6 +14,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	private int quantity;	// to produce
 	private Date startDate;
 	private Date finishDate;	// null if job is unfinished
+	private String extraComments;
 	
 	// getters and setters
 	public int getId() {
@@ -57,8 +58,15 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
 	}
+	public String getExtraComments() {
+		return extraComments;
+	}
+	public void setExtraComments(String extraComments) {
+		this.extraComments = extraComments;
+	}
 	
 	// controls eg. how Batch objects are represented in Spinners, ListViews etc
+	@Override
 	public String toString() {
 		String returnstring = "ID: "+id;
 		if (recipe == null) {
@@ -87,10 +95,12 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	}
 	
 	// equals and hashCode needed for LinkedHashMaps elsewhere
+	@Override
 	public boolean equals(Object o){
 		Batch other = (Batch) o;
 		return (other.getId() == this.id);
 	}
+	@Override
 	public int hashCode() {
 		return (id + " " + recipe.getProduct().getName() 
 				+ recipe.getProduct().getCode() + " " + startDate).hashCode();
@@ -98,10 +108,12 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	
 	// Parcelable implementation
 	// needed to pass objects around between activities etc
-    public int describeContents() {
+    @Override
+	public int describeContents() {
       return 0;
     }
-    public void writeToParcel(Parcel out, int flags) {
+    @Override
+	public void writeToParcel(Parcel out, int flags) {
     	out.writeInt(id);
     	out.writeParcelable(recipe, flags);
     	out.writeInt(quantity);
@@ -110,10 +122,12 @@ public class Batch implements Parcelable, Comparable<Batch> {
     }
     public static final Parcelable.Creator<Batch> CREATOR
         = new Parcelable.Creator<Batch>() {
-    	public Batch createFromParcel(Parcel in) {
+    	@Override
+		public Batch createFromParcel(Parcel in) {
     		return new Batch(in);
       }
-      public Batch[] newArray(int size) {
+      @Override
+	public Batch[] newArray(int size) {
         return new Batch[size];
       }
     };
@@ -126,7 +140,8 @@ public class Batch implements Parcelable, Comparable<Batch> {
     }
     
     // Comparator implementation
-    public int compareTo(Batch other) {
+    @Override
+	public int compareTo(Batch other) {
     	return (this.getId()<other.getId() ? 1 : this.getId() > other.getId() ? 1 : 0);
     }
 	

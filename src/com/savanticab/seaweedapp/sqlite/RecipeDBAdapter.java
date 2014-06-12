@@ -24,6 +24,7 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 		  //public static final String COLUMN_RAW_MATERIAL_ID = "rawmaterial_id";
 		  //public static final String COLUMN_QUANTITY = "quantity";
 		  public static final String COLUMN_INGREDIENTS = "ingredients";
+		  public static final String COLUMN_INSTRUCTIONS = "instructions";
 		  
 		  // Database creation SQL statement
 		  protected static final String DATABASE_CREATE = "create table " 
@@ -34,7 +35,8 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 		      //+ COLUMN_RAW_MATERIAL_ID + " integer not null references " + RawMaterialTable.TABLE_NAME + "(" + RawMaterialTable.COLUMN_ID + "), " 
 		      //+ COLUMN_QUANTITY + " real, " 
 			  //+ "primary key(" + COLUMN_PRODUCT_ID + ", " + COLUMN_RAW_MATERIAL_ID + ")"
-		      + COLUMN_INGREDIENTS + " text"
+		      + COLUMN_INGREDIENTS + " text,"
+		      + COLUMN_INSTRUCTIONS + " text"
 		      + ");";
 
 			@Override public String getTableName() { return TABLE_NAME; }
@@ -44,21 +46,23 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 				super(context);
 			}
 		  Gson gson;
-		  public ContentValues getContentValues(Recipe recipe) {
+		  @Override
+		public ContentValues getContentValues(Recipe recipe) {
 				ContentValues values = new ContentValues();
 		    	values.put(COLUMN_PRODUCT_ID, recipe.getProduct().getId());
 		    	gson = new Gson();
 		    	//Store ingredients as JSON string
 		        values.put(COLUMN_INGREDIENTS, gson.toJson(recipe.getIngredients()));
+		        values.put(COLUMN_INSTRUCTIONS, recipe.getInstructions());
 				return values;
 			}
 			
+			@Override
 			public Recipe loadFromCursor(Cursor cursor) {
 				Recipe recipe = new Recipe();
 				int productId = Integer.parseInt(cursor.getString(0));
-				recipe.setId(productId);
-				recipe.setProduct(new ProductDBAdapter(mContext).findProductById(productId));
-				
+				recipe.setId(productId);		
+				recipe.setProduct(new ProductDBAdapter(mContext).findProductById(productId));			
 				Type type = new TypeToken<LinkedHashMap<String, Double>>(){}.getType();
 				String strng = cursor.getString(1);
 				gson = new Gson();
@@ -70,7 +74,8 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 					material = mAdapter.findRawMaterialByName(ingredient.getKey());
 					ingredients.put(material, ingredient.getValue());
 				}
-				recipe.setIngredients(ingredients);
+				recipe.setIngredients(ingredients);		
+				recipe.setInstructions(cursor.getString(2));
 				return recipe;
 			}		
 		    

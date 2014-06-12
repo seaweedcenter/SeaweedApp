@@ -45,38 +45,45 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
           productAdapter.add(product4);
           
           ProductInventoryDBAdaptor productInventoryAdapter = new ProductInventoryDBAdaptor(context);
-          productInventoryAdapter.add(new ProductInventory(product1, 200, 0));
-          productInventoryAdapter.add(new ProductInventory(product2, 100, 0));
-          productInventoryAdapter.add(new ProductInventory(product3, 300, 0));
-          productInventoryAdapter.add(new ProductInventory(product4, 150, 0));
+          productInventoryAdapter.add(new ProductInventory(product1, 200, 100));
+          productInventoryAdapter.add(new ProductInventory(product2, 100, 100));
+          productInventoryAdapter.add(new ProductInventory(product3, 300, 100));
+          productInventoryAdapter.add(new ProductInventory(product4, 150, 100));
           
           RawMaterialDBAdapter materialAdapter = new RawMaterialDBAdapter(context);
           RawMaterial material1 = new RawMaterial("Coconut oil", "L", "");
           RawMaterial material2 = new RawMaterial("Seaweed", "Kg", "");
           RawMaterial material3 = new RawMaterial("Bee wax", "Kg", "");
+          RawMaterial material4 = new RawMaterial("TestMtrl", "Kg", "");
           materialAdapter.add(material1);
           materialAdapter.add(material2);
           materialAdapter.add(material3);
+          materialAdapter.add(material4);
           
           MaterialInventoryDBAdapter matInvAdapter = new MaterialInventoryDBAdapter(context);
           matInvAdapter.add(new MaterialInventory(material1, 100, 0, 0.0));
           matInvAdapter.add(new MaterialInventory(material2, 50, 0, 0.0));
           matInvAdapter.add(new MaterialInventory(material3, 5, 2, 0.0));
+          matInvAdapter.add(new MaterialInventory(material4, 5, 2, 0.0));
           
           
           LinkedHashMap<RawMaterial, Double> m = new LinkedHashMap<RawMaterial, Double>();
+          String instr = new String( "Min sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla blla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
           m.put(material1, 1.0);
           m.put(material2, 0.5);        
-          Recipe r = new Recipe(product1, m);
+          Recipe r = new Recipe(product1, m, instr);
           RecipeDBAdapter recipeAdapter = new RecipeDBAdapter(context);
           recipeAdapter.add(r);
           
           m = new LinkedHashMap<RawMaterial, Double>();
+          String instr2 = new String("Min andra sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
           m.put(material1, 2.0);
           m.put(material2, 0.5); 
           m.put(material3, 0.25);
-          r = new Recipe(product2, m);
+          m.put(material4, 0.25);
+          r = new Recipe(product2, m, instr2);
           recipeAdapter.add(r);
+          
           
           Batch batch1 = new Batch(r, 1, 20);
           BatchDBAdapter bAdapter = new BatchDBAdapter(context);

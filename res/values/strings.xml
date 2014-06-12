@@ -48,9 +48,11 @@
     <string name="item_heading_proddoc">Item</string>
     <string name="notes_heading_proddoc">Notes</string>
     <string name="quantity_heading_proddoc">Quantity</string>
-    
+     <string name="instructions_heading_proddoc">Instructions:</string>
     <string name="enter_quantity_prodplan">Enter quantity</string>
     <string name="in_stock_heading_prodplan">In Stock</string>
     <string name="item_heading_prodplan">Item</string>
     <string name="need_heading_prodplan">Need</string>
+    
+    <string name="add_extra_row_to_batch">Add extra row</string>
 </resources>

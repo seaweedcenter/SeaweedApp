@@ -36,6 +36,7 @@ public class RawMaterialDBAdapter extends BaseDBAdapter<RawMaterial>{
 		}
 
 
+		@Override
 		public ContentValues getContentValues(RawMaterial material) {
 			ContentValues values = new ContentValues();
 	    	values.put(RawMaterialDBAdapter.COLUMN_ID, material.getId());
@@ -45,6 +46,7 @@ public class RawMaterialDBAdapter extends BaseDBAdapter<RawMaterial>{
 			return values;
 		}
 		
+		@Override
 		public RawMaterial loadFromCursor(Cursor cursor) {
 			RawMaterial material = new RawMaterial();
 			material.setId(Integer.parseInt(cursor.getString(0)));

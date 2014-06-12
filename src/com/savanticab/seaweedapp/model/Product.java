@@ -52,6 +52,7 @@ public class Product implements Parcelable {
 	}
 	
 	// equals and hashcode needed for proper LinkedHashMap compatibility
+	@Override
 	public boolean equals(Object other) {
 		Product p = (Product)other;
 		if (!p.getCode().equals(this.code)){ return false; }
@@ -60,6 +61,7 @@ public class Product implements Parcelable {
 		if (!p.getSize().equals(this.size)) { return false; }
 		return true;
 	}
+	@Override
 	public int hashCode() {
 		return (this.name + this.code + this.fragance + this.size).hashCode();
 	}
@@ -78,10 +80,12 @@ public class Product implements Parcelable {
 	
 	// Parcelable implementation
 	// needed when passing Products around in Bundles for example
-    public int describeContents() {
+    @Override
+	public int describeContents() {
       return 0;
     }
-    public void writeToParcel(Parcel out, int flags) {
+    @Override
+	public void writeToParcel(Parcel out, int flags) {
     	out.writeInt(id);
     	out.writeString(code);
     	out.writeString(name);
@@ -91,10 +95,12 @@ public class Product implements Parcelable {
     }
     public static final Parcelable.Creator<Product> CREATOR
         = new Parcelable.Creator<Product>() {
-    	public Product createFromParcel(Parcel in) {
+    	@Override
+		public Product createFromParcel(Parcel in) {
     		return new Product(in);
       }
-      public Product[] newArray(int size) {
+      @Override
+	public Product[] newArray(int size) {
         return new Product[size];
       }
     };

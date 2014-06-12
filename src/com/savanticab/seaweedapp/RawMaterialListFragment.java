@@ -6,14 +6,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.savanticab.seaweedapp.dummy.DummyContent;
-import com.savanticab.seaweedapp.model.Inventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
-import com.savanticab.seaweedapp.sqlite.MySQLiteHelper;
 
 /**
  * 
@@ -140,7 +139,7 @@ public class RawMaterialListFragment extends ListFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mActivatedPosition != ListView.INVALID_POSITION) {
+		if (mActivatedPosition != AdapterView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
@@ -154,12 +153,12 @@ public class RawMaterialListFragment extends ListFragment {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
 		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
+				activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE
+						: AbsListView.CHOICE_MODE_NONE);
 	}
 
 	private void setActivatedPosition(int position) {
-		if (position == ListView.INVALID_POSITION) {
+		if (position == AdapterView.INVALID_POSITION) {
 			getListView().setItemChecked(mActivatedPosition, false);
 		} else {
 			getListView().setItemChecked(position, true);
