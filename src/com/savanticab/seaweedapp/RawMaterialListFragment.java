@@ -1,17 +1,22 @@
 package com.savanticab.seaweedapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxRecord;
+import com.dropbox.sync.android.DbxTable;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.RawMaterial;
 import com.savanticab.seaweedapp.model.Recipe;
@@ -82,22 +87,29 @@ public class RawMaterialListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//MaterialInventoryDBAdapter mAdaptor = new MaterialInventoryDBAdapter(getActivity().getApplicationContext());
-		//List<RawMaterial> rawMaterialList = mAdaptor.getAllMaterialsInInventory();
-		ParseQuery<RawMaterial> matInvQuery = ParseQuery.getQuery(RawMaterial.class);
-		//matInvQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+		DbxAccount acct = SeaweedApplication.getDefaultAccount();
+        if (null == acct) {
+            Log.e(RawMaterialListFragment.class.getName(), "No linked account.");
+            return;
+        }
 		rawMaterialList = new ArrayList<RawMaterial>();
+        DbxDatastore store;
 		try {
-			rawMaterialList = matInvQuery.find();//TODO: change from all rawmaterials to all materials IN materialInventory
-
-		} catch (ParseException e) {
+			store = DbxDatastore.openDefault(acct);
+	        DbxTable materialTable = store.getTable(RawMaterial.TABLE_NAME);
+	        DbxTable.QueryResult results = materialTable.query();
+	        Iterator<DbxRecord> iterator = results.iterator();
+	        while (iterator.hasNext()){
+		        DbxRecord result = iterator.next();
+		        rawMaterialList.add(new RawMaterial(result));        	
+	        }
+	        store.close();
+		} catch (DbxException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+			e1.printStackTrace();
+		}
+		
 		// TODO: replace with a real list adapter.
-		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-		//		android.R.layout.simple_list_item_activated_1,
-		//		android.R.id.text1, DummyContent.ITEMS));
 		setListAdapter(new ArrayAdapter<RawMaterial>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
 				android.R.id.text1, rawMaterialList));

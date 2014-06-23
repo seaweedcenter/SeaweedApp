@@ -2,10 +2,6 @@ package com.savanticab.seaweedapp;
 
 import java.util.List;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseQuery.CachePolicy;
 import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 

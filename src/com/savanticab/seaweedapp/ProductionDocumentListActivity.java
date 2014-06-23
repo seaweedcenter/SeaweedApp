@@ -1,6 +1,5 @@
 package com.savanticab.seaweedapp;
 
-import com.parse.ParseException;
 import com.savanticab.seaweedapp.model.Batch;
 
 import android.content.Intent;

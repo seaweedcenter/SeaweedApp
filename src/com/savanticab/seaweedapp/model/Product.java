@@ -1,71 +1,84 @@
 package com.savanticab.seaweedapp.model;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import com.dropbox.sync.android.DbxRecord;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@ParseClassName("Product")
-public class Product extends ParseObject implements Parcelable {
+//@ParseClassName("Product")
+public class Product implements Parcelable { //extends ParseObject 
 	
-	private int id;	// id in SQL table and in app, hashed from code member
+
+	public static final String TABLE_NAME = "products";
+	public static final String ID = "id";
+	public static final String CODE = "code";
+	public static final String NAME = "name";
+	public static final String FRAGANCE = "fragance";
+	public static final String SIZE = "size";
+	public static final String PRICE = "price";
+	public static final String STOCK = "stock";
+	public static final String IN_PRODUCTION = "in_production";
+	
+	private String id;	// id in dropbox
 	private String code;
 	private String name;
 	private String fragance;
 	private String size;
 	private Double price;
+	private int stock;
+	private int inProduction;
+	
+	private DbxRecord mRecord;
 	
 	// getters and setters...
 	public String getCode() {
-		//return code;
-		return getString("code");
+		return code;
 	}
 	public void setCode(String code) {
 		this.code = code;
-		//this.id = code.hashCode();
-		put("code", code);
-		//put("id", code.hashCode());
 	}
 	public Double getPrice(){
-		//return price;
-		return getDouble("price");
+		return price;
 	}
 	public void setPrice(Double p) {
 		this.price = p;
-		put("price", p);
 	}
 	public String getName() {
-		//return name;
-		return getString("name");
+		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-		put("name", name);
 	}
 	public String getFragance() {
-		//return fragance;
-		return getString("fragance");
+		return fragance;
 	}
 	public void setFragance(String fragance) {
 		this.fragance = fragance;
-		put("fragance", fragance);
 	}
 	public String getSize() {
-		//return size;
-		return getString("size");
+		return size;
 	}
 	public void setSize(String size) {
 		this.size = size;
-		put("size", size);
 	}
-	public int getId() {
-		//return id;
-		return getInt("id");
+	public String getId() {
+		return id;
 	}
-	public void setId(int id) {
+	/*public void setId(int id) {
 		this.id = id;
 		put("id", id);
+	}*/
+	public int getStock() {
+		return stock;
+	}
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+	public int getInproduction() {
+		return inProduction;
+	}
+	public void setInproduction(int inproduction) {
+		this.inProduction = inproduction;
 	}
 	
 	// equals and hashcode needed for proper LinkedHashMap compatibility
@@ -84,18 +97,23 @@ public class Product extends ParseObject implements Parcelable {
 	public Product(){}
 	public Product(String code, String name, String fragance, String size, 
 			Double price){
-		this.id = code.hashCode();//id;
 		this.code = code;
 		this.name = name;
 		this.fragance = fragance;
 		this.size = size;
 		this.price = price;
-		//put("id", code.hashCode());
-		put("code", code);
-		put("name", name);
-		put("fragance", fragance);
-		put("size", size);
-		put("price", price);
+	}
+
+	public Product(DbxRecord record) {
+		this.mRecord = record;
+		
+		this.code = record.getString(CODE);
+		this.name = record.getString(NAME);
+		this.fragance = record.getString(FRAGANCE);
+		this.size = record.getString(SIZE);
+		this.price = record.getDouble(PRICE);
+
+		this.id = record.getId();
 	}
 	
 	
@@ -105,12 +123,14 @@ public class Product extends ParseObject implements Parcelable {
       return 0;
     }
     public void writeToParcel(Parcel out, int flags) {
-    	out.writeInt(id);
+    	out.writeString(id);
     	out.writeString(code);
     	out.writeString(name);
     	out.writeString(fragance);
     	out.writeString(size);
     	out.writeDouble(price);
+    	out.writeInt(stock);
+    	out.writeInt(inProduction);
     }
     public static final Parcelable.Creator<Product> CREATOR
         = new Parcelable.Creator<Product>() {
@@ -122,12 +142,14 @@ public class Product extends ParseObject implements Parcelable {
       }
     };
     private Product(Parcel in) {
-    	id = in.readInt();
+    	id = in.readString();
     	code = in.readString();
     	name = in.readString();
     	fragance = in.readString();
     	size = in.readString();
     	price = in.readDouble();
+    	stock = in.readInt();
+    	inProduction = in.readInt();
     }
 	
 }

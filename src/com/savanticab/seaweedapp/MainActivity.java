@@ -1,5 +1,20 @@
 package com.savanticab.seaweedapp;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFields;
+import com.dropbox.sync.android.DbxRecord;
+import com.dropbox.sync.android.DbxTable;
+import com.savanticab.seaweedapp.model.Batch;
+import com.savanticab.seaweedapp.model.Product;
+import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.model.Recipe;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -17,6 +32,10 @@ import android.app.ActionBar;
 
 public class MainActivity extends Activity {
 
+	static final int REQUEST_LINK_TO_DBX = 0;
+	private DbxAccountManager mAccountManager;
+	private DbxAccount mAccount;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +45,95 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		mAccountManager = SeaweedApplication
+				.getAccountManager(MainActivity.this);
+		if (mAccountManager.hasLinkedAccount()) {
+			mAccount = mAccountManager.getLinkedAccount();
+		} else {
+			mAccountManager.startLink(this, REQUEST_LINK_TO_DBX);
+		}
 
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_LINK_TO_DBX) {
+			if (resultCode == Activity.RESULT_OK) {
+				mAccount = mAccountManager.getLinkedAccount();
+
+				DbxDatastore store = null;
+				try {
+					store = DbxDatastore.openDefault(mAccount);
+				} catch (DbxException e) {
+					// TODO Auto-generated catch block e.printStackTrace(); }
+				} finally {
+					DbxTable tasksTbl = store.getTable(RawMaterial.TABLE_NAME);
+					tasksTbl.insert().set(RawMaterial.NAME, "Coconut oil")
+							.set(RawMaterial.UNIT, "L")
+							.set(RawMaterial.STOCK, 5)
+							.set(RawMaterial.ORDERED, 0)
+							.set(RawMaterial.RESERVED, 0);
+					tasksTbl.insert().set(RawMaterial.NAME, "Seaweed")
+							.set(RawMaterial.UNIT, "Kg")
+							.set(RawMaterial.STOCK, 10)
+							.set(RawMaterial.ORDERED, 2)
+							.set(RawMaterial.RESERVED, 1);
+					tasksTbl.insert().set(RawMaterial.NAME, "Bee wax")
+							.set(RawMaterial.UNIT, "Kg")
+							.set(RawMaterial.STOCK, 50)
+							.set(RawMaterial.ORDERED, 5)
+							.set(RawMaterial.RESERVED, 0);
+					
+					tasksTbl = store.getTable(Product.TABLE_NAME);
+					DbxRecord product1 = tasksTbl.insert().set(Product.CODE, "SOAP1")
+							.set(Product.NAME, "Soap").set(Product.FRAGANCE, "Lime")
+							.set(Product.SIZE, "Big").set(Product.PRICE, 10.0)
+							.set(Product.STOCK, 200).set(Product.IN_PRODUCTION, 0);
+					DbxRecord product2 = tasksTbl.insert().set(Product.CODE, "SOAP2")
+							.set(Product.NAME, "Soap").set(Product.FRAGANCE, "Clove")
+							.set(Product.SIZE, "Small").set(Product.PRICE, 6.0)
+							.set(Product.STOCK, 100).set(Product.IN_PRODUCTION, 0);
+					tasksTbl.insert().set(Product.CODE, "SOAP3")
+							.set(Product.NAME, "Soap")
+							.set(Product.FRAGANCE, "Langi-langi")
+							.set(Product.SIZE, "Big").set(Product.PRICE, 14.0)
+							.set(Product.STOCK, 300).set(Product.IN_PRODUCTION, 0);
+					tasksTbl.insert().set(Product.CODE, "SOAP4")
+							.set(Product.NAME, "Soap")
+							.set(Product.FRAGANCE, "Lemongrass")
+							.set(Product.SIZE, "Medium").set(Product.PRICE, 16.0)
+							.set(Product.STOCK, 150).set(Product.IN_PRODUCTION, 0);
+
+					LinkedHashMap<String, Double> m = new LinkedHashMap<String, Double>();
+					m.put("7yPdcNo8dTnPuAdhyjgLBA", 1.0);
+					m.put("WZ8-OeGevhdl_H7iwWd32g", 0.5);
+					Recipe r = new Recipe(new Product(product1), m);
+					r.save(store);
+
+					m = new LinkedHashMap<String, Double>();
+					m.put("7yPdcNo8dTnPuAdhyjgLBA", 2.0);
+					m.put("WZ8-OeGevhdl_H7iwWd32g", 0.5);
+					m.put("d1gVXJko7eruD9XjWBpYqA", 0.25);
+					r = new Recipe(new Product(product2), m);
+					r.save(store);
+					
+					Batch batch1 = new Batch(r, 1, 20);
+					batch1.save(store);
+					try {
+						store.sync();
+					} catch (DbxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					store.close();
+				}
+
+			} else {
+				// ... Link failed or was cancelled by the user.
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	//
@@ -77,7 +184,7 @@ public class MainActivity extends Activity {
 					startActivity(i);
 				}
 			});
-			
+
 			// Button "To the shop"
 			Button button_shop = (Button) rootView
 					.findViewById(R.id.button_to_shop);

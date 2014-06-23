@@ -14,6 +14,7 @@ import android.app.ListFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseException;
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.Product;
@@ -79,29 +82,18 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 				R.layout.fragment_productiondocument_detail, container, false);
 
 		batch = (Batch)getArguments().getParcelable("batch");
-		try {
-			batch.fetch();
-		} catch (ParseException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+
 		if (batch != null) {
 			
 			Toast toast = Toast.makeText(getActivity(), batch.toString(), Toast.LENGTH_SHORT);
 			toast.show();
 			
 			TextView textViewHeading = (TextView) rootView.findViewById(R.id.productiondocument_detail_batchid);
-			textViewHeading.setText("Batch ID:" + batch.getId());
+			textViewHeading.setText("Batch ID:" + batch.getBatchNumber());
 			
-			Recipe r = null;
-			Product p = null;
-			try {
-				r = batch.getRecipe().fetchIfNeeded();
-				p = r.getProduct().fetchIfNeeded();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Recipe r = batch.getRecipe();
+			Product p = r.getProduct();
+			
 			//DateFormat df = DateFormat.getDateTimeInstance();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			
@@ -134,13 +126,8 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 //			TextView textViewQuantity = (TextView) rootView.findViewById(R.id.productiondocument_detail_quantity);
 //			textViewQuantity.setText("Quantity:" + batch.getQuantity());
 			
-			Map<RawMaterial, Double> ingredients = null;
-			try {
-				ingredients = r.getIngredients();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Map<RawMaterial, Double> ingredients = r.getIngredients();
+
 			TableLayout table = (TableLayout) rootView.findViewById(R.id.table_ProdDoc);
 			int productQty = batch.getQuantity();
 			
@@ -213,7 +200,23 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			// update database
 			//new BatchDBAdapter(getActivity().getApplicationContext()).updateBatch(batch);//helper.updateBatch(batch);
 			//helper.updateInventory(inventory);
-			batch.saveEventually();
+			//batch.saveEventually();
+			DbxAccount acct = SeaweedApplication.getDefaultAccount();
+			if (null == acct) {
+				Log.e(RawMaterialListFragment.class.getName(),
+						"No linked account.");
+				return;
+			}
+			DbxDatastore store = null;
+
+			try {
+				store = DbxDatastore.openDefault(acct);
+			} catch (DbxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			batch.save(store);
+			store.close();
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			TextView textViewFinishDate = (TextView) v.getRootView().findViewById(R.id.productiondocument_detail_finishdate);

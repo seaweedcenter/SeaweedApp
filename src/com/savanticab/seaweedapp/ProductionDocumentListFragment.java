@@ -1,6 +1,8 @@
 package com.savanticab.seaweedapp;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,12 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxRecord;
+import com.dropbox.sync.android.DbxTable;
 import com.savanticab.seaweedapp.dummy.DummyContent;
 import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.MaterialInventory;
+import com.savanticab.seaweedapp.model.RawMaterial;
 
 /**
  * Responsible for listing Batches
@@ -89,28 +94,28 @@ public class ProductionDocumentListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//BatchDBAdapter bAdaptor = new BatchDBAdapter(this.getActivity().getApplicationContext());
-		ParseQuery<Batch> query = ParseQuery.getQuery(Batch.class);
-		//query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-		/*matInvQuery.findInBackground(new FindCallback<Batch>() {
-			@Override
-			public void done(List<Batch> objects, ParseException e) {
-				if (e == null) {
-		            batchList = objects;
-		        } else {
-		        	
-		        	Log.d("Parse", e.getMessage());
-		        }
-				
-			}
-		});*/
+		DbxAccount acct = SeaweedApplication.getDefaultAccount();
+        if (null == acct) {
+            Log.e(RawMaterialListFragment.class.getName(), "No linked account.");
+            return;
+        }
+		batchList = new ArrayList<Batch>();
+        DbxDatastore store;
 		try {
-			batchList = query.find();
-		} catch (ParseException e) {
+			store = DbxDatastore.openDefault(acct);
+	        DbxTable batchTable = store.getTable(Batch.TABLE_NAME);
+	        DbxTable.QueryResult results = batchTable.query();
+	        Iterator<DbxRecord> iterator = results.iterator();
+	        while (iterator.hasNext()){
+		        DbxRecord result = iterator.next();
+		        batchList.add(new Batch(result));        	
+	        }
+	        store.close();
+		} catch (DbxException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		//List<Batch> batchList = bAdaptor.getAll(); // helper.getAllBatches();
+		
 		List<Batch> batchListUnfinished = new LinkedList<Batch>();
 		List<Batch> batchListFinished = new LinkedList<Batch>();
 		

@@ -1,10 +1,7 @@
 package com.savanticab.seaweedapp.model;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
 
-@ParseClassName("MaterialInventory")
-public class MaterialInventory extends ParseObject{
+public class MaterialInventory {//extends ParseObject{
 	private RawMaterial material;
 	private double stock;
 	private double ordered;
@@ -12,43 +9,35 @@ public class MaterialInventory extends ParseObject{
 	
 	
 	public RawMaterial getMaterial() {
-		//return material;
-		return (RawMaterial) getParseObject("material");
+		return material;
 	}
 
 	public void setMaterial(RawMaterial material) {
 		this.material = material;
-		put("material", material);
 	}
 
 	public double getStock() {
-		//return stock;
-		return getDouble("stock");
+		return stock;
 	}
 
 	public void setStock(double stock) {
 		this.stock = stock;
-		put("stock", stock);
 	}
 
 	public double getOrdered() {
-		//return ordered;
-		return getDouble("ordered");
+		return ordered;
 	}
 
 	public void setOrdered(double ordered) {
 		this.ordered = ordered;
-		put("ordered", ordered);
 	}
 
 	public double getReserved() {
-		//return reserved;
-		return getDouble("reserved");
+		return reserved;
 	}
 
 	public void setReserved(double reserved) {
 		this.reserved = reserved;
-		put("reserved", reserved);
 	}
 
 	public MaterialInventory() {}
@@ -58,9 +47,5 @@ public class MaterialInventory extends ParseObject{
 		this.stock = stock;
 		this.ordered = ordered;
 		this.reserved = reserved;
-		put("material", material);
-		put("stock", stock);
-		put("ordered", ordered);
-		put("reserved", reserved);
 	}
 }
