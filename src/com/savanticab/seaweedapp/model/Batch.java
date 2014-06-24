@@ -9,7 +9,8 @@ import com.savanticab.seaweedapp.model.Recipe;
 
 public class Batch implements Parcelable, Comparable<Batch> {
 
-	private int id;		// incremented in app as batches are created
+	private String id;		
+	private int batchNumber; // incremented in app as batches are created -- unique key in DB
 	private Recipe recipe;
 	private int quantity;	// to produce
 	private Date startDate;
@@ -17,12 +18,19 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	private String extraComments;
 	
 	// getters and setters
-	public int getId() {
-		return id;
+	public String getId() {
+		return String.valueOf(this.hashCode());
 	}
-	public void setId(int id) {
+	/*public void setId(String id) {
 		this.id = id;
+	}*/
+	public int getBatchNumber(){
+		return batchNumber;
 	}
+	public void setBatchNumber(int batchNumber){
+		this.batchNumber = batchNumber;
+	}
+	
 	public boolean isFinished() {
 		return (finishDate != null);
 	}
@@ -68,29 +76,29 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	// controls eg. how Batch objects are represented in Spinners, ListViews etc
 	@Override
 	public String toString() {
-		String returnstring = "ID: "+id;
+		String returnstring = "ID: " + getBatchNumber();
 		if (recipe == null) {
 			return returnstring;
 		}
 		if (recipe.getProduct() != null) {
-			returnstring += "Code: " + recipe.getProduct().getCode();
+			returnstring += " Code: " + recipe.getProduct().getCode();
 		}
 		return returnstring;
 	}
 	
 	// constructors
-	public Batch(Recipe recipe, int id, int quantity) {
+	public Batch(Recipe recipe, int batchNumber, int quantity) {
 		startDate = new Date();
 		finishDate = null; // not yet finished
 		this.recipe = recipe;
-		this.id = id;
+		this.batchNumber = batchNumber;
 		this.quantity = quantity;
 	}
 	public Batch() {
 		startDate = null;
 		finishDate = null;
 		recipe = null;
-		id = -1;
+		batchNumber = -1;
 		quantity = 0;
 	}
 	
@@ -98,12 +106,11 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	@Override
 	public boolean equals(Object o){
 		Batch other = (Batch) o;
-		return (other.getId() == this.id);
+		return (other.getId() == this.getId());
 	}
 	@Override
 	public int hashCode() {
-		return (id + " " + recipe.getProduct().getName() 
-				+ recipe.getProduct().getCode() + " " + startDate).hashCode();
+		return this.getBatchNumber();
 	}
 	
 	// Parcelable implementation
@@ -114,7 +121,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
     }
     @Override
 	public void writeToParcel(Parcel out, int flags) {
-    	out.writeInt(id);
+    	out.writeString(id);
     	out.writeParcelable(recipe, flags);
     	out.writeInt(quantity);
     	out.writeSerializable(startDate);
@@ -132,7 +139,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
       }
     };
     private Batch(Parcel in) {
-    	id = in.readInt();
+    	id = in.readString();
     	recipe = in.readParcelable(Recipe.class.getClassLoader());
     	quantity = in.readInt();
     	startDate = (Date)in.readSerializable();
@@ -142,7 +149,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
     // Comparator implementation
     @Override
 	public int compareTo(Batch other) {
-    	return (this.getId()<other.getId() ? 1 : this.getId() > other.getId() ? 1 : 0);
+    	return (this.getBatchNumber()<other.getBatchNumber() ? -1 : this.getBatchNumber() > other.getBatchNumber() ? 1 : 0);
     }
 	
 }

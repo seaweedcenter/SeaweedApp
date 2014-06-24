@@ -8,23 +8,23 @@ import android.os.Parcelable;
 public class Recipe implements Parcelable {
 	
 	private int id;
-	private Product product;
+	private Product product; // --> unique key in DB
 	private LinkedHashMap<RawMaterial, Double> ingredients;
 	private String instructions;
 	
 	// getters and setters
-	public int getId() {
-		return id;
+	public String getId() {
+		return String.valueOf(this.hashCode());
 	}
-	public void setId(int id) {
+	/*public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 	public Product getProduct() {
 		return product;
 	}
 	public void setProduct(Product product) {
 		this.product = product;
-		this.id = product.getId();
+		//this.id = product.getId();
 	}
 	public LinkedHashMap<RawMaterial, Double> getIngredients() {
 		return ingredients;
@@ -46,7 +46,7 @@ public class Recipe implements Parcelable {
 	}
 	public Recipe(Product p, LinkedHashMap<RawMaterial, Double> ingredients, String instructions){
 		this.product = p;
-		this.id = p.getId();	// is recipe ID supposed to be the same as prod. ID?
+		//this.id = p.getId();	// is recipe ID supposed to be the same as prod. ID?
 		this.ingredients = ingredients; //new HashMap<RawMaterial, Double>();
 		this.instructions = instructions;
 	}
@@ -59,7 +59,7 @@ public class Recipe implements Parcelable {
 	}
 	@Override
 	public int hashCode() {
-		return (this.id + " " + product.getName() + product.getCode()).hashCode();
+		return (product).hashCode();
 	}
 	
 	// description

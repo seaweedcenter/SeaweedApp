@@ -1,5 +1,8 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import com.dropbox.sync.android.DbxFields;
+import com.dropbox.sync.android.DbxRecord;
+import com.savanticab.seaweedapp.model.ProductInventory;
 import com.savanticab.seaweedapp.model.RawMaterial;
 
 import android.content.ContentValues;
@@ -49,31 +52,54 @@ public class RawMaterialDBAdapter extends BaseDBAdapter<RawMaterial>{
 		@Override
 		public RawMaterial loadFromCursor(Cursor cursor) {
 			RawMaterial material = new RawMaterial();
-			material.setId(cursor.getInt(0));
+			//material.setId(cursor.getInt(0));
 			material.setName(cursor.getString(1));
 			material.setUnit(cursor.getString(2));
 			material.setIcon(cursor.getString(3));
 			return material;
 		}
 
-	    public RawMaterial findRawMaterialById(int materialId){
-	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_ID + " =  \"" + materialId + "\"";
-	    	return find(query);
+
+		@Override
+		public DbxFields getFields(RawMaterial item){
+			DbxFields fields = new DbxFields();
+			fields.set(COLUMN_NAME, item.getName());
+			fields.set(COLUMN_UNIT, item.getUnit());
+			//fields.set(COLUMN_ICON, item.getIcon());
+			return fields;
+		}
+		
+		@Override
+		public RawMaterial loadFromRecord(DbxRecord record) {
+			RawMaterial item = new RawMaterial();
+			item.setName(record.getString(COLUMN_NAME));
+			item.setUnit(record.getString(COLUMN_UNIT));
+			//item.setIcon(record.getString(COLUMN_ICON));
+			return item;
+		}
+		
+	    public RawMaterial findRawMaterialById(String materialId){
+	    	//String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_ID + " =  \"" + materialId + "\"";
+	    	//return find(query);
+	    	return findItemById(materialId);
 	    }
 	    public RawMaterial findRawMaterialByName(String materialname){
-	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
-	    	return find(query);
+	    	//String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
+	    	//return find(query);
+	    	return find(new DbxFields().set(COLUMN_NAME, materialname));
 	    }
 	    
 	    public int updateRawMaterial(RawMaterial material) {
 	    	
-	        return update(material, COLUMN_ID + " = ?", new String[] { String.valueOf(material.getId()) });
+	        //return update(material, COLUMN_ID + " = ?", new String[] { String.valueOf(material.getId()) });
+	        return update(material, material.getId());
 	    }
 	    
 	    public boolean deleteRawMaterial(String materialname){
 	    	
-	    	String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
-	    	return delete(query);
+	    	//String query = "Select * FROM " + RawMaterialDBAdapter.TABLE_NAME + " WHERE " + RawMaterialDBAdapter.COLUMN_NAME + " =  \"" + materialname + "\"";
+	    	//return delete(query);
+	    	return delete(new DbxFields().set(COLUMN_NAME, materialname));
 	    }
 
 }

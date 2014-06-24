@@ -1,9 +1,13 @@
 package com.savanticab.seaweedapp.model;
 
 public class ProductInventory {
-	private Product product;
+	private Product product; // --> unique key in DB
 	private int stock;
 	private int inproduction;
+	
+	public String getId() {
+		return String.valueOf(this.hashCode());
+	}
 	
 	public Product getProduct() {
 		return product;
@@ -29,6 +33,11 @@ public class ProductInventory {
 		this.product = product;
 		this.stock = stock;
 		this.inproduction = inproduction;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.product.hashCode();
 	}
 	
 }

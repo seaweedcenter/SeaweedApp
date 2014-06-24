@@ -6,13 +6,16 @@ import android.os.Parcelable;
 public class Product implements Parcelable {
 	
 	private int id;	// id in SQL table and in app, hashed from code member
-	private String code;
+	private String code; // --> unique key in DB
 	private String name;
 	private String fragance;
 	private String size;
 	private Double price;
 	
 	// getters and setters...
+	public String getId() {
+		return String.valueOf(this.hashCode());
+	}
 	public String getCode() {
 		return code;
 	}
@@ -44,12 +47,12 @@ public class Product implements Parcelable {
 	public void setSize(String size) {
 		this.size = size;
 	}
-	public int getId() {
+	/*public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 	
 	// equals and hashcode needed for proper LinkedHashMap compatibility
 	@Override
@@ -63,7 +66,7 @@ public class Product implements Parcelable {
 	}
 	@Override
 	public int hashCode() {
-		return (this.name + this.code + this.fragance + this.size).hashCode();
+		return (this.code).hashCode();
 	}
 	
 	public Product(){}

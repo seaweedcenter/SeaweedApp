@@ -92,7 +92,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			toast.show();
 			
 			TextView textViewHeading = (TextView) rootView.findViewById(R.id.productiondocument_detail_batchid);
-			textViewHeading.setText("Batch ID:" + batch.getId());
+			textViewHeading.setText("Batch ID:" + batch.getBatchNumber());
 			
 			Recipe r = batch.getRecipe();
 			Product p = r.getProduct();
@@ -307,7 +307,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			  	 
        	       if (!text.isEmpty()) {
        		 
-       		     Batch mBatch = mDBAdaptor.findBatchById(batch.getId());
+       		     Batch mBatch = mDBAdaptor.findBatchByBatchNumber(batch.getBatchNumber());
        		     mBatch.setExtraComments(text);
        		     mDBAdaptor.updateBatch(mBatch);
        	        }

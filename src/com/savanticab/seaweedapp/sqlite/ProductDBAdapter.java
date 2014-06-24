@@ -1,5 +1,8 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import com.dropbox.sync.android.DbxFields;
+import com.dropbox.sync.android.DbxRecord;
+import com.savanticab.seaweedapp.model.MaterialInventory;
 import com.savanticab.seaweedapp.model.Product;
 
 import android.content.ContentValues;
@@ -54,7 +57,7 @@ public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 		@Override
 		public Product loadFromCursor(Cursor cursor) {
 			Product product = new Product();
-			product.setId(cursor.getInt(0));
+			//product.setId(cursor.getInt(0));
 			product.setCode(cursor.getString(1));
 			product.setName(cursor.getString(2));
 			product.setFragance(cursor.getString(3));
@@ -63,25 +66,50 @@ public class ProductDBAdapter  extends BaseDBAdapter<Product>{
 			return product;
 		}
 	    
-	    public Product findProductById(int productId){
-	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_ID + " =  \"" + productId + "\"";
-	    	return find(query);
+
+		@Override
+		public DbxFields getFields(Product item){
+			DbxFields fields = new DbxFields();
+			fields.set(COLUMN_CODE, item.getCode());
+			fields.set(COLUMN_NAME, item.getName());
+			fields.set(COLUMN_FRAGANCE, item.getFragance());
+			fields.set(COLUMN_SIZE, item.getSize());
+			return fields;
+		}
+		
+		@Override
+		public Product loadFromRecord(DbxRecord record) {
+			Product item = new Product();
+			item.setCode(record.getString(COLUMN_CODE));
+			item.setName(record.getString(COLUMN_NAME));
+			item.setFragance(record.getString(COLUMN_FRAGANCE));
+			item.setSize(record.getString(COLUMN_SIZE));
+			return item;
+		}
+		
+	    public Product findProductById(String productId){
+	    	//String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_ID + " =  \"" + productId + "\"";
+	    	//return find(query);
+	    	return findItemById(productId);
 	    }
 	    
 	    public Product findProductByCode(String productcode){
-	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
-	    	return find(query);
+	    	//String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
+	    	//return find(query);
+	    	return find(new DbxFields().set(COLUMN_CODE, productcode));
 	    }
 	    
 	    public int updateProduct(Product product) {
 	 
-	        return update(product, COLUMN_ID + " = ?", new String[] { String.valueOf(product.getId()) });
+	        //return update(product, COLUMN_ID + " = ?", new String[] { String.valueOf(product.getId()) });
+	        return update(product, product.getId());
 	 
 	    }
 	    public boolean deleteProduct(String productcode) {
 	    	
-	    	String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
-	    	return delete(query);
+	    	//String query = "Select * FROM " + ProductDBAdapter.TABLE_NAME + " WHERE " + ProductDBAdapter.COLUMN_CODE + " =  \"" + productcode + "\"";
+	    	//return delete(query);
+	    	return delete(new DbxFields().set(COLUMN_CODE, productcode));
 	    }
 	  
 }

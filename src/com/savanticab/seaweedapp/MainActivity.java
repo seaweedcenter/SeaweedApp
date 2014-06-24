@@ -1,5 +1,27 @@
 package com.savanticab.seaweedapp;
 
+import java.util.LinkedHashMap;
+
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxDatastoreManager;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxException.Unauthorized;
+import com.savanticab.seaweedapp.model.Batch;
+import com.savanticab.seaweedapp.model.MaterialInventory;
+import com.savanticab.seaweedapp.model.Product;
+import com.savanticab.seaweedapp.model.ProductInventory;
+import com.savanticab.seaweedapp.model.RawMaterial;
+import com.savanticab.seaweedapp.model.Recipe;
+import com.savanticab.seaweedapp.sqlite.BaseDBAdapter;
+import com.savanticab.seaweedapp.sqlite.BatchDBAdapter;
+import com.savanticab.seaweedapp.sqlite.MaterialInventoryDBAdapter;
+import com.savanticab.seaweedapp.sqlite.ProductDBAdapter;
+import com.savanticab.seaweedapp.sqlite.ProductInventoryDBAdaptor;
+import com.savanticab.seaweedapp.sqlite.RawMaterialDBAdapter;
+import com.savanticab.seaweedapp.sqlite.RecipeDBAdapter;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -14,6 +36,10 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
+	static final int REQUEST_LINK_TO_DBX = 0;
+	private DbxAccountManager mAccountManager;
+	private DbxAccount mAccount;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,8 +50,86 @@ public class MainActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
+		mAccountManager = BaseDBAdapter.getAccountManager(this);
+		
+		if (mAccountManager.hasLinkedAccount()) {
+			mAccount = mAccountManager.getLinkedAccount();
+		} else {
+			mAccountManager.startLink(this, REQUEST_LINK_TO_DBX);
+		}
+
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == REQUEST_LINK_TO_DBX) {
+	        if (resultCode == Activity.RESULT_OK) {
+	            mAccount = mAccountManager.getLinkedAccount();
+
+	            Product product1 = new Product("SOAP1", "Soap", "Lime", "Big", 10.0);
+	            Product product2 = new Product("SOAP2", "Soap", "Clove", "Small", 6.0);
+	            Product product3 = new Product("SOAP3", "Soap", "Langi-langi", "Big", 14.0);
+	            Product product4 = new Product("SOAP4", "Soap", "Lemongrass", "Medium", 16.0);
+	            ProductDBAdapter productAdapter = new ProductDBAdapter(this);
+	            productAdapter.add(product1);
+	            productAdapter.add(product2);
+	            productAdapter.add(product3);
+	            productAdapter.add(product4);
+	            
+	            ProductInventoryDBAdaptor productInventoryAdapter = new ProductInventoryDBAdaptor(this);
+	            productInventoryAdapter.add(new ProductInventory(product1, 200, 100));
+	            productInventoryAdapter.add(new ProductInventory(product2, 100, 100));
+	            productInventoryAdapter.add(new ProductInventory(product3, 300, 100));
+	            productInventoryAdapter.add(new ProductInventory(product4, 150, 100));
+	            
+	            RawMaterialDBAdapter materialAdapter = new RawMaterialDBAdapter(this);
+	            RawMaterial material1 = new RawMaterial("Coconut oil", "L", "");
+	            RawMaterial material2 = new RawMaterial("Seaweed", "Kg", "");
+	            RawMaterial material3 = new RawMaterial("Bee wax", "Kg", "");
+	            RawMaterial material4 = new RawMaterial("TestMtrl", "Kg", "");
+	            materialAdapter.add(material1);
+	            materialAdapter.add(material2);
+	            materialAdapter.add(material3);
+	            materialAdapter.add(material4);
+	            
+	            MaterialInventoryDBAdapter matInvAdapter = new MaterialInventoryDBAdapter(this);
+	            matInvAdapter.add(new MaterialInventory(material1, 100, 0, 0.0));
+	            matInvAdapter.add(new MaterialInventory(material2, 50, 0, 0.0));
+	            matInvAdapter.add(new MaterialInventory(material3, 5, 2, 0.0));
+	            matInvAdapter.add(new MaterialInventory(material4, 5, 2, 0.0));
+	            
+	            
+	            LinkedHashMap<RawMaterial, Double> m = new LinkedHashMap<RawMaterial, Double>();
+	            String instr = new String( "Min sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla blla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+	            m.put(material1, 1.0);
+	            m.put(material2, 0.5);        
+	            Recipe r = new Recipe(product1, m, instr);
+	            RecipeDBAdapter recipeAdapter = new RecipeDBAdapter(this);
+	            recipeAdapter.add(r);
+	            
+	            m = new LinkedHashMap<RawMaterial, Double>();
+	            String instr2 = new String("Min andra sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+	            m.put(material1, 2.0);
+	            m.put(material2, 0.5); 
+	            m.put(material3, 0.25);
+	            m.put(material4, 0.25);
+	            r = new Recipe(product2, m, instr2);
+	            recipeAdapter.add(r);
+	            
+	            
+	            Batch batch1 = new Batch(r, 1, 20);
+	            batch1.setExtraComments("cladkd");
+	            BatchDBAdapter bAdapter = new BatchDBAdapter(this);
+	            bAdapter.add(batch1);
+	            
+	        } else {
+	            // ... Link failed or was cancelled by the user.
+	        }
+	    } else {
+	        super.onActivityResult(requestCode, resultCode, data);
+	    }
+	}
+	
 	//
 	// @Override
 	// public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,7 +178,7 @@ public class MainActivity extends Activity {
 					startActivity(i);
 				}
 			});
-			
+
 			// Button "To the shop"
 			Button button_shop = (Button) rootView
 					.findViewById(R.id.button_to_shop);
