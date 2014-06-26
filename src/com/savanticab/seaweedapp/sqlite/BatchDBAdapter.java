@@ -1,9 +1,13 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.savanticab.seaweedapp.model.Batch;
 
 import android.content.ContentValues;
@@ -21,6 +25,9 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	public static final String COLUMN_STARTDATE = "startDate";
 	public static final String COLUMN_FINISHDATE = "finishDate";
 	public static final String COLUMN_EXTRACOMMENTS = "extraComments";
+	public static final String COLUMN_COMMENTS = "Comments";
+	public static final String COLUMN_DATE = "Date";
+	
 	
 	// Database creation SQL statement
 	protected static final String DATABASE_CREATE = "create table " 
@@ -31,7 +38,9 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	  + COLUMN_QUANTITY + " integer, "
 	  + COLUMN_STARTDATE + " text, "
 	  + COLUMN_FINISHDATE + " text,"
-	  + COLUMN_EXTRACOMMENTS + " text"
+	  + COLUMN_EXTRACOMMENTS + " text,"
+	  + COLUMN_COMMENTS + " text,"
+	  + COLUMN_DATE + " text"
 	  + ");";
 	
 	@Override public String getTableName() { return TABLE_NAME;}
@@ -40,7 +49,8 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 	public BatchDBAdapter(Context context) {
 		super(context);
 	}
-
+    
+	Gson gson;
 	@Override
 	public ContentValues getContentValues(Batch batch) {
 		ContentValues values = new ContentValues();
@@ -50,8 +60,13 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
         String startDate = (batch.getStartDate() != null) ? Long.toString(batch.getStartDate().getTime()) : "null";
         String finishDate = (batch.getFinishDate() != null) ? Long.toString(batch.getFinishDate().getTime()) : "null";
         values.put(COLUMN_STARTDATE, startDate);
-        values.put(COLUMN_FINISHDATE, finishDate);
-        values.put(BatchDBAdapter.COLUMN_EXTRACOMMENTS, batch.getExtraComments());
+        values.put(COLUMN_FINISHDATE, finishDate);       
+        gson = new Gson();
+        values.put(BatchDBAdapter.COLUMN_EXTRACOMMENTS, gson.toJson(batch.getExtraComments()));
+        //values.put(BatchDBAdapter.COLUMN_EXTRACOMMENTS, batch.getExtraComments());
+        //values.put(BatchDBAdapter.COLUMN_COMMENTS, batch.getComments());
+        values.put(BatchDBAdapter.COLUMN_COMMENTS, gson.toJson(batch.getComments()));
+        values.put(BatchDBAdapter.COLUMN_DATE, batch.getDate());
 		return values;
 	}
 	
@@ -69,7 +84,22 @@ public class BatchDBAdapter extends BaseDBAdapter<Batch>{
 		batch.setStartDate(!startDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(startDate)):null);
 		String finishDate = cursor.getString(4);
 		batch.setFinishDate(!finishDate.equalsIgnoreCase("null") ? new Date(Long.parseLong(finishDate)):null);
-		batch.setExtraComments(cursor.getString(5));
+		
+		//batch.setExtraComments(cursor.getString(5));
+		Type type1 = new TypeToken<ArrayList<String>>(){}.getType();
+		String strng1 = cursor.getString(5);
+		gson = new Gson();
+		ArrayList<String> extraCommentsDB = gson.fromJson(strng1, type1);
+		batch.setExtraComments(extraCommentsDB);
+		
+        //batch.setComments(cursor.getString(6));
+		Type type2 = new TypeToken<ArrayList<String>>(){}.getType();
+		String strng2 = cursor.getString(6);
+		gson = new Gson();
+		ArrayList<String> CommentsDB = gson.fromJson(strng2, type2);
+		batch.setComments(CommentsDB);
+		
+        batch.setDate(cursor.getString(7));
 		return batch;
 	}
     

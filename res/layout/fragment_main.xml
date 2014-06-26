@@ -20,34 +20,29 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="fill_vertical"
         android:layout_marginLeft="64dp"
-        android:layout_marginTop="16dp"
-        android:layout_rowSpan="3"
+        android:layout_marginTop="16dp"    
         android:contentDescription="@string/seaweed_center_logo"
         android:maxWidth="@dimen/activity_horizontal_margin"
         android:scaleType="fitStart"
         android:src="@drawable/seaweed_center_logo_2" />
-
+    
     <Button
         android:id="@+id/button_to_factory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView1"
-        android:layout_column="1"
+        android:layout_alignTop="@+id/imageView1"       
         android:layout_gravity="left|center_vertical"
-        android:layout_marginBottom="113dp"
-        android:layout_row="0"
         android:layout_toRightOf="@+id/imageView1"
         android:onClick="@+id/button_factory_click"
         android:text="@string/start_to_factory" />
-
+ 
     <Button
         android:id="@+id/button_report"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
+        android:layout_height="wrap_content"       
         android:layout_alignLeft="@+id/button_to_factory"
         android:layout_alignRight="@+id/button_to_factory"
-        android:layout_marginBottom="34dp"
+        android:layout_below="@+id/button_to_factory"
         android:onClick="@+id/button_report_click"
         android:text="@string/start_to_reports" />
 

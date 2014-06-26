@@ -332,9 +332,9 @@ public class ProductionPlanActivity extends Activity {
 //				TextView textViewHeadingStock = (TextView)v.getRootView().findViewById(R.id.textViewProdPlanHeading);
 //				textViewHeadingStock.setVisibility(View.INVISIBLE);
 				
-				//EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
+				EditText editTextQuantity = (EditText)table.getRootView().findViewById(R.id.production_planned_quantity);
 				//editTextQuantity.setVisibility(View.INVISIBLE);
-				//editTextQuantity.setText("");
+				editTextQuantity.setText("");
 				//editTextQuantity.setHintTextColor(Color.GRAY);
 				
 			}

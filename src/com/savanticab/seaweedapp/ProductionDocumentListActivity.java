@@ -91,9 +91,11 @@ public class ProductionDocumentListActivity extends FragmentActivity implements
 	public void onItemSelected(Batch batch) {
 
 		if (mTwoPane) {
+			
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
+			
 			Bundle arguments = new Bundle();
 			//arguments.putString(ProductionDocumentDetailFragment.ARG_ITEM_ID,
 			//		id);

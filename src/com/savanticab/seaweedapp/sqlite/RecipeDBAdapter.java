@@ -1,6 +1,7 @@
 package com.savanticab.seaweedapp.sqlite;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -53,7 +54,9 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 		    	gson = new Gson();
 		    	//Store ingredients as JSON string
 		        values.put(COLUMN_INGREDIENTS, gson.toJson(recipe.getIngredients()));
-		        values.put(COLUMN_INSTRUCTIONS, recipe.getInstructions());
+		        values.put(COLUMN_INSTRUCTIONS, gson.toJson(recipe.getInstructions()));
+		        //values.put(COLUMN_INSTRUCTIONS, recipe.getInstructions());
+		        
 				return values;
 			}
 			
@@ -73,9 +76,18 @@ public class RecipeDBAdapter extends BaseDBAdapter<Recipe>{
 				for(Entry<String, Double> ingredient: ingredientsDB.entrySet()){
 					material = mAdapter.findRawMaterialByName(ingredient.getKey());
 					ingredients.put(material, ingredient.getValue());
+					
 				}
-				recipe.setIngredients(ingredients);		
-				recipe.setInstructions(cursor.getString(2));
+				recipe.setIngredients(ingredients);
+				
+				Type type2 = new TypeToken<ArrayList<String>>(){}.getType();
+				String strng2 = cursor.getString(2);
+				gson = new Gson();
+				ArrayList<String> instructionsDB = gson.fromJson(strng2, type2);
+
+				recipe.setIngredients(ingredients);
+				recipe.setInstructions(instructionsDB);
+				//recipe.setInstructions(cursor.getString(2));
 				return recipe;
 			}		
 		    

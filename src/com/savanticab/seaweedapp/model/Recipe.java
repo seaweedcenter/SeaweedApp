@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import android.os.Parcel;
@@ -10,7 +11,8 @@ public class Recipe implements Parcelable {
 	private int id;
 	private Product product;
 	private LinkedHashMap<RawMaterial, Double> ingredients;
-	private String instructions;
+	//private String instructions;
+	private ArrayList<String> instructions;
 	
 	// getters and setters
 	public int getId() {
@@ -33,18 +35,29 @@ public class Recipe implements Parcelable {
 		this.ingredients = ingredients;
 	}
 	
+	public ArrayList<String> getInstructions() {
+		return instructions;
+	}
+	public void setInstructions(ArrayList<String> instructionsDB) {
+		this.instructions = instructionsDB;
+	}
+	
+	/*
 	public String getInstructions() {
 		return instructions;
 	}
 	public void setInstructions(String instructions) {
 		this.instructions = instructions;
 	}
+	*/
 
 	// constructors
 	public Recipe(){
 		ingredients = new LinkedHashMap<RawMaterial, Double>();
+		instructions = new ArrayList<String>();
 	}
-	public Recipe(Product p, LinkedHashMap<RawMaterial, Double> ingredients, String instructions){
+
+	public Recipe(Product p, LinkedHashMap<RawMaterial, Double> ingredients, ArrayList<String> instructions){
 		this.product = p;
 		this.id = p.getId();	// is recipe ID supposed to be the same as prod. ID?
 		this.ingredients = ingredients; //new HashMap<RawMaterial, Double>();

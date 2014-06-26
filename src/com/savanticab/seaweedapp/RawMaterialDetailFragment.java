@@ -106,7 +106,7 @@ public class RawMaterialDetailFragment extends Fragment {
 				            		 //sqlhelper.updateRawMaterial(mtrl);
 				            		 //sqlhelper.updateInventory(inventory);
 				            		 mDBAdaptor.updateMaterialInventory(mInventory);
-				            		 editText.setText("");
+				            		 //editText.setText("");
 				            		 updateObjects(v.getRootView());
 				            	 }
 				             	else {

@@ -1,5 +1,6 @@
 package com.savanticab.seaweedapp.sqlite;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.savanticab.seaweedapp.model.Batch;
@@ -68,12 +69,37 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
           
           
           LinkedHashMap<RawMaterial, Double> m = new LinkedHashMap<RawMaterial, Double>();
-          String instr = new String( "Min sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla blla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+          ArrayList<String> instr = new ArrayList<String>();
+          instr.add( "Min sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla blla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+          instr.add( "Ytterligare instructioner");
           m.put(material1, 1.0);
           m.put(material2, 0.5);        
           Recipe r = new Recipe(product1, m, instr);
           RecipeDBAdapter recipeAdapter = new RecipeDBAdapter(context);
           recipeAdapter.add(r);
+          
+          m = new LinkedHashMap<RawMaterial, Double>();
+          ArrayList<String> instr2 = new ArrayList<String>();
+          instr2.add( "Min andra sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+          instr2.add("Mer instructioner");
+          m.put(material1, 1.0);
+          m.put(material1, 2.0);
+          m.put(material2, 0.5); 
+          m.put(material3, 0.25);
+          m.put(material4, 0.25);
+          r = new Recipe(product2, m, instr2);
+          recipeAdapter.add(r);
+          
+          /*
+          m = new LinkedHashMap<RawMaterial, Double>();
+          String instr = new String("Min andra sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
+          m.put(material1, 1.0);
+          m.put(material2, 0.5);        
+          Recipe r = new Recipe(product1, m, instr);
+          RecipeDBAdapter recipeAdapter = new RecipeDBAdapter(context);
+          recipeAdapter.add(r);
+          
+          
           
           m = new LinkedHashMap<RawMaterial, Double>();
           String instr2 = new String("Min andra sträng som kan innehålla massssssoooooor med teeeeeeeeeeext. Bla bla bla bla bla bla bla bla bla bla bla la bla bla bla bla bla bla bla bla bla bla");
@@ -83,7 +109,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
           m.put(material4, 0.25);
           r = new Recipe(product2, m, instr2);
           recipeAdapter.add(r);
-          
+          */
           
           Batch batch1 = new Batch(r, 1, 20);
           BatchDBAdapter bAdapter = new BatchDBAdapter(context);

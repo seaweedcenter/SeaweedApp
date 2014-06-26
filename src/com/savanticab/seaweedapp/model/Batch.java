@@ -1,6 +1,8 @@
 package com.savanticab.seaweedapp.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,7 +16,9 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	private int quantity;	// to produce
 	private Date startDate;
 	private Date finishDate;	// null if job is unfinished
-	private String extraComments;
+	private ArrayList<String> extraComments;
+	private ArrayList<String> Comments;
+	private String Date;
 	
 	// getters and setters
 	public int getId() {
@@ -58,11 +62,24 @@ public class Batch implements Parcelable, Comparable<Batch> {
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
 	}
-	public String getExtraComments() {
+	public ArrayList<String> getExtraComments() {
 		return extraComments;
 	}
-	public void setExtraComments(String extraComments) {
-		this.extraComments = extraComments;
+	public void setExtraComments(ArrayList<String> extraCommentsDB) {
+		this.extraComments = extraCommentsDB;
+	}
+	
+	public ArrayList<String> getComments() {
+		return Comments;
+	}
+	public void setComments(ArrayList<String> commentsDB) {
+		this.Comments = commentsDB;
+	}
+	public String getDate() {
+		return Date;
+	}
+	public void setDate(String Date) {
+		this.Date = Date;
 	}
 	
 	// controls eg. how Batch objects are represented in Spinners, ListViews etc
@@ -119,6 +136,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
     	out.writeInt(quantity);
     	out.writeSerializable(startDate);
     	out.writeSerializable(finishDate);
+    	//out.writeStringArray(extraComments);
     }
     public static final Parcelable.Creator<Batch> CREATOR
         = new Parcelable.Creator<Batch>() {
@@ -137,6 +155,7 @@ public class Batch implements Parcelable, Comparable<Batch> {
     	quantity = in.readInt();
     	startDate = (Date)in.readSerializable();
     	finishDate = (Date)in.readSerializable();
+    	//extraComments = in.readString();
     }
     
     // Comparator implementation
