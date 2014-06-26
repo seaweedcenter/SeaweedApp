@@ -166,18 +166,45 @@ public class MainActivity extends Activity {
 					false);
 
 			// Button "To the factory"
-			Button button_factory = (Button) rootView
-					.findViewById(R.id.button_to_factory);
-			button_factory.setOnClickListener(new View.OnClickListener() {
+			Button button_factory_rawmtrl = (Button) rootView
+					.findViewById(R.id.button_factory_rawmtrl);
+			button_factory_rawmtrl.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent i = new Intent(v.getContext(),
-							FactoryTasksActivity.class);
+							RawMaterialListActivity.class);
 					startActivity(i);
 				}
 			});
+			
+			Button button_factory_prod_plan = (Button) rootView
+					.findViewById(R.id.button_factory_prod_plan);
+			button_factory_prod_plan.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent i = new Intent(v.getContext(),
+							ProductionPlanActivity.class);
+					startActivity(i);
+				}
+			});
+			
+			Button button_factory_prod_doc = (Button) rootView
+					.findViewById(R.id.button_factory_prod_doc);
+			button_factory_prod_doc.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent i = new Intent(v.getContext(),
+							ProductionDocumentListActivity.class);
+					startActivity(i);
+				}
+			});
+			
 
 			// Button "To the shop"
 			Button button_shop = (Button) rootView
@@ -187,9 +214,6 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent i = new Intent(v.getContext(),
-							FactoryTasksActivity.class);
-					startActivity(i);
 				}
 			});
 
@@ -201,9 +225,6 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent i = new Intent(v.getContext(),
-							FactoryTasksActivity.class);
-					startActivity(i);
 				}
 			});
 			return rootView;
