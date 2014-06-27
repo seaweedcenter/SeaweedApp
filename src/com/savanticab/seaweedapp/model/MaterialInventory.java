@@ -1,11 +1,14 @@
 package com.savanticab.seaweedapp.model;
 
 public class MaterialInventory {
-	private RawMaterial material;
+	private RawMaterial material; // --> unique key in DB
 	private double stock;
 	private double ordered;
 	private double reserved;
 	
+	public String getId() {
+		return String.valueOf(this.hashCode());
+	}
 	
 	public RawMaterial getMaterial() {
 		return material;
@@ -46,5 +49,10 @@ public class MaterialInventory {
 		this.stock = stock;
 		this.ordered = ordered;
 		this.reserved = reserved;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getMaterial().hashCode();
 	}
 }

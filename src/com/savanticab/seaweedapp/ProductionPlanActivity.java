@@ -100,6 +100,7 @@ public class ProductionPlanActivity extends Activity {
 		private ImageButton buttonOK;
 		private Recipe recipe;
 		private Spinner productSpinner;
+		List<Recipe> mRecipeList;
 		
 		public PlaceholderFragment() {
 		}
@@ -110,12 +111,12 @@ public class ProductionPlanActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_production_plan,
 					container, false);
 			
-			List<Recipe> recipes = new RecipeDBAdapter(getActivity().getApplicationContext()).getAll();
+			mRecipeList = new RecipeDBAdapter(getActivity().getApplicationContext()).getAll();
 			
 			// the spinner from which the user can select a Recipe is stuffed with an ArrayAdapter
 			// which holds Recipe objects. The Recipe.toString() provides the text description shown
 			productSpinner = (Spinner) rootView.findViewById(R.id.spinner_product_name);
-			ArrayAdapter<Recipe> aa = new ArrayAdapter<Recipe>(getActivity(), android.R.layout.simple_spinner_item);
+			ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
 			aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			
 			TextView textViewFragrance = (TextView) rootView.findViewById(R.id.text_product_fragrance);
@@ -128,13 +129,11 @@ public class ProductionPlanActivity extends Activity {
 			//textViewInstructions.setText(" ");
 			
 			// add "empty" recipe to get a default description field in spinner
-			Recipe emptyRecipe = new Recipe();
-			emptyRecipe.setProduct(new Product("Select what you want to produce", "", "", "", 0.0));
-			aa.add(emptyRecipe);
+			aa.add("Select what you want to produce");
 			
-			for(int i=0; i<recipes.size(); i++){
-				Recipe tmp = recipes.get(i);
-				aa.add(tmp);
+			for(int i=0; i<mRecipeList.size(); i++){
+				Recipe tmp = mRecipeList.get(i);
+				aa.add(tmp.toString());
 			}
 			
 			productSpinner.setAdapter(aa);
@@ -190,6 +189,8 @@ public class ProductionPlanActivity extends Activity {
 			
 			// actual choice of product recipe
 			if (position > 0) { 
+				recipe = mRecipeList.get(position - 1);	
+				
 				textViewHeadingItem.setVisibility(View.VISIBLE);
 				textViewHeadingNeededQty.setVisibility(View.VISIBLE);
 				textViewHeadingStock.setVisibility(View.VISIBLE);
@@ -197,13 +198,16 @@ public class ProductionPlanActivity extends Activity {
 				textViewFragrance.setVisibility(View.VISIBLE);
 				textViewSize.setVisibility(View.VISIBLE);
 				//textViewInstructions.setVisibility(View.VISIBLE);			
+
+				textViewFragrance.setText(recipe.getProduct().getFragance());
+				textViewSize.setText(recipe.getProduct().getSize());
+				//textViewInstructions.setText(recipe.getInstructions());
 				
 				if (quantity > 0) {
 					//MySQLiteHelper helper = MySQLiteHelper.getInstance(getActivity());
 					//Inventory inventory = helper.getInventory();
 					List<MaterialInventory> mInventory = new MaterialInventoryDBAdapter(getActivity().getApplicationContext()).getAll();
-					// pick up Recipe passed by adapter
-					recipe = (Recipe)parent.getAdapter().getItem(position);	
+					
 					String s = recipe.getProduct().getCode()+" "+ recipe.getProduct().getName();
 					Map<RawMaterial, Double> ingredients = recipe.getIngredients();
 					
@@ -216,9 +220,6 @@ public class ProductionPlanActivity extends Activity {
 					}
 					
 					
-					textViewFragrance.setText(recipe.getProduct().getFragance());
-					textViewSize.setText(recipe.getProduct().getSize());
-					//textViewInstructions.setText(recipe.getInstructions());
 						
 					// (re-)populate table with recipe ingredients
 					for(Entry<RawMaterial, Double> entry : ingredients.entrySet()) {

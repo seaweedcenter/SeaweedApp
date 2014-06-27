@@ -6,18 +6,18 @@ import android.os.Parcelable;
 public class RawMaterial implements Parcelable {
 	
 	private int id;	// id in SQL table and in app, hashed from name
-	private String name;
+	private String name; // --> unique key in DB
 	private String unit;
 	private String icon;
 	private String test;
 	
 	// getters and setters
-	public int getId() {
-		return id;
+	public String getId() {
+		return String.valueOf(this.hashCode());
 	}
-	public void setId(int id) {
+	/*public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 	public String getName() {
 		return name;
 	}

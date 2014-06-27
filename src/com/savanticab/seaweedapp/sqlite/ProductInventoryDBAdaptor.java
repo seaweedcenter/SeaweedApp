@@ -3,6 +3,8 @@ package com.savanticab.seaweedapp.sqlite;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import com.dropbox.sync.android.DbxFields;
+import com.dropbox.sync.android.DbxRecord;
 import com.savanticab.seaweedapp.model.Batch;
 import com.savanticab.seaweedapp.model.Product;
 import com.savanticab.seaweedapp.model.ProductInventory;
@@ -51,26 +53,48 @@ public class ProductInventoryDBAdaptor extends BaseDBAdapter<ProductInventory>{
 			@Override
 			public ProductInventory loadFromCursor(Cursor cursor) {
 				ProductInventory productInventory = new ProductInventory();
-				productInventory.setProduct(new ProductDBAdapter(mContext).findProductById(cursor.getInt(0)));
+				//productInventory.setProduct(new ProductDBAdapter(mContext).findProductById(cursor.getInt(0)));
 				productInventory.setStock(cursor.getInt(1));
 				productInventory.setInproduction(cursor.getInt(2));
 				return productInventory;
 			}
+			
+
+			@Override
+			public DbxFields getFields(ProductInventory item){
+				DbxFields fields = new DbxFields();
+				fields.set(COLUMN_PRODUCT_ID, item.getProduct().getId());
+				fields.set(COLUMN_INSTOCKQTY, item.getStock());
+				fields.set(COLUMN_INPRODUCTIONQTY, item.getInproduction());
+				return fields;
+			}
+			
+			@Override
+			public ProductInventory loadFromRecord(DbxRecord record) {
+				ProductInventory item = new ProductInventory();
+				item.setProduct(new ProductDBAdapter(mContext).findProductById(record.getString(COLUMN_PRODUCT_ID)));
+				item.setStock((int) record.getLong(COLUMN_INSTOCKQTY));
+				item.setInproduction((int) record.getLong(COLUMN_INPRODUCTIONQTY));
+				return item;
+			}
 		    
-		    public ProductInventory findProductInventoryById(int productId){
-		    	String query = "Select * FROM " + ProductInventoryDBAdaptor.TABLE_NAME + " WHERE " + ProductInventoryDBAdaptor.COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
-		    	return find(query);
+		    public ProductInventory findProductInventoryById(String productId){
+		    	//String query = "Select * FROM " + ProductInventoryDBAdaptor.TABLE_NAME + " WHERE " + ProductInventoryDBAdaptor.COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
+		    	//return find(query);
+		    	return findItemById(productId);
 		    }
 		    
 		    public int updateProductInventory(ProductInventory product) {
 		 
-		        return update(product, COLUMN_PRODUCT_ID + " = ?", new String[] { String.valueOf(product.getProduct().getId()) });
+		        //return update(product, COLUMN_PRODUCT_ID + " = ?", new String[] { String.valueOf(product.getProduct().getId()) });
+		        return update(product, product.getId());
 		 
 		    }
-		    public boolean deleteProductInventory(int productId) {
+		    public boolean deleteProductInventory(String productId) {
 		    	
-		    	String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
-		    	return delete(query);
+		    	//String query = "Select * FROM " + TABLE_NAME + " WHERE " + COLUMN_PRODUCT_ID + " =  \"" + productId + "\"";
+		    	//return delete(query);
+		    	return delete(new DbxFields().set(COLUMN_PRODUCT_ID, productId));
 		    }
 		    
 		    //TODO: move somewhere else?

@@ -94,7 +94,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			toast.show();
 			
 			TextView textViewHeading = (TextView) rootView.findViewById(R.id.productiondocument_detail_batchid);
-			textViewHeading.setText("Batch ID:" + batch.getId());
+			textViewHeading.setText("Batch ID:" + batch.getBatchNumber());
 			
 			Recipe r = batch.getRecipe();
 			Product p = r.getProduct();
@@ -151,12 +151,41 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 				RawMaterial mtrl = entry.getKey();
 				Double quantityNeeded = entry.getValue() * productQty;
 				
-				TableRow rowRecipe = new TableRow(this.getActivity());
-				
+				TableRow rowRecipe = new TableRow(this.getActivity());				
 				EditText editDate = new EditText(this.getActivity());
-				editDate.setHint("enter date here");
-				rowRecipe.addView(editDate);
+				//editDate.setHint("enter date here");
+				EditText editTextComment = new EditText(this.getActivity());
+				//editTextComment.setHint("enter comments here");
 				
+				if(!(batch.getComments() == null)){
+					ArrayList<String> listComments = new ArrayList<String>();
+		            listComments.addAll(batch.getComments());
+		                 
+					 for(String str : listComments) {              
+				         editTextComment.setText(str) ;
+		                 rowRecipe.addView(editTextComment); //The specified child already has a parent. " +
+						}
+				         				
+				}
+				else {
+					 editTextComment.setHint("enter comments here");
+				}
+								
+				if(!(batch.getDate() == null)){											
+					ArrayList<String> listDate = new ArrayList<String>();
+		            listDate.addAll(batch.getDate());
+		                 
+					 for(String str : listDate) {              
+				         editDate.setText(str) ;
+		                 rowRecipe.addView(editDate);
+						}
+				         
+			    }
+			    else {
+					 editDate.setHint("enter date here");
+				}
+				
+				rowRecipe.addView(editDate);							
 				TextView textViewItem = new TextView(this.getActivity());
 				textViewItem.setText(mtrl.getName());
 				rowRecipe.addView(textViewItem);
@@ -164,40 +193,15 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 				textViewQty.setText(Double.toString(quantityNeeded));
 				rowRecipe.addView(textViewQty);
 				
-				EditText editTextComment = new EditText(this.getActivity());
-				editTextComment.setHint("enter comments here");
-				rowRecipe.addView(editTextComment);
-				
-				//TODO: Change format to Array of strings so the right string can be picked each time i the for loop
-				if(!(batch.getComments() == null)){
 
-					//editTextComment.setText(batch.getComments());
-				}
-				
-				if(!(batch.getDate() == null)){
-					
-					//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-					//textViewStartDate.setText("Started: " + df.format(batch.getStartDate()));
-
-					editTextComment.setText(batch.getDate());
-				}
-				
+				rowRecipe.addView(editTextComment);			
 				table.addView(rowRecipe);
 			}
 			
-			//TODO: Change format to Array of strings so the right string can be picked for each row added and add a for loop for those new rows
+			
+			
 			if(batch.isFinished() & !(batch.getExtraComments() == null)) {
 				
-				/*
-				if(!(batch.getExtraComments() == null)){
-			         TableLayout tableExtra = (TableLayout) rootView.findViewById(R.id.table_extra);
-			         TableRow rowRecipeExtra = new TableRow(this.getActivity());
-			         EditText editExtraTextComment = new EditText(this.getActivity());;
-			         editExtraTextComment.setText(batch.getExtraComments());
-			         rowRecipeExtra.addView(editExtraTextComment);
-			         tableExtra.addView(rowRecipeExtra);
-				}
-				*/
 				 ArrayList<String> list = new ArrayList<String>();
                  list.addAll(batch.getExtraComments());
                  
@@ -274,7 +278,7 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 		TableLayout table = (TableLayout)v.getRootView().findViewById(R.id.table_ProdDoc);
 		
 		//User click: Add extra row with comments in the batch in connection to the recipe
-		int nrOfRows = table.getChildCount();
+		//int nrOfRows = table.getChildCount();
 
 		if(v.getId()==buttonAddRow.getId()){
 			
@@ -301,15 +305,12 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			//Inventory inventory = helper.getInventory();
 			ProductInventoryDBAdaptor pIAdaptor = new ProductInventoryDBAdaptor(this.getActivity().getApplicationContext());
 			// update inventories and mark batch finished
-			Product product = batch.getRecipe().getProduct();
-					
+			Product product = batch.getRecipe().getProduct();					
 			pIAdaptor.ProductProductionFinish(product, batch);
-			batch.setIsFinished(true);
-		
+			batch.setIsFinished(true);		
 			mDBAdaptor = new BatchDBAdapter(getActivity().getApplicationContext());
 			
 			// update database
-			//new BatchDBAdapter(getActivity().getApplicationContext()).updateBatch(batch);//helper.updateBatch(batch);
 			mDBAdaptor.updateBatch(batch);
 			//helper.updateInventory(inventory);
 			
@@ -327,71 +328,83 @@ public class ProductionDocumentDetailFragment extends Fragment implements OnClic
 			
 			int rowPosition = 0;
 			int numOfExtraRows = tableExtra.getChildCount();
-			
-			//TODO: Generalize to handle more than one row
-			/*
-			TableRow rowExtra = (TableRow)tableExtra.getChildAt(rowPosition);
-			 
-			if (tableExtra.getChildCount() > 0){
-	
-			    EditText et = (EditText)rowExtra.getChildAt(0);			 
-			    String text = et.getText().toString();
-			      //rowPosition++;
-			  	 
-       	          if (!text.isEmpty()) {
-       		  
-       		         Batch mBatch = mDBAdaptor.findBatchById(batch.getId());
-       		         mBatch.setExtraComments(text);
-       		         mDBAdaptor.updateBatch(mBatch);
-       	          }
-			 }
-			 */
-			
 			ArrayList<String> listExtraComments = new ArrayList<String>();
-			
-			for(int i = 1; i <= numOfExtraRows; i++){
-			TableRow rowExtra = (TableRow)tableExtra.getChildAt(rowPosition);
-			 
-			if (tableExtra.getChildCount() > 0){
-	
-			    EditText et = (EditText)rowExtra.getChildAt(0);			 
-			    String text = et.getText().toString();
-                listExtraComments.add(text);
-			    rowPosition++;
-			  	 
-       	          if (!text.isEmpty()) {
-       		  
-       		         Batch mBatch = mDBAdaptor.findBatchById(batch.getId());
-       		         mBatch.setExtraComments(listExtraComments);
-       		         mDBAdaptor.updateBatch(mBatch);
-       	          }
-			 }
-       	     
-			 }
+
+			for (int i = 1; i <= numOfExtraRows; i++) {
+				TableRow rowExtra = (TableRow) tableExtra.getChildAt(rowPosition);
+
+				if (tableExtra.getChildCount() > 0) {
+
+					EditText et = (EditText) rowExtra.getChildAt(0);
+					String text = et.getText().toString();
+					listExtraComments.add(text);
+					rowPosition++;
+
+					if (!text.isEmpty()) {
+
+						Batch mBatch = mDBAdaptor.findBatchByBatchNumber(batch.getBatchNumber());
+						mBatch.setExtraComments(listExtraComments);
+						mDBAdaptor.updateBatch(mBatch);
+					}
+				}
+
+			}
        	       
 		
-       	     int rowPosition2 = 2;
-       	     //TODO: Generalize to handle more than one row
+			int rowPosition2 = 2;
+			int numOfRows = table.getChildCount();
+			ArrayList<String> listComments = new ArrayList<String>();
+			ArrayList<String> listDate = new ArrayList<String>();
+
+			for (int i = 2; i <= numOfRows - 1; i++) {
+				TableRow row = (TableRow) table.getChildAt(i);
+				EditText et2 = (EditText)row.getChildAt(3);
+				String text2 = et2.getText().toString();
+				listComments.add(text2);
+				
+				EditText et3 = (EditText)row.getChildAt(0); 
+				String text3 = et3.getText().toString();
+				listDate.add(text3);
+				//rowPosition2++;
+
+				if (!text2.isEmpty()) {
+
+					Batch mBatch = mDBAdaptor.findBatchByBatchNumber(batch.getBatchNumber());
+					mBatch.setComments(listComments);
+					mDBAdaptor.updateBatch(mBatch);
+				}
+
+				if (!text3.isEmpty()) {
+
+					Batch mBatch = mDBAdaptor.findBatchByBatchNumber(batch.getBatchNumber());
+					mBatch.setDate(listDate);
+					mDBAdaptor.updateBatch(mBatch);
+				}
+			}
+       	     /*
+       	      *        	     //TODO: Generalize to handle more than one row //KW fix
 			 TableRow row = (TableRow)table.getChildAt(rowPosition2);
 			 EditText et2 = (EditText)row.getChildAt(3);
 			 String text2 = et2.getText().toString();
 			   
 			       if (!text2.isEmpty()) {
 		       		 
-	       		      //Batch mBatch = mDBAdaptor.findBatchById(batch.getId());
+	       		      //Batch mBatch = mDBAdaptor.findBatchById(batch.getId()); //KW fix
 	       		      //mBatch.setComments(text2);
 	       		      //mDBAdaptor.updateBatch(mBatch);
 	       	       }
-			       
+	       	       
+       	     TableRow row = (TableRow)table.getChildAt(rowPosition2);    
 		     EditText et3 = (EditText)row.getChildAt(0);
 			 String text3 = et3.getText().toString();
 					   
 				   if (!text3.isEmpty()) {
 				       		 
-			       	  //Batch mBatch = mDBAdaptor.findBatchById(batch.getId());
+			       	  //Batch mBatch = mDBAdaptor.findBatchById(batch.getId()); //KW fix
 			       	  //mBatch.setDate(text3);
 			       	  //mDBAdaptor.updateBatch(mBatch);
 			       }
+			       */
 		       	     	
 			
 		}
